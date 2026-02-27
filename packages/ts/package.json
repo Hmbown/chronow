@@ -12,7 +12,9 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "eval-corpus": "npm run build && node ./scripts/eval-corpus.mjs",
-    "test": "npm run build && node ./scripts/test-conformance.mjs"
+    "test": "npm run build && node ./scripts/test-conformance.mjs",
+    "lint": "eslint 'src/**/*.ts'",
+    "format:check": "prettier --check 'src/**/*.ts'"
   },
   "repository": {
     "type": "git",
@@ -34,6 +36,10 @@
   },
   "devDependencies": {
     "@types/node": "^24.4.0",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "eslint": "^8.57.0",
+    "prettier": "^3.4.0",
     "typescript": "^5.9.2"
   }
 }

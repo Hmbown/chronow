@@ -1,5 +1,5 @@
 import { execFileSync } from "node:child_process";
-import { existsSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import os from "node:os";
 import path from "node:path";
 
@@ -84,8 +84,7 @@ export function evaluateCorpusFile(
 ): EvalCorpusResult {
   // WASM path: read and process in-process
   if (wasmModule && !options?.forceCli) {
-    const fs = require("node:fs");
-    const content = fs.readFileSync(casesFile, "utf8");
+    const content = readFileSync(casesFile, "utf8");
     const parsed = JSON.parse(content);
     const cases: CorpusCase[] = Array.isArray(parsed) ? parsed : parsed.cases;
     return evaluateCorpusInProcess(cases);

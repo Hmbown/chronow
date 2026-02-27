@@ -4,8 +4,12 @@ on:
   push:
   pull_request:
 
+env:
+  CARGO_TERM_COLOR: always
+
 jobs:
-  conformance:
+  # ── SHA-1022: Lint gates (run before build/test) ──────────────────────
+  fmt:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -13,49 +17,129 @@ jobs:
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
         with:
-          targets: wasm32-unknown-unknown
+          components: rustfmt
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - name: Check formatting
+        run: cargo fmt --all -- --check
+
+  clippy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
         with:
-          node-version: "22"
+          components: clippy
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
+      - name: Cache Cargo registry + git + target
+        uses: actions/cache@v4
         with:
-          python-version: "3.12"
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target/
+          key: clippy-${{ hashFiles('Cargo.lock') }}
+          restore-keys: clippy-
 
-      - name: Build Rust CLI
-        run: cargo build -p chronow-cli
+      - name: Run Clippy
+        run: cargo clippy --workspace -- -D warnings
+
+  # ── SHA-1024: Multi-platform build & test ─────────────────────────────
+  build-and-test:
+    needs: [fmt, clippy]
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.os == 'ubuntu-latest' && 'wasm32-unknown-unknown' || '' }}
+
+      # ── SHA-1023: Cargo caching ───────────────────────────────────────
+      - name: Cache Cargo registry + git + target
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-cargo-
+
+      # ── Build & test (all platforms) ──────────────────────────────────
+      - name: Build workspace
+        run: cargo build --workspace
 
       - name: Run Rust tests
         run: cargo test --workspace
 
-      - name: Build MCP server
-        run: cargo build -p chronow-mcp
+      # ── Ubuntu-only: WASM, TS, Python, Conformance ───────────────────
+      - name: Setup Node
+        if: matrix.os == 'ubuntu-latest'
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      # SHA-1023: Node modules caching
+      - name: Cache node_modules
+        if: matrix.os == 'ubuntu-latest'
+        uses: actions/cache@v4
+        with:
+          path: packages/ts/node_modules
+          key: node-modules-${{ hashFiles('packages/ts/package-lock.json') }}
+          restore-keys: node-modules-
+
+      - name: Setup Python
+        if: matrix.os == 'ubuntu-latest'
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # SHA-1023: pip caching
+      - name: Cache pip packages
+        if: matrix.os == 'ubuntu-latest'
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: pip-${{ runner.os }}-${{ hashFiles('packages/python/pyproject.toml') }}
+          restore-keys: pip-${{ runner.os }}-
 
       - name: Install wasm-pack
+        if: matrix.os == 'ubuntu-latest'
         run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
 
       - name: Build WASM
+        if: matrix.os == 'ubuntu-latest'
         run: wasm-pack build crates/core --target nodejs --out-dir ../../packages/ts/wasm -- --features wasm
 
       - name: Install TS deps
+        if: matrix.os == 'ubuntu-latest'
         run: npm install --prefix packages/ts
 
       - name: Install Python package
+        if: matrix.os == 'ubuntu-latest'
         run: python -m pip install -e packages/python
 
       - name: Regenerate conformance corpus
+        if: matrix.os == 'ubuntu-latest'
         run: python3 scripts/generate_conformance_cases.py --chronow-bin target/debug/chronow
 
       - name: Ensure corpus is deterministic
+        if: matrix.os == 'ubuntu-latest'
         run: git diff --exit-code conformance/cases
 
       - name: Run full conformance matrix
+        if: matrix.os == 'ubuntu-latest'
         run: python3 conformance/runner/run.py --matrix rust ts python --strict
 
       - name: WASM conformance
+        if: matrix.os == 'ubuntu-latest'
         env:
           CHRONOW_WASM: "1"
         run: npm test --prefix packages/ts
