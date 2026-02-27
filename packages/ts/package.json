@@ -1,7 +1,7 @@
 {
-  "name": "chronow-ts",
+  "name": "chronow",
   "version": "0.1.0",
-  "description": "Chronow TypeScript bindings (WASM-ready + deterministic CLI bridge)",
+  "description": "Deterministic temporal engine for timezone-safe datetime operations",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -13,6 +13,24 @@
     "build": "tsc -p tsconfig.json",
     "eval-corpus": "npm run build && node ./scripts/eval-corpus.mjs",
     "test": "npm run build && node ./scripts/test-conformance.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Hmbown/chronow.git"
+  },
+  "author": "Hunter Bown",
+  "license": "MIT",
+  "keywords": [
+    "temporal",
+    "timezone",
+    "dst",
+    "mcp",
+    "agent",
+    "datetime"
+  ],
+  "homepage": "https://github.com/Hmbown/chronow",
+  "bugs": {
+    "url": "https://github.com/Hmbown/chronow/issues"
   },
   "devDependencies": {
     "@types/node": "^24.4.0",

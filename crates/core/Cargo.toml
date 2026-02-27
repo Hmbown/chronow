@@ -3,6 +3,12 @@ name = "chronow-core"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
+description = "Deterministic temporal engine for timezone-safe datetime operations"
+repository = "https://github.com/Hmbown/chronow"
+homepage = "https://github.com/Hmbown/chronow"
+keywords = ["temporal", "timezone", "datetime", "dst", "mcp"]
+categories = ["date-and-time"]
+readme = "../../README.md"
 
 [lib]
 name = "chronow_core"

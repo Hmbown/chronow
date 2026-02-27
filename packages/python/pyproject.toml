@@ -8,7 +8,22 @@ version = "0.1.0"
 description = "Chronow deterministic temporal engine Python bindings"
 readme = "README.md"
 requires-python = ">=3.10"
+license = {text = "MIT"}
 dependencies = []
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+[[project.authors]]
+name = "Hunter Bown"
+email = "hunter@chronow.dev"
+
+[project.urls]
+Homepage = "https://github.com/Hmbown/chronow"
+Repository = "https://github.com/Hmbown/chronow"
+Documentation = "https://github.com/Hmbown/chronow/tree/main/docs"
 
 [tool.setuptools]
 packages = ["chronow"]

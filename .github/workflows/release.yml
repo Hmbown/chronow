@@ -1,0 +1,189 @@
+# SHA-1017
+name: release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    name: Build (${{ matrix.target }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: x86_64-unknown-linux-gnu
+            os: ubuntu-latest
+            use_cross: true
+            archive: tar.gz
+          - target: x86_64-apple-darwin
+            os: macos-latest
+            use_cross: false
+            archive: tar.gz
+          - target: aarch64-apple-darwin
+            os: macos-latest
+            use_cross: false
+            archive: tar.gz
+          - target: x86_64-pc-windows-msvc
+            os: windows-latest
+            use_cross: false
+            archive: zip
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Install cross
+        if: matrix.use_cross
+        run: cargo install cross --locked
+
+      - name: Build chronow CLI
+        run: ${{ matrix.use_cross && 'cross' || 'cargo' }} build --release --target ${{ matrix.target }} -p chronow-cli
+
+      - name: Build chronow-mcp
+        run: ${{ matrix.use_cross && 'cross' || 'cargo' }} build --release --target ${{ matrix.target }} -p chronow-mcp
+
+      - name: Determine binary suffix
+        id: suffix
+        shell: bash
+        run: |
+          if [[ "${{ matrix.target }}" == *"windows"* ]]; then
+            echo "exe=.exe" >> "$GITHUB_OUTPUT"
+          else
+            echo "exe=" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Package (unix)
+        if: matrix.archive == 'tar.gz'
+        shell: bash
+        run: |
+          tag="${GITHUB_REF_NAME}"
+          staging="chronow-${tag}-${{ matrix.target }}"
+          mkdir -p "$staging"
+
+          cp "target/${{ matrix.target }}/release/chronow${{ steps.suffix.outputs.exe }}" "$staging/"
+          cp "target/${{ matrix.target }}/release/chronow-mcp${{ steps.suffix.outputs.exe }}" "$staging/"
+          cp LICENSE* README.md "$staging/" 2>/dev/null || true
+
+          tar czf "${staging}.tar.gz" "$staging"
+
+          echo "ASSET=${staging}.tar.gz" >> "$GITHUB_ENV"
+
+      - name: Package (windows)
+        if: matrix.archive == 'zip'
+        shell: bash
+        run: |
+          tag="${GITHUB_REF_NAME}"
+          staging="chronow-${tag}-${{ matrix.target }}"
+          mkdir -p "$staging"
+
+          cp "target/${{ matrix.target }}/release/chronow${{ steps.suffix.outputs.exe }}" "$staging/"
+          cp "target/${{ matrix.target }}/release/chronow-mcp${{ steps.suffix.outputs.exe }}" "$staging/"
+          cp LICENSE* README.md "$staging/" 2>/dev/null || true
+
+          7z a "${staging}.zip" "$staging"
+
+          echo "ASSET=${staging}.zip" >> "$GITHUB_ENV"
+
+      - name: Generate SHA-256 checksum
+        shell: bash
+        run: |
+          if command -v shasum &>/dev/null; then
+            shasum -a 256 "$ASSET" > "${ASSET}.sha256"
+          else
+            sha256sum "$ASSET" > "${ASSET}.sha256"
+          fi
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-${{ matrix.target }}
+          path: |
+            ${{ env.ASSET }}
+            ${{ env.ASSET }}.sha256
+
+  build-wasm:
+    name: Build WASM
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+
+      - name: Install wasm-pack
+        run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+
+      - name: Build WASM
+        run: wasm-pack build crates/core --target nodejs --out-dir ../../packages/ts/wasm -- --features wasm
+
+      - name: Package WASM
+        shell: bash
+        run: |
+          tag="${GITHUB_REF_NAME}"
+          asset="chronow_core_bg-${tag}.wasm"
+          cp packages/ts/wasm/chronow_core_bg.wasm "$asset"
+
+          shasum -a 256 "$asset" > "${asset}.sha256"
+
+          echo "WASM_ASSET=${asset}" >> "$GITHUB_ENV"
+
+      - name: Upload WASM artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-wasm
+          path: |
+            ${{ env.WASM_ASSET }}
+            ${{ env.WASM_ASSET }}.sha256
+
+  publish:
+    name: Publish GitHub Release
+    needs: [build, build-wasm]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          pattern: release-*
+          merge-multiple: true
+
+      - name: Generate release body with checksums
+        shell: bash
+        run: |
+          {
+            echo "## Checksums (SHA-256)"
+            echo ""
+            echo '```'
+            cat artifacts/*.sha256
+            echo '```'
+          } > release_body.md
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          body_path: release_body.md
+          files: |
+            artifacts/*.tar.gz
+            artifacts/*.zip
+            artifacts/*.wasm
+          draft: false
+          prerelease: ${{ contains(github.ref_name, '-') }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
