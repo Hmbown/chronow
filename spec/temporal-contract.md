@@ -84,8 +84,10 @@ Any other input must return `unsupported_intent`.
 
 ## Snap semantics
 - `snap_to`: snaps an instant to the boundary of a calendar unit in a given zone.
-- Units: `day`, `week`, `month`, `quarter`, `year`.
-- Edges: `start` (00:00:00) or `end` (23:59:59.999... → last second of that unit).
+- Units: `hour`, `day`, `week`, `month`, `quarter`, `year`.
+- Edges: `start` or `end`.
+- Hour snap: `start` snaps to :00:00 of the current hour; `end` snaps to :59:59 of the current hour.
+- Day/week/month/quarter/year snap: `start` snaps to 00:00:00; `end` snaps to 23:59:59 of the last day of the unit.
 - Week snap uses `week_starts_on` (default: `monday`). Supported values: `monday`, `sunday`.
 - DST gaps at the snap boundary are resolved with `compatible` disambiguation.
 - Quarter boundaries: Q1=Jan, Q2=Apr, Q3=Jul, Q4=Oct.
@@ -95,9 +97,14 @@ Any other input must return `unsupported_intent`.
 - `M` before `T` = months. `M` after `T` = minutes. `P1MT1M` = 1 month + 1 minute.
 - Weeks are normalized to days (1W = 7D) in the parsed output.
 - Empty duration `P` or `PT` with no components is an error.
+- Negative durations: a leading `-` before `P` (e.g., `-P1DT2H`) negates all components.
+  All parsed fields will be negative. This is consistent with ISO 8601-2:2019 sign convention.
 - `format_duration`: converts a `DurationSpec` struct to ISO 8601 string.
 - Weeks are folded into days. All components emitted (zero components included as `0`).
 - Output format: `PnYnMnDTnHnMnS`.
+- Negative output: if any field is negative, the formatted string is prefixed with `-`
+  and all component magnitudes are emitted as absolute values (e.g., `-P1Y2M3DT4H5M6S`).
+- `add_duration` works naturally with negative durations — negative fields subtract time.
 
 ## Interval semantics
 - `interval_check`: compares two time intervals.

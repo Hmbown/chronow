@@ -1,14 +1,266 @@
 use rmcp::{
-    ServerHandler, ServiceExt,
+    ErrorData as McpError, ServerHandler, ServiceExt,
     handler::server::tool::ToolRouter,
     handler::server::wrapper::Parameters,
-    model::{ServerCapabilities, ServerInfo, Implementation, ToolsCapability},
+    model::{
+        AnnotateAble, Annotated, ListResourcesResult, PaginatedRequestParams, RawResource,
+        ReadResourceRequestParams, ReadResourceResult, ResourceContents, ResourcesCapability,
+        ServerCapabilities, ServerInfo, Implementation, ToolsCapability,
+    },
     schemars, tool, tool_handler, tool_router,
+    service::RequestContext,
+    service::RoleServer,
     transport::io::stdio,
 };
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
+
+// ============================================================================ //
+// MCP Resources: prompt templates for common temporal workflows
+// ============================================================================ //
+
+mod resources {
+    /// URI scheme for all Chronow resources.
+    pub const DISAMBIGUATION_URI: &str = "chronow://policies/disambiguation";
+    pub const TIMEZONE_CONVERSION_URI: &str = "chronow://workflows/timezone-conversion";
+    pub const SCHEDULE_MEETING_URI: &str = "chronow://workflows/schedule-meeting";
+    pub const NEXT_BUSINESS_DAY_URI: &str = "chronow://workflows/next-business-day";
+
+    pub const DISAMBIGUATION_CONTENT: &str = "\
+Chronow Disambiguation Policies
+================================
+
+When converting a local datetime to a UTC instant, the local time may be
+ambiguous (it occurs twice during a DST fall-back) or may not exist at all
+(it is skipped during a DST spring-forward). The `disambiguation` parameter
+on `resolve_local` and `add_duration` controls how these cases are handled.
+
+Policies
+--------
+
+1. compatible (default)
+   - Ambiguous: picks the offset that was in effect *before* the transition
+     (i.e. the first occurrence / summer-time offset during fall-back).
+   - Skipped: picks the offset that will be in effect *after* the transition
+     (i.e. the clock jumps forward, so the time is moved forward).
+   - Use when: you want the most intuitive behavior for end users and do not
+     need to distinguish between the two possible instants.
+
+2. earlier
+   - Ambiguous: always selects the *earlier* UTC instant (the first
+     occurrence).
+   - Skipped: selects the *earlier* valid instant (the moment just before the
+     gap, which is the last instant at the old offset).
+   - Use when: you need the earliest possible interpretation, e.g. scheduling
+     a deadline where \"no later than\" semantics matter.
+
+3. later
+   - Ambiguous: always selects the *later* UTC instant (the second
+     occurrence).
+   - Skipped: selects the *later* valid instant (the moment the clock jumps
+     to, which is the first instant at the new offset).
+   - Use when: you prefer the most recent interpretation, e.g. a billing
+     cut-off where you want maximum elapsed time.
+
+4. reject
+   - Ambiguous: returns an error instead of silently choosing.
+   - Skipped: returns an error instead of silently adjusting.
+   - Use when: your application requires the user to explicitly handle DST
+     conflicts (e.g. a calendar UI that should prompt the user).
+
+Example
+-------
+Local time 2024-11-03T01:30:00 in America/New_York is ambiguous (fall-back).
+
+  compatible -> 2024-11-03T05:30:00Z (EDT, UTC-4, the first occurrence)
+  earlier    -> 2024-11-03T05:30:00Z (EDT, UTC-4)
+  later      -> 2024-11-03T06:30:00Z (EST, UTC-5)
+  reject     -> error: ambiguous_local_datetime
+";
+
+    pub const TIMEZONE_CONVERSION_CONTENT: &str = "\
+Workflow: Timezone Conversion
+==============================
+
+Convert a datetime from one timezone to another using the Chronow MCP tools.
+
+Steps
+-----
+1. Resolve the source local datetime to a UTC instant:
+
+   Tool: resolve_local
+   Params:
+     local: \"<source datetime, e.g. 2024-06-15T14:30:00>\"
+     zone:  \"<source IANA zone, e.g. America/New_York>\"
+     disambiguation: \"compatible\"
+
+   This gives you the canonical UTC instant.
+
+2. Format the UTC instant in the target timezone:
+
+   Tool: format_instant
+   Params:
+     instant: \"<UTC instant from step 1, e.g. 2024-06-15T18:30:00Z>\"
+     zone:    \"<target IANA zone, e.g. Asia/Tokyo>\"
+     format:  \"extended\"
+
+   This gives you the local representation in the target zone.
+
+Example
+-------
+Convert 2024-06-15 2:30 PM New York time to Tokyo time:
+
+  Step 1: resolve_local(local=\"2024-06-15T14:30:00\", zone=\"America/New_York\")
+          -> instant: 2024-06-15T18:30:00Z
+
+  Step 2: format_instant(instant=\"2024-06-15T18:30:00Z\", zone=\"Asia/Tokyo\")
+          -> 2024-06-16T03:30:00+09:00
+
+Tips
+----
+- Always go through UTC. Never try to add/subtract offset hours manually.
+- Use zone_info to check whether DST is active if you need offset details.
+- Use list_zones with a region_filter to discover valid IANA zone names.
+";
+
+    pub const SCHEDULE_MEETING_CONTENT: &str = "\
+Workflow: Schedule a Meeting Across Timezones
+===============================================
+
+Find a meeting time that works for participants in multiple timezones.
+
+Steps
+-----
+1. Get the current time to establish a baseline:
+
+   Tool: now
+   Params:
+     zone: \"<organizer's IANA zone>\"
+
+2. Pick a candidate local time in the organizer's timezone and resolve it:
+
+   Tool: resolve_local
+   Params:
+     local: \"<candidate datetime, e.g. 2024-06-17T10:00:00>\"
+     zone:  \"<organizer's IANA zone>\"
+     disambiguation: \"compatible\"
+
+3. For each participant's timezone, format the UTC instant to see their local time:
+
+   Tool: format_instant
+   Params:
+     instant: \"<UTC instant from step 2>\"
+     zone:    \"<participant's IANA zone>\"
+     format:  \"extended\"
+
+4. Verify all local times are within acceptable business hours (e.g. 08:00-18:00).
+   If not, adjust the candidate time and repeat from step 2.
+
+5. Optionally, compute the duration until the meeting:
+
+   Tool: diff_instants
+   Params:
+     start: \"<current UTC instant from step 1>\"
+     end:   \"<meeting UTC instant from step 2>\"
+     zone:  \"<organizer's IANA zone>\"
+
+Example
+-------
+Schedule a meeting for a team in New York, London, and Tokyo:
+
+  Step 1: now(zone=\"America/New_York\") -> 2024-06-14T16:00:00-04:00
+
+  Step 2: resolve_local(local=\"2024-06-17T09:00:00\", zone=\"America/New_York\")
+          -> 2024-06-17T13:00:00Z
+
+  Step 3:
+    format_instant(instant=\"2024-06-17T13:00:00Z\", zone=\"America/New_York\")
+    -> 2024-06-17T09:00:00-04:00  (9 AM -- good)
+
+    format_instant(instant=\"2024-06-17T13:00:00Z\", zone=\"Europe/London\")
+    -> 2024-06-17T14:00:00+01:00  (2 PM -- good)
+
+    format_instant(instant=\"2024-06-17T13:00:00Z\", zone=\"Asia/Tokyo\")
+    -> 2024-06-17T22:00:00+09:00  (10 PM -- too late!)
+
+  Adjust: try 2024-06-17T08:00:00 New York -> 12:00Z -> 21:00 Tokyo (still late).
+  Try: 2024-06-17T21:00:00 Tokyo = 2024-06-17T12:00:00Z = 08:00 New York, 13:00 London.
+  This works if New York can do 8 AM.
+
+Tips
+----
+- Use zone_info to check DST offsets for each zone at the meeting date.
+- Use interval_check to verify no scheduling conflicts with existing meetings.
+- For recurring meetings, use recurrence_preview to generate the full series
+  and verify each occurrence falls in business hours (DST shifts can move them).
+";
+
+    pub const NEXT_BUSINESS_DAY_CONTENT: &str = "\
+Workflow: Find the Next Business Day
+======================================
+
+Find the next business day from a given date, skipping weekends and holidays.
+
+Steps
+-----
+1. Get the current time (or start from a known date):
+
+   Tool: now
+   Params:
+     zone: \"<IANA zone for business calendar>\"
+
+2. Use recurrence_preview with a daily recurrence and business calendar to
+   find the next N business days:
+
+   Tool: recurrence_preview
+   Params:
+     start_local: \"<starting local date/time, e.g. 2024-06-14T09:00:00>\"
+     zone: \"<IANA zone>\"
+     rule:
+       frequency: \"daily\"
+       interval: 1
+       count: 1           # increase to get more business days ahead
+     business_calendar:
+       exclude_weekends: true
+       holidays:          # list any holidays to skip
+         - \"2024-06-19\"   # e.g. Juneteenth
+         - \"2024-07-04\"   # e.g. Independence Day
+     disambiguation: \"compatible\"
+
+   The first occurrence in the result is the next business day.
+
+3. Optionally, snap to the start of that business day:
+
+   Tool: snap_to
+   Params:
+     instant: \"<UTC instant of the business day from step 2>\"
+     zone: \"<IANA zone>\"
+     unit: \"day\"
+     edge: \"start\"
+
+Example
+-------
+Find the next business day after Friday 2024-06-14 in New York:
+
+  recurrence_preview(
+    start_local=\"2024-06-15T09:00:00\",   # start from the day after
+    zone=\"America/New_York\",
+    rule={ frequency: \"daily\", interval: 1, count: 1 },
+    business_calendar={ exclude_weekends: true, holidays: [\"2024-06-19\"] }
+  )
+  -> First occurrence: 2024-06-17T09:00:00 (Monday) -- the next business day.
+
+Tips
+----
+- Set start_local to the day *after* the reference date if you want \"next\"
+  business day (not including the reference date itself).
+- Increase `count` to get multiple upcoming business days at once.
+- Add country-specific holidays to the holidays list for accurate results.
+- Use diff_instants between now and the result to compute how many calendar
+  days away the next business day is.
+";
+}
 
 #[derive(Clone)]
 struct ChronowServer {
@@ -433,6 +685,77 @@ impl ChronowServer {
     }
 }
 
+/// Build the static list of MCP resources exposed by this server.
+fn chronow_resources() -> Vec<Annotated<RawResource>> {
+    vec![
+        RawResource {
+            uri: resources::DISAMBIGUATION_URI.into(),
+            name: "disambiguation-policies".into(),
+            title: Some("Disambiguation Policies".into()),
+            description: Some(
+                "Description of all disambiguation policies (compatible, earlier, later, reject) with when to use each."
+                    .into(),
+            ),
+            mime_type: Some("text/plain".into()),
+            size: None,
+            icons: None,
+            meta: None,
+        }
+        .no_annotation(),
+        RawResource {
+            uri: resources::TIMEZONE_CONVERSION_URI.into(),
+            name: "workflow-timezone-conversion".into(),
+            title: Some("Workflow: Timezone Conversion".into()),
+            description: Some(
+                "Prompt template for converting times across timezones using Chronow tools.".into(),
+            ),
+            mime_type: Some("text/plain".into()),
+            size: None,
+            icons: None,
+            meta: None,
+        }
+        .no_annotation(),
+        RawResource {
+            uri: resources::SCHEDULE_MEETING_URI.into(),
+            name: "workflow-schedule-meeting".into(),
+            title: Some("Workflow: Schedule Meeting".into()),
+            description: Some(
+                "Prompt template for scheduling meetings across timezones using Chronow tools."
+                    .into(),
+            ),
+            mime_type: Some("text/plain".into()),
+            size: None,
+            icons: None,
+            meta: None,
+        }
+        .no_annotation(),
+        RawResource {
+            uri: resources::NEXT_BUSINESS_DAY_URI.into(),
+            name: "workflow-next-business-day".into(),
+            title: Some("Workflow: Next Business Day".into()),
+            description: Some(
+                "Prompt template for finding the next business day using Chronow tools.".into(),
+            ),
+            mime_type: Some("text/plain".into()),
+            size: None,
+            icons: None,
+            meta: None,
+        }
+        .no_annotation(),
+    ]
+}
+
+/// Look up the text content for a given resource URI.
+fn resource_content_for_uri(uri: &str) -> Option<&'static str> {
+    match uri {
+        resources::DISAMBIGUATION_URI => Some(resources::DISAMBIGUATION_CONTENT),
+        resources::TIMEZONE_CONVERSION_URI => Some(resources::TIMEZONE_CONVERSION_CONTENT),
+        resources::SCHEDULE_MEETING_URI => Some(resources::SCHEDULE_MEETING_CONTENT),
+        resources::NEXT_BUSINESS_DAY_URI => Some(resources::NEXT_BUSINESS_DAY_CONTENT),
+        _ => None,
+    }
+}
+
 #[tool_handler]
 impl ServerHandler for ChronowServer {
     fn get_info(&self) -> ServerInfo {
@@ -448,10 +771,45 @@ impl ServerHandler for ChronowServer {
             },
             capabilities: ServerCapabilities {
                 tools: Some(ToolsCapability::default()),
+                resources: Some(ResourcesCapability::default()),
                 ..Default::default()
             },
             ..Default::default()
         }
+    }
+
+    fn list_resources(
+        &self,
+        _request: Option<PaginatedRequestParams>,
+        _context: RequestContext<RoleServer>,
+    ) -> impl std::future::Future<Output = Result<ListResourcesResult, McpError>> + Send + '_ {
+        std::future::ready(Ok(ListResourcesResult {
+            resources: chronow_resources(),
+            next_cursor: None,
+            meta: None,
+        }))
+    }
+
+    fn read_resource(
+        &self,
+        request: ReadResourceRequestParams,
+        _context: RequestContext<RoleServer>,
+    ) -> impl std::future::Future<Output = Result<ReadResourceResult, McpError>> + Send + '_ {
+        let result = match resource_content_for_uri(&request.uri) {
+            Some(text) => Ok(ReadResourceResult {
+                contents: vec![ResourceContents::TextResourceContents {
+                    uri: request.uri,
+                    mime_type: Some("text/plain".into()),
+                    text: text.into(),
+                    meta: None,
+                }],
+            }),
+            None => Err(McpError::resource_not_found(
+                format!("unknown resource URI: {}", request.uri),
+                None,
+            )),
+        };
+        std::future::ready(result)
     }
 }
 
@@ -590,5 +948,106 @@ mod tests {
         assert!(is_error(&result));
         let text = first_text(&result);
         assert!(text.contains("invalid_zone"), "got: {text}");
+    }
+
+    // ================================================================== //
+    // Resource tests
+    // ================================================================== //
+
+    // ------------------------------------------------------------------ //
+    // 7. list_resources returns all four resources.
+    // ------------------------------------------------------------------ //
+    #[test]
+    fn list_resources_returns_all() {
+        let resources = chronow_resources();
+        assert_eq!(resources.len(), 4, "expected 4 resources");
+
+        let uris: Vec<&str> = resources.iter().map(|r| r.raw.uri.as_str()).collect();
+        assert!(uris.contains(&"chronow://policies/disambiguation"));
+        assert!(uris.contains(&"chronow://workflows/timezone-conversion"));
+        assert!(uris.contains(&"chronow://workflows/schedule-meeting"));
+        assert!(uris.contains(&"chronow://workflows/next-business-day"));
+
+        // All should have text/plain mime type
+        for r in &resources {
+            assert_eq!(
+                r.raw.mime_type.as_deref(),
+                Some("text/plain"),
+                "resource {} should be text/plain",
+                r.raw.uri
+            );
+        }
+    }
+
+    // ------------------------------------------------------------------ //
+    // 8. read_resource returns content for each known URI.
+    // ------------------------------------------------------------------ //
+    #[test]
+    fn read_resource_disambiguation() {
+        let content = resource_content_for_uri("chronow://policies/disambiguation");
+        assert!(content.is_some(), "disambiguation resource should exist");
+        let text = content.unwrap();
+        assert!(text.contains("compatible"), "should describe compatible policy");
+        assert!(text.contains("earlier"), "should describe earlier policy");
+        assert!(text.contains("later"), "should describe later policy");
+        assert!(text.contains("reject"), "should describe reject policy");
+    }
+
+    #[test]
+    fn read_resource_timezone_conversion() {
+        let content = resource_content_for_uri("chronow://workflows/timezone-conversion");
+        assert!(content.is_some(), "timezone-conversion resource should exist");
+        let text = content.unwrap();
+        assert!(text.contains("resolve_local"), "should reference resolve_local tool");
+        assert!(text.contains("format_instant"), "should reference format_instant tool");
+    }
+
+    #[test]
+    fn read_resource_schedule_meeting() {
+        let content = resource_content_for_uri("chronow://workflows/schedule-meeting");
+        assert!(content.is_some(), "schedule-meeting resource should exist");
+        let text = content.unwrap();
+        assert!(text.contains("resolve_local"), "should reference resolve_local tool");
+        assert!(text.contains("format_instant"), "should reference format_instant tool");
+        assert!(text.contains("diff_instants"), "should reference diff_instants tool");
+    }
+
+    #[test]
+    fn read_resource_next_business_day() {
+        let content = resource_content_for_uri("chronow://workflows/next-business-day");
+        assert!(content.is_some(), "next-business-day resource should exist");
+        let text = content.unwrap();
+        assert!(text.contains("recurrence_preview"), "should reference recurrence_preview tool");
+        assert!(text.contains("exclude_weekends"), "should mention weekend exclusion");
+        assert!(text.contains("holidays"), "should mention holidays");
+    }
+
+    // ------------------------------------------------------------------ //
+    // 9. read_resource returns None for unknown URIs.
+    // ------------------------------------------------------------------ //
+    #[test]
+    fn read_resource_unknown_uri() {
+        let content = resource_content_for_uri("chronow://nonexistent/thing");
+        assert!(content.is_none(), "unknown URI should return None");
+    }
+
+    // ------------------------------------------------------------------ //
+    // 10. All resources have non-empty names, titles, and descriptions.
+    // ------------------------------------------------------------------ //
+    #[test]
+    fn resources_have_metadata() {
+        for r in chronow_resources() {
+            assert!(!r.raw.name.is_empty(), "resource name should not be empty");
+            assert!(
+                r.raw.title.is_some() && !r.raw.title.as_ref().unwrap().is_empty(),
+                "resource {} should have a non-empty title",
+                r.raw.uri
+            );
+            assert!(
+                r.raw.description.is_some() && !r.raw.description.as_ref().unwrap().is_empty(),
+                "resource {} should have a non-empty description",
+                r.raw.uri
+            );
+        }
     }
 }

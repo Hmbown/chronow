@@ -7,6 +7,7 @@ use regex::Regex;
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 use std::collections::HashSet;
+use std::sync::LazyLock;
 #[cfg(feature = "wasm")]
 use wasm_bindgen::prelude::*;
 
@@ -119,6 +120,8 @@ pub enum ArithmeticMode {
 #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum SnapUnit {
+    /// Snap to the boundary of an hour.
+    Hour,
     /// Snap to the boundary of a day.
     Day,
     /// Snap to the boundary of a week.
@@ -668,35 +671,47 @@ fn op_normalize_intent(
     let _ = parse_zone(default_zone)?;
     let raw = input.trim();
 
-    let tomorrow_re = Regex::new(
-        r"(?i)^tomorrow at (?P<time>\d{1,2}:\d{2})(?: in (?P<zone>[A-Za-z0-9_./+-]+))?$",
-    )
-    .map_err(|e| EngineError::InvalidRequest(e.to_string()))?;
+    static TOMORROW_RE: LazyLock<Regex> = LazyLock::new(|| {
+        Regex::new(
+            r"(?i)^tomorrow at (?P<time>\d{1,2}:\d{2})(?: in (?P<zone>[A-Za-z0-9_./+-]+))?$",
+        )
+        .unwrap()
+    });
 
-    let next_re = Regex::new(r"(?i)^next (?P<weekday>monday|tuesday|wednesday|thursday|friday|saturday|sunday) at (?P<time>\d{1,2}:\d{2})(?: in (?P<zone>[A-Za-z0-9_./+-]+))?$")
-        .map_err(|e| EngineError::InvalidRequest(e.to_string()))?;
+    static NEXT_RE: LazyLock<Regex> = LazyLock::new(|| {
+        Regex::new(r"(?i)^next (?P<weekday>monday|tuesday|wednesday|thursday|friday|saturday|sunday) at (?P<time>\d{1,2}:\d{2})(?: in (?P<zone>[A-Za-z0-9_./+-]+))?$")
+            .unwrap()
+    });
 
-    let in_days_re = Regex::new(
-        r"(?i)^in (?P<days>\d+) days? at (?P<time>\d{1,2}:\d{2})(?: in (?P<zone>[A-Za-z0-9_./+-]+))?$",
-    )
-    .map_err(|e| EngineError::InvalidRequest(e.to_string()))?;
+    static IN_DAYS_RE: LazyLock<Regex> = LazyLock::new(|| {
+        Regex::new(
+            r"(?i)^in (?P<days>\d+) days? at (?P<time>\d{1,2}:\d{2})(?: in (?P<zone>[A-Za-z0-9_./+-]+))?$",
+        )
+        .unwrap()
+    });
 
-    let on_date_re = Regex::new(
-        r"(?i)^on (?P<date>\d{4}-\d{2}-\d{2}) at (?P<time>\d{1,2}:\d{2})(?: in (?P<zone>[A-Za-z0-9_./+-]+))?$",
-    )
-    .map_err(|e| EngineError::InvalidRequest(e.to_string()))?;
+    static ON_DATE_RE: LazyLock<Regex> = LazyLock::new(|| {
+        Regex::new(
+            r"(?i)^on (?P<date>\d{4}-\d{2}-\d{2}) at (?P<time>\d{1,2}:\d{2})(?: in (?P<zone>[A-Za-z0-9_./+-]+))?$",
+        )
+        .unwrap()
+    });
 
-    let every_weekday_re = Regex::new(
-        r"(?i)^every weekday at (?P<time>\d{1,2}:\d{2})(?: in (?P<zone>[A-Za-z0-9_./+-]+))?(?: for (?P<count>\d+) occurrences?)?$",
-    )
-    .map_err(|e| EngineError::InvalidRequest(e.to_string()))?;
+    static EVERY_WEEKDAY_RE: LazyLock<Regex> = LazyLock::new(|| {
+        Regex::new(
+            r"(?i)^every weekday at (?P<time>\d{1,2}:\d{2})(?: in (?P<zone>[A-Za-z0-9_./+-]+))?(?: for (?P<count>\d+) occurrences?)?$",
+        )
+        .unwrap()
+    });
 
-    let every_day_re = Regex::new(
-        r"(?i)^every (?P<weekday>monday|tuesday|wednesday|thursday|friday|saturday|sunday) at (?P<time>\d{1,2}:\d{2})(?: in (?P<zone>[A-Za-z0-9_./+-]+))?(?: for (?P<count>\d+) occurrences?)?$",
-    )
-    .map_err(|e| EngineError::InvalidRequest(e.to_string()))?;
+    static EVERY_DAY_RE: LazyLock<Regex> = LazyLock::new(|| {
+        Regex::new(
+            r"(?i)^every (?P<weekday>monday|tuesday|wednesday|thursday|friday|saturday|sunday) at (?P<time>\d{1,2}:\d{2})(?: in (?P<zone>[A-Za-z0-9_./+-]+))?(?: for (?P<count>\d+) occurrences?)?$",
+        )
+        .unwrap()
+    });
 
-    if let Some(caps) = tomorrow_re.captures(raw) {
+    if let Some(caps) = TOMORROW_RE.captures(raw) {
         let time = parse_hhmm(caps.name("time").expect("time capture exists").as_str())?;
         let zone = caps.name("zone").map(|m| m.as_str()).unwrap_or(default_zone);
         let _ = parse_zone(zone)?;
@@ -708,7 +723,7 @@ fn op_normalize_intent(
         return Ok(one_off_intent(raw, zone, target));
     }
 
-    if let Some(caps) = next_re.captures(raw) {
+    if let Some(caps) = NEXT_RE.captures(raw) {
         let time = parse_hhmm(caps.name("time").expect("time capture exists").as_str())?;
         let zone = caps.name("zone").map(|m| m.as_str()).unwrap_or(default_zone);
         let _ = parse_zone(zone)?;
@@ -727,7 +742,7 @@ fn op_normalize_intent(
         return Ok(one_off_intent(raw, zone, day.and_time(time)));
     }
 
-    if let Some(caps) = in_days_re.captures(raw) {
+    if let Some(caps) = IN_DAYS_RE.captures(raw) {
         let time = parse_hhmm(caps.name("time").expect("time capture exists").as_str())?;
         let zone = caps.name("zone").map(|m| m.as_str()).unwrap_or(default_zone);
         let _ = parse_zone(zone)?;
@@ -745,7 +760,7 @@ fn op_normalize_intent(
         return Ok(one_off_intent(raw, zone, day.and_time(time)));
     }
 
-    if let Some(caps) = on_date_re.captures(raw) {
+    if let Some(caps) = ON_DATE_RE.captures(raw) {
         let time = parse_hhmm(caps.name("time").expect("time capture exists").as_str())?;
         let zone = caps.name("zone").map(|m| m.as_str()).unwrap_or(default_zone);
         let _ = parse_zone(zone)?;
@@ -757,7 +772,7 @@ fn op_normalize_intent(
         return Ok(one_off_intent(raw, zone, date.and_time(time)));
     }
 
-    if let Some(caps) = every_weekday_re.captures(raw) {
+    if let Some(caps) = EVERY_WEEKDAY_RE.captures(raw) {
         let time = parse_hhmm(caps.name("time").expect("time capture exists").as_str())?;
         let zone = caps.name("zone").map(|m| m.as_str()).unwrap_or(default_zone);
         let _ = parse_zone(zone)?;
@@ -798,7 +813,7 @@ fn op_normalize_intent(
         }));
     }
 
-    if let Some(caps) = every_day_re.captures(raw) {
+    if let Some(caps) = EVERY_DAY_RE.captures(raw) {
         let time = parse_hhmm(caps.name("time").expect("time capture exists").as_str())?;
         let zone = caps.name("zone").map(|m| m.as_str()).unwrap_or(default_zone);
         let _ = parse_zone(zone)?;
@@ -923,6 +938,12 @@ fn op_snap_to(
     let local = utc.with_timezone(&tz).naive_local();
 
     let snapped = match (unit, edge) {
+        (SnapUnit::Hour, SnapEdge::Start) => {
+            local.date().and_hms_opt(local.hour(), 0, 0).unwrap()
+        }
+        (SnapUnit::Hour, SnapEdge::End) => {
+            local.date().and_hms_opt(local.hour(), 59, 59).unwrap()
+        }
         (SnapUnit::Day, SnapEdge::Start) => {
             local.date().and_hms_opt(0, 0, 0).unwrap()
         }
@@ -996,10 +1017,17 @@ fn op_snap_to(
 }
 
 fn op_parse_duration(input: &str) -> Result<Value, EngineError> {
+    // Support negative durations: a leading `-` negates all components.
+    let (negative, rest) = if let Some(stripped) = input.strip_prefix('-') {
+        (true, stripped)
+    } else {
+        (false, input)
+    };
+
     let re = Regex::new(r"^P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)W)?(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?)?$")
         .map_err(|e| EngineError::InvalidRequest(e.to_string()))?;
 
-    let caps = re.captures(input)
+    let caps = re.captures(rest)
         .ok_or_else(|| EngineError::InvalidDuration(format!("invalid ISO 8601 duration: {input}")))?;
 
     // Ensure not just "P" or "PT" with nothing
@@ -1019,13 +1047,15 @@ fn op_parse_duration(input: &str) -> Result<Value, EngineError> {
         caps.get(idx).map(|m| m.as_str().parse::<i64>().unwrap_or(0)).unwrap_or(0)
     };
 
-    let years = parse_group(1) as i32;
-    let months = parse_group(2) as i32;
-    let weeks = parse_group(3);
-    let days = parse_group(4);
-    let hours = parse_group(5);
-    let minutes = parse_group(6);
-    let seconds = parse_group(7);
+    let sign: i64 = if negative { -1 } else { 1 };
+
+    let years = (parse_group(1) * sign) as i32;
+    let months = (parse_group(2) * sign) as i32;
+    let weeks = parse_group(3) * sign;
+    let days = parse_group(4) * sign;
+    let hours = parse_group(5) * sign;
+    let minutes = parse_group(6) * sign;
+    let seconds = parse_group(7) * sign;
 
     Ok(json!({
         "years": years,
@@ -1039,18 +1069,34 @@ fn op_parse_duration(input: &str) -> Result<Value, EngineError> {
 }
 
 fn op_format_duration(duration: &DurationSpec) -> Result<Value, EngineError> {
-    let total_days = duration.days + duration.weeks * 7;
+    // Detect negative duration: if any field is negative, output with leading `-`
+    // and use absolute values for all fields.
+    let is_negative = duration.years < 0
+        || duration.months < 0
+        || duration.weeks < 0
+        || duration.days < 0
+        || duration.hours < 0
+        || duration.minutes < 0
+        || duration.seconds < 0;
+
+    let abs_years = duration.years.unsigned_abs();
+    let abs_months = duration.months.unsigned_abs();
+    let abs_total_days = (duration.days.abs() + duration.weeks.abs() * 7) as u64;
+    let abs_hours = duration.hours.unsigned_abs();
+    let abs_minutes = duration.minutes.unsigned_abs();
+    let abs_seconds = duration.seconds.unsigned_abs();
 
     let date_part = format!(
         "{}Y{}M{}D",
-        duration.years, duration.months, total_days
+        abs_years, abs_months, abs_total_days
     );
     let time_part = format!(
         "{}H{}M{}S",
-        duration.hours, duration.minutes, duration.seconds
+        abs_hours, abs_minutes, abs_seconds
     );
 
-    let formatted = format!("P{date_part}T{time_part}");
+    let prefix = if is_negative { "-" } else { "" };
+    let formatted = format!("{prefix}P{date_part}T{time_part}");
 
     Ok(json!({
         "formatted": formatted,
@@ -1715,6 +1761,81 @@ mod tests {
         }));
         assert!(resp.ok);
         assert_eq!(resp.value.unwrap()["formatted"], "P1Y2M3DT4H5M6S");
+    }
+
+    #[test]
+    fn parse_negative_duration() {
+        let resp = evaluate_request_value(json!({
+            "op": "parse_duration",
+            "input": "-P1DT2H",
+        }));
+        assert!(resp.ok);
+        let v = resp.value.unwrap();
+        assert_eq!(v["days"], -1);
+        assert_eq!(v["hours"], -2);
+        assert_eq!(v["years"], 0);
+        assert_eq!(v["months"], 0);
+        assert_eq!(v["minutes"], 0);
+        assert_eq!(v["seconds"], 0);
+    }
+
+    #[test]
+    fn parse_negative_duration_full() {
+        let resp = evaluate_request_value(json!({
+            "op": "parse_duration",
+            "input": "-P1Y2M3DT4H5M6S",
+        }));
+        assert!(resp.ok);
+        let v = resp.value.unwrap();
+        assert_eq!(v["years"], -1);
+        assert_eq!(v["months"], -2);
+        assert_eq!(v["days"], -3);
+        assert_eq!(v["hours"], -4);
+        assert_eq!(v["minutes"], -5);
+        assert_eq!(v["seconds"], -6);
+    }
+
+    #[test]
+    fn format_negative_duration() {
+        let resp = evaluate_request_value(json!({
+            "op": "format_duration",
+            "duration": {"years": -1, "months": -2, "days": -3, "hours": -4, "minutes": -5, "seconds": -6},
+        }));
+        assert!(resp.ok);
+        assert_eq!(resp.value.unwrap()["formatted"], "-P1Y2M3DT4H5M6S");
+    }
+
+    #[test]
+    fn negative_duration_round_trip() {
+        // Parse a negative duration, then format it, and verify it round-trips.
+        let parse_resp = evaluate_request_value(json!({
+            "op": "parse_duration",
+            "input": "-P1Y2M3DT4H5M6S",
+        }));
+        assert!(parse_resp.ok);
+        let parsed = parse_resp.value.unwrap();
+
+        let format_resp = evaluate_request_value(json!({
+            "op": "format_duration",
+            "duration": parsed,
+        }));
+        assert!(format_resp.ok);
+        assert_eq!(format_resp.value.unwrap()["formatted"], "-P1Y2M3DT4H5M6S");
+    }
+
+    #[test]
+    fn add_negative_duration_absolute() {
+        // Subtracting 1 hour from 2024-01-01T12:00:00Z should yield 11:00:00
+        let resp = evaluate_request_value(json!({
+            "op": "add_duration",
+            "start": "2024-01-01T12:00:00Z",
+            "zone": "UTC",
+            "duration": {"hours": -1},
+            "arithmetic": "absolute",
+        }));
+        assert!(resp.ok);
+        let v = resp.value.unwrap();
+        assert_eq!(v["result"]["instant"], "2024-01-01T11:00:00Z");
     }
 
     #[test]
