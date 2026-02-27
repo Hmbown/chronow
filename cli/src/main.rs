@@ -5,6 +5,21 @@ use chronow_core::{evaluate_request, evaluate_request_value, Disambiguation, Req
 use clap::{Parser, Subcommand};
 use serde_json::{json, Value};
 
+/// Print a JSON error to stderr and exit with code 1.
+fn exit_error(code: &str, message: &str) -> ! {
+    let err = serde_json::json!({
+        "error": { "code": code, "message": message }
+    });
+    eprintln!("{}", err);
+    std::process::exit(1);
+}
+
+/// Serialize a value to `serde_json::Value`, exiting with a JSON error on failure.
+fn to_json_value<T: serde::Serialize>(val: T) -> Value {
+    serde_json::to_value(val)
+        .unwrap_or_else(|e| exit_error("serialization_error", &e.to_string()))
+}
+
 #[derive(Parser, Debug)]
 #[command(name = "chronow")]
 #[command(about = "Deterministic temporal engine CLI")]
@@ -127,6 +142,28 @@ enum Commands {
         #[arg(long)]
         zone: Option<String>,
     },
+    /// Add a duration to an instant
+    AddDuration {
+        #[arg(long)]
+        instant: String,
+        #[arg(long)]
+        duration: String,
+        #[arg(long, default_value = "calendar")]
+        mode: String,
+        #[arg(long)]
+        zone: Option<String>,
+        #[arg(long, default_value = "compatible")]
+        disambiguation: String,
+    },
+    /// Parse natural language temporal intent
+    NormalizeIntent {
+        #[arg(long)]
+        text: String,
+        #[arg(long)]
+        ref_now: String,
+        #[arg(long)]
+        ref_zone: String,
+    },
     Eval {
         #[arg(long)]
         request: Option<String>,
@@ -145,7 +182,7 @@ fn main() {
     let output = match cli.command {
         Commands::Parse { input } => {
             let req = Request::ParseInstant { input };
-            serde_json::to_value(evaluate_request(req)).expect("serialize parse response")
+            to_json_value(evaluate_request(req))
         }
         Commands::Convert {
             input,
@@ -157,7 +194,7 @@ fn main() {
                 zone,
                 format,
             };
-            serde_json::to_value(evaluate_request(req)).expect("serialize format response")
+            to_json_value(evaluate_request(req))
         }
         Commands::Resolve {
             local,
@@ -169,7 +206,7 @@ fn main() {
                 zone,
                 disambiguation: parse_disambiguation(&disambiguation),
             };
-            serde_json::to_value(evaluate_request(req)).expect("serialize resolve response")
+            to_json_value(evaluate_request(req))
         }
         Commands::Recur {
             start_local,
@@ -217,7 +254,7 @@ fn main() {
                 "disambiguation": disambiguation,
             });
 
-            serde_json::to_value(evaluate_request_value(request)).expect("serialize recur response")
+            to_json_value(evaluate_request_value(request))
         }
         Commands::Diff { start, end, zone } => {
             let request = json!({
@@ -226,7 +263,7 @@ fn main() {
                 "end": end,
                 "zone": zone,
             });
-            serde_json::to_value(evaluate_request_value(request)).expect("serialize diff response")
+            to_json_value(evaluate_request_value(request))
         }
         Commands::Compare { a, b } => {
             let request = json!({
@@ -234,7 +271,7 @@ fn main() {
                 "a": a,
                 "b": b,
             });
-            serde_json::to_value(evaluate_request_value(request)).expect("serialize compare response")
+            to_json_value(evaluate_request_value(request))
         }
         Commands::Snap {
             instant,
@@ -251,14 +288,14 @@ fn main() {
                 "edge": edge,
                 "week_starts_on": week_starts_on,
             });
-            serde_json::to_value(evaluate_request_value(request)).expect("serialize snap response")
+            to_json_value(evaluate_request_value(request))
         }
         Commands::ParseDuration { input } => {
             let request = json!({
                 "op": "parse_duration",
                 "input": input,
             });
-            serde_json::to_value(evaluate_request_value(request)).expect("serialize parse-duration response")
+            to_json_value(evaluate_request_value(request))
         }
         Commands::FormatDuration {
             years,
@@ -281,7 +318,7 @@ fn main() {
                     "seconds": seconds,
                 },
             });
-            serde_json::to_value(evaluate_request_value(request)).expect("serialize format-duration response")
+            to_json_value(evaluate_request_value(request))
         }
         Commands::IntervalCheck {
             a_start,
@@ -296,7 +333,7 @@ fn main() {
                 "interval_b": {"start": b_start, "end": b_end},
                 "mode": mode,
             });
-            serde_json::to_value(evaluate_request_value(request)).expect("serialize interval-check response")
+            to_json_value(evaluate_request_value(request))
         }
         Commands::ZoneInfo { zone, at } => {
             let mut request = json!({
@@ -306,7 +343,7 @@ fn main() {
             if let Some(at_val) = at {
                 request["at"] = json!(at_val);
             }
-            serde_json::to_value(evaluate_request_value(request)).expect("serialize zone-info response")
+            to_json_value(evaluate_request_value(request))
         }
         Commands::ListZones { region_filter } => {
             let mut request = json!({
@@ -315,7 +352,7 @@ fn main() {
             if let Some(filter) = region_filter {
                 request["region_filter"] = json!(filter);
             }
-            serde_json::to_value(evaluate_request_value(request)).expect("serialize list-zones response")
+            to_json_value(evaluate_request_value(request))
         }
         Commands::Now { zone } => {
             let mut request = json!({
@@ -324,48 +361,157 @@ fn main() {
             if let Some(z) = zone {
                 request["zone"] = json!(z);
             }
-            serde_json::to_value(evaluate_request_value(request)).expect("serialize now response")
+            to_json_value(evaluate_request_value(request))
+        }
+        Commands::AddDuration {
+            instant,
+            duration,
+            mode,
+            zone,
+            disambiguation,
+        } => {
+            // First, parse the ISO duration string into component fields
+            let parse_resp = evaluate_request_value(json!({
+                "op": "parse_duration",
+                "input": duration,
+            }));
+            if !parse_resp.ok {
+                // Duration parsing failed; surface the error directly
+                return println!(
+                    "{}",
+                    serde_json::to_string_pretty(&to_json_value(parse_resp))
+                        .unwrap_or_else(|e| exit_error("serialization_error", &e.to_string()))
+                );
+            }
+            let dur = parse_resp.value.unwrap_or_else(|| {
+                exit_error(
+                    "internal_error",
+                    "parse_duration returned ok but no value",
+                )
+            });
+
+            let zone_str = zone.unwrap_or_else(|| {
+                if mode == "calendar" {
+                    exit_error(
+                        "missing_argument",
+                        "--zone is required for calendar mode arithmetic",
+                    )
+                } else {
+                    "UTC".to_string()
+                }
+            });
+
+            let request = json!({
+                "op": "add_duration",
+                "start": instant,
+                "zone": zone_str,
+                "duration": {
+                    "years": dur["years"],
+                    "months": dur["months"],
+                    "weeks": dur["weeks"],
+                    "days": dur["days"],
+                    "hours": dur["hours"],
+                    "minutes": dur["minutes"],
+                    "seconds": dur["seconds"],
+                },
+                "arithmetic": mode,
+                "disambiguation": disambiguation,
+            });
+            to_json_value(evaluate_request_value(request))
+        }
+        Commands::NormalizeIntent {
+            text,
+            ref_now,
+            ref_zone,
+        } => {
+            let request = json!({
+                "op": "normalize_intent",
+                "input": text,
+                "reference_local": ref_now,
+                "default_zone": ref_zone,
+            });
+            to_json_value(evaluate_request_value(request))
         }
         Commands::Eval {
             request,
             request_file,
         } => {
             let req_json = if let Some(raw) = request {
-                serde_json::from_str::<Value>(&raw).expect("--request must be valid JSON")
+                serde_json::from_str::<Value>(&raw).unwrap_or_else(|e| {
+                    exit_error("invalid_json", &format!("--request is not valid JSON: {}", e))
+                })
             } else if let Some(path) = request_file {
-                let content = fs::read_to_string(path).expect("read request file");
-                serde_json::from_str::<Value>(&content).expect("request file must be valid JSON")
+                let content = fs::read_to_string(&path).unwrap_or_else(|e| {
+                    exit_error(
+                        "io_error",
+                        &format!("failed to read request file '{}': {}", path.display(), e),
+                    )
+                });
+                serde_json::from_str::<Value>(&content).unwrap_or_else(|e| {
+                    exit_error(
+                        "invalid_json",
+                        &format!("request file is not valid JSON: {}", e),
+                    )
+                })
             } else {
-                panic!("provide --request or --request-file");
+                exit_error(
+                    "missing_argument",
+                    "provide --request or --request-file",
+                );
             };
 
-            serde_json::to_value(evaluate_request_value(req_json)).expect("serialize eval response")
+            to_json_value(evaluate_request_value(req_json))
         }
         Commands::EvalCorpus { cases_file } => {
-            let content = fs::read_to_string(cases_file).expect("read cases file");
-            let parsed: Value = serde_json::from_str(&content).expect("valid cases JSON");
+            let content = fs::read_to_string(&cases_file).unwrap_or_else(|e| {
+                exit_error(
+                    "io_error",
+                    &format!("failed to read cases file '{}': {}", cases_file.display(), e),
+                )
+            });
+            let parsed: Value = serde_json::from_str(&content).unwrap_or_else(|e| {
+                exit_error("invalid_json", &format!("cases file is not valid JSON: {}", e))
+            });
 
             let cases = if parsed.is_array() {
-                parsed.as_array().expect("cases array").clone()
+                parsed.as_array().unwrap().clone()
             } else {
                 parsed
                     .get("cases")
                     .and_then(Value::as_array)
-                    .expect("expected array or object with cases field")
-                    .clone()
+                    .cloned()
+                    .unwrap_or_else(|| {
+                        exit_error(
+                            "invalid_format",
+                            "cases file must be a JSON array or an object with a \"cases\" field",
+                        )
+                    })
             };
 
             let results: Vec<Value> = cases
                 .iter()
-                .map(|case| {
+                .enumerate()
+                .map(|(i, case)| {
                     let id = case
                         .get("id")
                         .and_then(Value::as_str)
-                        .expect("case id")
+                        .unwrap_or_else(|| {
+                            exit_error(
+                                "invalid_format",
+                                &format!("case at index {} is missing a string \"id\" field", i),
+                            )
+                        })
                         .to_string();
-                    let request = case.get("request").expect("case request").clone();
-                    let response = serde_json::to_value(evaluate_request_value(request))
-                        .expect("serialize corpus response");
+                    let request = case
+                        .get("request")
+                        .cloned()
+                        .unwrap_or_else(|| {
+                            exit_error(
+                                "invalid_format",
+                                &format!("case '{}' (index {}) is missing a \"request\" field", id, i),
+                            )
+                        });
+                    let response = to_json_value(evaluate_request_value(request));
                     json!({
                         "id": id,
                         "response": response,
@@ -380,10 +526,9 @@ fn main() {
         }
     };
 
-    println!(
-        "{}",
-        serde_json::to_string_pretty(&output).expect("serialize final output")
-    );
+    let output_str = serde_json::to_string_pretty(&output)
+        .unwrap_or_else(|e| exit_error("serialization_error", &e.to_string()));
+    println!("{}", output_str);
 }
 
 fn parse_disambiguation(value: &str) -> Disambiguation {

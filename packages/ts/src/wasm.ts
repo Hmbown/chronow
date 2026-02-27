@@ -5,10 +5,9 @@ export type WasmEvaluator = {
 };
 
 export async function loadWasmEvaluator(): Promise<WasmEvaluator> {
-  // WASM artifact is generated via wasm-pack into packages/ts/wasm/pkg.
-  const specifier = "../wasm/pkg/chronow_wasm.js";
-  const mod: any = await import(specifier);
-  await mod.default();
+  // WASM artifact is generated via:
+  //   wasm-pack build crates/core --target nodejs --out-dir ../../packages/ts/wasm
+  const mod: any = await import(/* webpackIgnore: true */ "../wasm/chronow_core.js");
   return mod as WasmEvaluator;
 }
 
