@@ -1,0 +1,23 @@
+[package]
+name = "chronow-core"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[lib]
+name = "chronow_core"
+path = "src/lib.rs"
+crate-type = ["rlib", "cdylib"]
+
+[dependencies]
+chrono.workspace = true
+chrono-tz.workspace = true
+regex.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+wasm-bindgen = { version = "0.2.105", optional = true }
+
+[features]
+default = []
+wasm = ["dep:wasm-bindgen"]

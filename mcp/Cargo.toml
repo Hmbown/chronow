@@ -1,0 +1,18 @@
+[package]
+name = "chronow-mcp"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[[bin]]
+name = "chronow-mcp"
+path = "src/main.rs"
+
+[dependencies]
+anyhow = "1"
+chronow-core = { path = "../crates/core" }
+rmcp.workspace = true
+schemars.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+tokio.workspace = true

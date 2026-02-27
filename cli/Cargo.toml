@@ -1,0 +1,14 @@
+[package]
+name = "chronow-cli"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[[bin]]
+name = "chronow"
+path = "src/main.rs"
+
+[dependencies]
+clap.workspace = true
+serde_json.workspace = true
+chronow-core = { path = "../crates/core" }

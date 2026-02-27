@@ -1,0 +1,3056 @@
+{
+  "cases": [
+    {
+      "category": "parse_instant",
+      "description": "Parse canonical ISO/RFC3339 input '2024-01-01T00:00:00Z'",
+      "expected": {
+        "ok": true,
+        "value": {
+          "epoch_millis": 1704067200000,
+          "epoch_seconds": 1704067200,
+          "instant": "2024-01-01T00:00:00Z"
+        }
+      },
+      "id": "iso.0001",
+      "request": {
+        "input": "2024-01-01T00:00:00Z",
+        "op": "parse_instant"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO parsing, timezone offsets, invalid date handling, DST gap compatibility",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/parseISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "parse_instant",
+      "description": "Parse canonical ISO/RFC3339 input '2024-02-29T23:59:59Z'",
+      "expected": {
+        "ok": true,
+        "value": {
+          "epoch_millis": 1709251199000,
+          "epoch_seconds": 1709251199,
+          "instant": "2024-02-29T23:59:59Z"
+        }
+      },
+      "id": "iso.0002",
+      "request": {
+        "input": "2024-02-29T23:59:59Z",
+        "op": "parse_instant"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO parsing, timezone offsets, invalid date handling, DST gap compatibility",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/parseISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "parse_instant",
+      "description": "Parse canonical ISO/RFC3339 input '2019-03-03T19:00:52+14:00'",
+      "expected": {
+        "ok": true,
+        "value": {
+          "epoch_millis": 1551589252000,
+          "epoch_seconds": 1551589252,
+          "instant": "2019-03-03T05:00:52Z"
+        }
+      },
+      "id": "iso.0003",
+      "request": {
+        "input": "2019-03-03T19:00:52+14:00",
+        "op": "parse_instant"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO parsing, timezone offsets, invalid date handling, DST gap compatibility",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/parseISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "parse_instant",
+      "description": "Parse canonical ISO/RFC3339 input '2019-03-03T19:00:52-11:00'",
+      "expected": {
+        "ok": true,
+        "value": {
+          "epoch_millis": 1551679252000,
+          "epoch_seconds": 1551679252,
+          "instant": "2019-03-04T06:00:52Z"
+        }
+      },
+      "id": "iso.0004",
+      "request": {
+        "input": "2019-03-03T19:00:52-11:00",
+        "op": "parse_instant"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO parsing, timezone offsets, invalid date handling, DST gap compatibility",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/parseISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "parse_instant",
+      "description": "Parse canonical ISO/RFC3339 input '2024-09-17'",
+      "expected": {
+        "ok": true,
+        "value": {
+          "epoch_millis": 1726531200000,
+          "epoch_seconds": 1726531200,
+          "instant": "2024-09-17T00:00:00Z"
+        }
+      },
+      "id": "iso.0005",
+      "request": {
+        "input": "2024-09-17",
+        "op": "parse_instant"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO parsing, timezone offsets, invalid date handling, DST gap compatibility",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/parseISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "parse_instant",
+      "description": "Parse canonical ISO/RFC3339 input '2024-09-17T10:15:30'",
+      "expected": {
+        "ok": true,
+        "value": {
+          "epoch_millis": 1726568130000,
+          "epoch_seconds": 1726568130,
+          "instant": "2024-09-17T10:15:30Z"
+        }
+      },
+      "id": "iso.0006",
+      "request": {
+        "input": "2024-09-17T10:15:30",
+        "op": "parse_instant"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO parsing, timezone offsets, invalid date handling, DST gap compatibility",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/parseISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "parse_instant",
+      "description": "Parse canonical ISO/RFC3339 input '2024-13-01T00:00:00Z'",
+      "expected": {
+        "error": {
+          "code": "invalid_datetime",
+          "message": "unable to parse instant: 2024-13-01T00:00:00Z"
+        },
+        "ok": false
+      },
+      "id": "iso.0007",
+      "request": {
+        "input": "2024-13-01T00:00:00Z",
+        "op": "parse_instant"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO parsing, timezone offsets, invalid date handling, DST gap compatibility",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/parseISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "parse_instant",
+      "description": "Parse canonical ISO/RFC3339 input 'not-a-date'",
+      "expected": {
+        "error": {
+          "code": "invalid_datetime",
+          "message": "unable to parse instant: not-a-date"
+        },
+        "ok": false
+      },
+      "id": "iso.0008",
+      "request": {
+        "input": "not-a-date",
+        "op": "parse_instant"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO parsing, timezone offsets, invalid date handling, DST gap compatibility",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/parseISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "parse_instant",
+      "description": "Parse canonical ISO/RFC3339 input '2024-03-10T02:00:00'",
+      "expected": {
+        "ok": true,
+        "value": {
+          "epoch_millis": 1710036000000,
+          "epoch_seconds": 1710036000,
+          "instant": "2024-03-10T02:00:00Z"
+        }
+      },
+      "id": "iso.0009",
+      "request": {
+        "input": "2024-03-10T02:00:00",
+        "op": "parse_instant"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO parsing, timezone offsets, invalid date handling, DST gap compatibility",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/parseISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "parse_instant",
+      "description": "Parse canonical ISO/RFC3339 input '2024-11-03T01:30:00'",
+      "expected": {
+        "ok": true,
+        "value": {
+          "epoch_millis": 1730597400000,
+          "epoch_seconds": 1730597400,
+          "instant": "2024-11-03T01:30:00Z"
+        }
+      },
+      "id": "iso.0010",
+      "request": {
+        "input": "2024-11-03T01:30:00",
+        "op": "parse_instant"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO parsing, timezone offsets, invalid date handling, DST gap compatibility",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/parseISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2024-04-10T00:00:00Z in America/New_York using extended",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "extended",
+          "formatted": "2024-04-09T20:00:00-04:00",
+          "input_instant": "2024-04-10T00:00:00Z",
+          "offset_seconds": -14400,
+          "zone": "America/New_York"
+        }
+      },
+      "id": "iso.0011",
+      "request": {
+        "format": "extended",
+        "instant": "2024-04-10T00:00:00Z",
+        "op": "format_instant",
+        "zone": "America/New_York"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2024-04-10T00:00:00Z in America/New_York using basic",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "basic",
+          "formatted": "20240409T200000-0400",
+          "input_instant": "2024-04-10T00:00:00Z",
+          "offset_seconds": -14400,
+          "zone": "America/New_York"
+        }
+      },
+      "id": "iso.0012",
+      "request": {
+        "format": "basic",
+        "instant": "2024-04-10T00:00:00Z",
+        "op": "format_instant",
+        "zone": "America/New_York"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2024-04-10T00:00:00Z in America/New_York using date",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "date",
+          "formatted": "2024-04-09",
+          "input_instant": "2024-04-10T00:00:00Z",
+          "offset_seconds": -14400,
+          "zone": "America/New_York"
+        }
+      },
+      "id": "iso.0013",
+      "request": {
+        "format": "date",
+        "instant": "2024-04-10T00:00:00Z",
+        "op": "format_instant",
+        "zone": "America/New_York"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2024-04-10T00:00:00Z in America/New_York using time",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "time",
+          "formatted": "20:00:00-04:00",
+          "input_instant": "2024-04-10T00:00:00Z",
+          "offset_seconds": -14400,
+          "zone": "America/New_York"
+        }
+      },
+      "id": "iso.0014",
+      "request": {
+        "format": "time",
+        "instant": "2024-04-10T00:00:00Z",
+        "op": "format_instant",
+        "zone": "America/New_York"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2024-04-10T00:00:00Z in Europe/London using extended",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "extended",
+          "formatted": "2024-04-10T01:00:00+01:00",
+          "input_instant": "2024-04-10T00:00:00Z",
+          "offset_seconds": 3600,
+          "zone": "Europe/London"
+        }
+      },
+      "id": "iso.0015",
+      "request": {
+        "format": "extended",
+        "instant": "2024-04-10T00:00:00Z",
+        "op": "format_instant",
+        "zone": "Europe/London"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2024-04-10T00:00:00Z in Europe/London using basic",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "basic",
+          "formatted": "20240410T010000+0100",
+          "input_instant": "2024-04-10T00:00:00Z",
+          "offset_seconds": 3600,
+          "zone": "Europe/London"
+        }
+      },
+      "id": "iso.0016",
+      "request": {
+        "format": "basic",
+        "instant": "2024-04-10T00:00:00Z",
+        "op": "format_instant",
+        "zone": "Europe/London"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2024-04-10T00:00:00Z in Europe/London using date",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "date",
+          "formatted": "2024-04-10",
+          "input_instant": "2024-04-10T00:00:00Z",
+          "offset_seconds": 3600,
+          "zone": "Europe/London"
+        }
+      },
+      "id": "iso.0017",
+      "request": {
+        "format": "date",
+        "instant": "2024-04-10T00:00:00Z",
+        "op": "format_instant",
+        "zone": "Europe/London"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2024-04-10T00:00:00Z in Europe/London using time",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "time",
+          "formatted": "01:00:00+01:00",
+          "input_instant": "2024-04-10T00:00:00Z",
+          "offset_seconds": 3600,
+          "zone": "Europe/London"
+        }
+      },
+      "id": "iso.0018",
+      "request": {
+        "format": "time",
+        "instant": "2024-04-10T00:00:00Z",
+        "op": "format_instant",
+        "zone": "Europe/London"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2024-04-10T00:00:00Z in Asia/Singapore using extended",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "extended",
+          "formatted": "2024-04-10T08:00:00+08:00",
+          "input_instant": "2024-04-10T00:00:00Z",
+          "offset_seconds": 28800,
+          "zone": "Asia/Singapore"
+        }
+      },
+      "id": "iso.0019",
+      "request": {
+        "format": "extended",
+        "instant": "2024-04-10T00:00:00Z",
+        "op": "format_instant",
+        "zone": "Asia/Singapore"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2024-04-10T00:00:00Z in Asia/Singapore using basic",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "basic",
+          "formatted": "20240410T080000+0800",
+          "input_instant": "2024-04-10T00:00:00Z",
+          "offset_seconds": 28800,
+          "zone": "Asia/Singapore"
+        }
+      },
+      "id": "iso.0020",
+      "request": {
+        "format": "basic",
+        "instant": "2024-04-10T00:00:00Z",
+        "op": "format_instant",
+        "zone": "Asia/Singapore"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2024-04-10T00:00:00Z in Asia/Singapore using date",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "date",
+          "formatted": "2024-04-10",
+          "input_instant": "2024-04-10T00:00:00Z",
+          "offset_seconds": 28800,
+          "zone": "Asia/Singapore"
+        }
+      },
+      "id": "iso.0021",
+      "request": {
+        "format": "date",
+        "instant": "2024-04-10T00:00:00Z",
+        "op": "format_instant",
+        "zone": "Asia/Singapore"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2024-04-10T00:00:00Z in Asia/Singapore using time",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "time",
+          "formatted": "08:00:00+08:00",
+          "input_instant": "2024-04-10T00:00:00Z",
+          "offset_seconds": 28800,
+          "zone": "Asia/Singapore"
+        }
+      },
+      "id": "iso.0022",
+      "request": {
+        "format": "time",
+        "instant": "2024-04-10T00:00:00Z",
+        "op": "format_instant",
+        "zone": "Asia/Singapore"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2024-04-10T00:00:00Z in Pacific/Auckland using extended",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "extended",
+          "formatted": "2024-04-10T12:00:00+12:00",
+          "input_instant": "2024-04-10T00:00:00Z",
+          "offset_seconds": 43200,
+          "zone": "Pacific/Auckland"
+        }
+      },
+      "id": "iso.0023",
+      "request": {
+        "format": "extended",
+        "instant": "2024-04-10T00:00:00Z",
+        "op": "format_instant",
+        "zone": "Pacific/Auckland"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2024-04-10T00:00:00Z in Pacific/Auckland using basic",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "basic",
+          "formatted": "20240410T120000+1200",
+          "input_instant": "2024-04-10T00:00:00Z",
+          "offset_seconds": 43200,
+          "zone": "Pacific/Auckland"
+        }
+      },
+      "id": "iso.0024",
+      "request": {
+        "format": "basic",
+        "instant": "2024-04-10T00:00:00Z",
+        "op": "format_instant",
+        "zone": "Pacific/Auckland"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2024-04-10T00:00:00Z in Pacific/Auckland using date",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "date",
+          "formatted": "2024-04-10",
+          "input_instant": "2024-04-10T00:00:00Z",
+          "offset_seconds": 43200,
+          "zone": "Pacific/Auckland"
+        }
+      },
+      "id": "iso.0025",
+      "request": {
+        "format": "date",
+        "instant": "2024-04-10T00:00:00Z",
+        "op": "format_instant",
+        "zone": "Pacific/Auckland"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2024-04-10T00:00:00Z in Pacific/Auckland using time",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "time",
+          "formatted": "12:00:00+12:00",
+          "input_instant": "2024-04-10T00:00:00Z",
+          "offset_seconds": 43200,
+          "zone": "Pacific/Auckland"
+        }
+      },
+      "id": "iso.0026",
+      "request": {
+        "format": "time",
+        "instant": "2024-04-10T00:00:00Z",
+        "op": "format_instant",
+        "zone": "Pacific/Auckland"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2024-04-10T00:00:00Z in Australia/Sydney using extended",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "extended",
+          "formatted": "2024-04-10T10:00:00+10:00",
+          "input_instant": "2024-04-10T00:00:00Z",
+          "offset_seconds": 36000,
+          "zone": "Australia/Sydney"
+        }
+      },
+      "id": "iso.0027",
+      "request": {
+        "format": "extended",
+        "instant": "2024-04-10T00:00:00Z",
+        "op": "format_instant",
+        "zone": "Australia/Sydney"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2024-04-10T00:00:00Z in Australia/Sydney using basic",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "basic",
+          "formatted": "20240410T100000+1000",
+          "input_instant": "2024-04-10T00:00:00Z",
+          "offset_seconds": 36000,
+          "zone": "Australia/Sydney"
+        }
+      },
+      "id": "iso.0028",
+      "request": {
+        "format": "basic",
+        "instant": "2024-04-10T00:00:00Z",
+        "op": "format_instant",
+        "zone": "Australia/Sydney"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2024-04-10T00:00:00Z in Australia/Sydney using date",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "date",
+          "formatted": "2024-04-10",
+          "input_instant": "2024-04-10T00:00:00Z",
+          "offset_seconds": 36000,
+          "zone": "Australia/Sydney"
+        }
+      },
+      "id": "iso.0029",
+      "request": {
+        "format": "date",
+        "instant": "2024-04-10T00:00:00Z",
+        "op": "format_instant",
+        "zone": "Australia/Sydney"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2024-04-10T00:00:00Z in Australia/Sydney using time",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "time",
+          "formatted": "10:00:00+10:00",
+          "input_instant": "2024-04-10T00:00:00Z",
+          "offset_seconds": 36000,
+          "zone": "Australia/Sydney"
+        }
+      },
+      "id": "iso.0030",
+      "request": {
+        "format": "time",
+        "instant": "2024-04-10T00:00:00Z",
+        "op": "format_instant",
+        "zone": "Australia/Sydney"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2024-09-17T10:00:00Z in America/New_York using extended",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "extended",
+          "formatted": "2024-09-17T06:00:00-04:00",
+          "input_instant": "2024-09-17T10:00:00Z",
+          "offset_seconds": -14400,
+          "zone": "America/New_York"
+        }
+      },
+      "id": "iso.0031",
+      "request": {
+        "format": "extended",
+        "instant": "2024-09-17T10:00:00Z",
+        "op": "format_instant",
+        "zone": "America/New_York"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2024-09-17T10:00:00Z in America/New_York using basic",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "basic",
+          "formatted": "20240917T060000-0400",
+          "input_instant": "2024-09-17T10:00:00Z",
+          "offset_seconds": -14400,
+          "zone": "America/New_York"
+        }
+      },
+      "id": "iso.0032",
+      "request": {
+        "format": "basic",
+        "instant": "2024-09-17T10:00:00Z",
+        "op": "format_instant",
+        "zone": "America/New_York"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2024-09-17T10:00:00Z in America/New_York using date",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "date",
+          "formatted": "2024-09-17",
+          "input_instant": "2024-09-17T10:00:00Z",
+          "offset_seconds": -14400,
+          "zone": "America/New_York"
+        }
+      },
+      "id": "iso.0033",
+      "request": {
+        "format": "date",
+        "instant": "2024-09-17T10:00:00Z",
+        "op": "format_instant",
+        "zone": "America/New_York"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2024-09-17T10:00:00Z in America/New_York using time",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "time",
+          "formatted": "06:00:00-04:00",
+          "input_instant": "2024-09-17T10:00:00Z",
+          "offset_seconds": -14400,
+          "zone": "America/New_York"
+        }
+      },
+      "id": "iso.0034",
+      "request": {
+        "format": "time",
+        "instant": "2024-09-17T10:00:00Z",
+        "op": "format_instant",
+        "zone": "America/New_York"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2024-09-17T10:00:00Z in Europe/London using extended",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "extended",
+          "formatted": "2024-09-17T11:00:00+01:00",
+          "input_instant": "2024-09-17T10:00:00Z",
+          "offset_seconds": 3600,
+          "zone": "Europe/London"
+        }
+      },
+      "id": "iso.0035",
+      "request": {
+        "format": "extended",
+        "instant": "2024-09-17T10:00:00Z",
+        "op": "format_instant",
+        "zone": "Europe/London"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2024-09-17T10:00:00Z in Europe/London using basic",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "basic",
+          "formatted": "20240917T110000+0100",
+          "input_instant": "2024-09-17T10:00:00Z",
+          "offset_seconds": 3600,
+          "zone": "Europe/London"
+        }
+      },
+      "id": "iso.0036",
+      "request": {
+        "format": "basic",
+        "instant": "2024-09-17T10:00:00Z",
+        "op": "format_instant",
+        "zone": "Europe/London"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2024-09-17T10:00:00Z in Europe/London using date",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "date",
+          "formatted": "2024-09-17",
+          "input_instant": "2024-09-17T10:00:00Z",
+          "offset_seconds": 3600,
+          "zone": "Europe/London"
+        }
+      },
+      "id": "iso.0037",
+      "request": {
+        "format": "date",
+        "instant": "2024-09-17T10:00:00Z",
+        "op": "format_instant",
+        "zone": "Europe/London"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2024-09-17T10:00:00Z in Europe/London using time",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "time",
+          "formatted": "11:00:00+01:00",
+          "input_instant": "2024-09-17T10:00:00Z",
+          "offset_seconds": 3600,
+          "zone": "Europe/London"
+        }
+      },
+      "id": "iso.0038",
+      "request": {
+        "format": "time",
+        "instant": "2024-09-17T10:00:00Z",
+        "op": "format_instant",
+        "zone": "Europe/London"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2024-09-17T10:00:00Z in Asia/Singapore using extended",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "extended",
+          "formatted": "2024-09-17T18:00:00+08:00",
+          "input_instant": "2024-09-17T10:00:00Z",
+          "offset_seconds": 28800,
+          "zone": "Asia/Singapore"
+        }
+      },
+      "id": "iso.0039",
+      "request": {
+        "format": "extended",
+        "instant": "2024-09-17T10:00:00Z",
+        "op": "format_instant",
+        "zone": "Asia/Singapore"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2024-09-17T10:00:00Z in Asia/Singapore using basic",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "basic",
+          "formatted": "20240917T180000+0800",
+          "input_instant": "2024-09-17T10:00:00Z",
+          "offset_seconds": 28800,
+          "zone": "Asia/Singapore"
+        }
+      },
+      "id": "iso.0040",
+      "request": {
+        "format": "basic",
+        "instant": "2024-09-17T10:00:00Z",
+        "op": "format_instant",
+        "zone": "Asia/Singapore"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2024-09-17T10:00:00Z in Asia/Singapore using date",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "date",
+          "formatted": "2024-09-17",
+          "input_instant": "2024-09-17T10:00:00Z",
+          "offset_seconds": 28800,
+          "zone": "Asia/Singapore"
+        }
+      },
+      "id": "iso.0041",
+      "request": {
+        "format": "date",
+        "instant": "2024-09-17T10:00:00Z",
+        "op": "format_instant",
+        "zone": "Asia/Singapore"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2024-09-17T10:00:00Z in Asia/Singapore using time",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "time",
+          "formatted": "18:00:00+08:00",
+          "input_instant": "2024-09-17T10:00:00Z",
+          "offset_seconds": 28800,
+          "zone": "Asia/Singapore"
+        }
+      },
+      "id": "iso.0042",
+      "request": {
+        "format": "time",
+        "instant": "2024-09-17T10:00:00Z",
+        "op": "format_instant",
+        "zone": "Asia/Singapore"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2024-09-17T10:00:00Z in Pacific/Auckland using extended",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "extended",
+          "formatted": "2024-09-17T22:00:00+12:00",
+          "input_instant": "2024-09-17T10:00:00Z",
+          "offset_seconds": 43200,
+          "zone": "Pacific/Auckland"
+        }
+      },
+      "id": "iso.0043",
+      "request": {
+        "format": "extended",
+        "instant": "2024-09-17T10:00:00Z",
+        "op": "format_instant",
+        "zone": "Pacific/Auckland"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2024-09-17T10:00:00Z in Pacific/Auckland using basic",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "basic",
+          "formatted": "20240917T220000+1200",
+          "input_instant": "2024-09-17T10:00:00Z",
+          "offset_seconds": 43200,
+          "zone": "Pacific/Auckland"
+        }
+      },
+      "id": "iso.0044",
+      "request": {
+        "format": "basic",
+        "instant": "2024-09-17T10:00:00Z",
+        "op": "format_instant",
+        "zone": "Pacific/Auckland"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2024-09-17T10:00:00Z in Pacific/Auckland using date",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "date",
+          "formatted": "2024-09-17",
+          "input_instant": "2024-09-17T10:00:00Z",
+          "offset_seconds": 43200,
+          "zone": "Pacific/Auckland"
+        }
+      },
+      "id": "iso.0045",
+      "request": {
+        "format": "date",
+        "instant": "2024-09-17T10:00:00Z",
+        "op": "format_instant",
+        "zone": "Pacific/Auckland"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2024-09-17T10:00:00Z in Pacific/Auckland using time",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "time",
+          "formatted": "22:00:00+12:00",
+          "input_instant": "2024-09-17T10:00:00Z",
+          "offset_seconds": 43200,
+          "zone": "Pacific/Auckland"
+        }
+      },
+      "id": "iso.0046",
+      "request": {
+        "format": "time",
+        "instant": "2024-09-17T10:00:00Z",
+        "op": "format_instant",
+        "zone": "Pacific/Auckland"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2024-09-17T10:00:00Z in Australia/Sydney using extended",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "extended",
+          "formatted": "2024-09-17T20:00:00+10:00",
+          "input_instant": "2024-09-17T10:00:00Z",
+          "offset_seconds": 36000,
+          "zone": "Australia/Sydney"
+        }
+      },
+      "id": "iso.0047",
+      "request": {
+        "format": "extended",
+        "instant": "2024-09-17T10:00:00Z",
+        "op": "format_instant",
+        "zone": "Australia/Sydney"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2024-09-17T10:00:00Z in Australia/Sydney using basic",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "basic",
+          "formatted": "20240917T200000+1000",
+          "input_instant": "2024-09-17T10:00:00Z",
+          "offset_seconds": 36000,
+          "zone": "Australia/Sydney"
+        }
+      },
+      "id": "iso.0048",
+      "request": {
+        "format": "basic",
+        "instant": "2024-09-17T10:00:00Z",
+        "op": "format_instant",
+        "zone": "Australia/Sydney"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2024-09-17T10:00:00Z in Australia/Sydney using date",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "date",
+          "formatted": "2024-09-17",
+          "input_instant": "2024-09-17T10:00:00Z",
+          "offset_seconds": 36000,
+          "zone": "Australia/Sydney"
+        }
+      },
+      "id": "iso.0049",
+      "request": {
+        "format": "date",
+        "instant": "2024-09-17T10:00:00Z",
+        "op": "format_instant",
+        "zone": "Australia/Sydney"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2024-09-17T10:00:00Z in Australia/Sydney using time",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "time",
+          "formatted": "20:00:00+10:00",
+          "input_instant": "2024-09-17T10:00:00Z",
+          "offset_seconds": 36000,
+          "zone": "Australia/Sydney"
+        }
+      },
+      "id": "iso.0050",
+      "request": {
+        "format": "time",
+        "instant": "2024-09-17T10:00:00Z",
+        "op": "format_instant",
+        "zone": "Australia/Sydney"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2019-03-03T19:00:52Z in America/New_York using extended",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "extended",
+          "formatted": "2019-03-03T14:00:52-05:00",
+          "input_instant": "2019-03-03T19:00:52Z",
+          "offset_seconds": -18000,
+          "zone": "America/New_York"
+        }
+      },
+      "id": "iso.0051",
+      "request": {
+        "format": "extended",
+        "instant": "2019-03-03T19:00:52Z",
+        "op": "format_instant",
+        "zone": "America/New_York"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2019-03-03T19:00:52Z in America/New_York using basic",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "basic",
+          "formatted": "20190303T140052-0500",
+          "input_instant": "2019-03-03T19:00:52Z",
+          "offset_seconds": -18000,
+          "zone": "America/New_York"
+        }
+      },
+      "id": "iso.0052",
+      "request": {
+        "format": "basic",
+        "instant": "2019-03-03T19:00:52Z",
+        "op": "format_instant",
+        "zone": "America/New_York"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2019-03-03T19:00:52Z in America/New_York using date",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "date",
+          "formatted": "2019-03-03",
+          "input_instant": "2019-03-03T19:00:52Z",
+          "offset_seconds": -18000,
+          "zone": "America/New_York"
+        }
+      },
+      "id": "iso.0053",
+      "request": {
+        "format": "date",
+        "instant": "2019-03-03T19:00:52Z",
+        "op": "format_instant",
+        "zone": "America/New_York"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2019-03-03T19:00:52Z in America/New_York using time",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "time",
+          "formatted": "14:00:52-05:00",
+          "input_instant": "2019-03-03T19:00:52Z",
+          "offset_seconds": -18000,
+          "zone": "America/New_York"
+        }
+      },
+      "id": "iso.0054",
+      "request": {
+        "format": "time",
+        "instant": "2019-03-03T19:00:52Z",
+        "op": "format_instant",
+        "zone": "America/New_York"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2019-03-03T19:00:52Z in Europe/London using extended",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "extended",
+          "formatted": "2019-03-03T19:00:52Z",
+          "input_instant": "2019-03-03T19:00:52Z",
+          "offset_seconds": 0,
+          "zone": "Europe/London"
+        }
+      },
+      "id": "iso.0055",
+      "request": {
+        "format": "extended",
+        "instant": "2019-03-03T19:00:52Z",
+        "op": "format_instant",
+        "zone": "Europe/London"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2019-03-03T19:00:52Z in Europe/London using basic",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "basic",
+          "formatted": "20190303T190052Z",
+          "input_instant": "2019-03-03T19:00:52Z",
+          "offset_seconds": 0,
+          "zone": "Europe/London"
+        }
+      },
+      "id": "iso.0056",
+      "request": {
+        "format": "basic",
+        "instant": "2019-03-03T19:00:52Z",
+        "op": "format_instant",
+        "zone": "Europe/London"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2019-03-03T19:00:52Z in Europe/London using date",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "date",
+          "formatted": "2019-03-03",
+          "input_instant": "2019-03-03T19:00:52Z",
+          "offset_seconds": 0,
+          "zone": "Europe/London"
+        }
+      },
+      "id": "iso.0057",
+      "request": {
+        "format": "date",
+        "instant": "2019-03-03T19:00:52Z",
+        "op": "format_instant",
+        "zone": "Europe/London"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2019-03-03T19:00:52Z in Europe/London using time",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "time",
+          "formatted": "19:00:52Z",
+          "input_instant": "2019-03-03T19:00:52Z",
+          "offset_seconds": 0,
+          "zone": "Europe/London"
+        }
+      },
+      "id": "iso.0058",
+      "request": {
+        "format": "time",
+        "instant": "2019-03-03T19:00:52Z",
+        "op": "format_instant",
+        "zone": "Europe/London"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2019-03-03T19:00:52Z in Asia/Singapore using extended",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "extended",
+          "formatted": "2019-03-04T03:00:52+08:00",
+          "input_instant": "2019-03-03T19:00:52Z",
+          "offset_seconds": 28800,
+          "zone": "Asia/Singapore"
+        }
+      },
+      "id": "iso.0059",
+      "request": {
+        "format": "extended",
+        "instant": "2019-03-03T19:00:52Z",
+        "op": "format_instant",
+        "zone": "Asia/Singapore"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2019-03-03T19:00:52Z in Asia/Singapore using basic",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "basic",
+          "formatted": "20190304T030052+0800",
+          "input_instant": "2019-03-03T19:00:52Z",
+          "offset_seconds": 28800,
+          "zone": "Asia/Singapore"
+        }
+      },
+      "id": "iso.0060",
+      "request": {
+        "format": "basic",
+        "instant": "2019-03-03T19:00:52Z",
+        "op": "format_instant",
+        "zone": "Asia/Singapore"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2019-03-03T19:00:52Z in Asia/Singapore using date",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "date",
+          "formatted": "2019-03-04",
+          "input_instant": "2019-03-03T19:00:52Z",
+          "offset_seconds": 28800,
+          "zone": "Asia/Singapore"
+        }
+      },
+      "id": "iso.0061",
+      "request": {
+        "format": "date",
+        "instant": "2019-03-03T19:00:52Z",
+        "op": "format_instant",
+        "zone": "Asia/Singapore"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2019-03-03T19:00:52Z in Asia/Singapore using time",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "time",
+          "formatted": "03:00:52+08:00",
+          "input_instant": "2019-03-03T19:00:52Z",
+          "offset_seconds": 28800,
+          "zone": "Asia/Singapore"
+        }
+      },
+      "id": "iso.0062",
+      "request": {
+        "format": "time",
+        "instant": "2019-03-03T19:00:52Z",
+        "op": "format_instant",
+        "zone": "Asia/Singapore"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2019-03-03T19:00:52Z in Pacific/Auckland using extended",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "extended",
+          "formatted": "2019-03-04T08:00:52+13:00",
+          "input_instant": "2019-03-03T19:00:52Z",
+          "offset_seconds": 46800,
+          "zone": "Pacific/Auckland"
+        }
+      },
+      "id": "iso.0063",
+      "request": {
+        "format": "extended",
+        "instant": "2019-03-03T19:00:52Z",
+        "op": "format_instant",
+        "zone": "Pacific/Auckland"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2019-03-03T19:00:52Z in Pacific/Auckland using basic",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "basic",
+          "formatted": "20190304T080052+1300",
+          "input_instant": "2019-03-03T19:00:52Z",
+          "offset_seconds": 46800,
+          "zone": "Pacific/Auckland"
+        }
+      },
+      "id": "iso.0064",
+      "request": {
+        "format": "basic",
+        "instant": "2019-03-03T19:00:52Z",
+        "op": "format_instant",
+        "zone": "Pacific/Auckland"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2019-03-03T19:00:52Z in Pacific/Auckland using date",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "date",
+          "formatted": "2019-03-04",
+          "input_instant": "2019-03-03T19:00:52Z",
+          "offset_seconds": 46800,
+          "zone": "Pacific/Auckland"
+        }
+      },
+      "id": "iso.0065",
+      "request": {
+        "format": "date",
+        "instant": "2019-03-03T19:00:52Z",
+        "op": "format_instant",
+        "zone": "Pacific/Auckland"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2019-03-03T19:00:52Z in Pacific/Auckland using time",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "time",
+          "formatted": "08:00:52+13:00",
+          "input_instant": "2019-03-03T19:00:52Z",
+          "offset_seconds": 46800,
+          "zone": "Pacific/Auckland"
+        }
+      },
+      "id": "iso.0066",
+      "request": {
+        "format": "time",
+        "instant": "2019-03-03T19:00:52Z",
+        "op": "format_instant",
+        "zone": "Pacific/Auckland"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2019-03-03T19:00:52Z in Australia/Sydney using extended",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "extended",
+          "formatted": "2019-03-04T06:00:52+11:00",
+          "input_instant": "2019-03-03T19:00:52Z",
+          "offset_seconds": 39600,
+          "zone": "Australia/Sydney"
+        }
+      },
+      "id": "iso.0067",
+      "request": {
+        "format": "extended",
+        "instant": "2019-03-03T19:00:52Z",
+        "op": "format_instant",
+        "zone": "Australia/Sydney"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2019-03-03T19:00:52Z in Australia/Sydney using basic",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "basic",
+          "formatted": "20190304T060052+1100",
+          "input_instant": "2019-03-03T19:00:52Z",
+          "offset_seconds": 39600,
+          "zone": "Australia/Sydney"
+        }
+      },
+      "id": "iso.0068",
+      "request": {
+        "format": "basic",
+        "instant": "2019-03-03T19:00:52Z",
+        "op": "format_instant",
+        "zone": "Australia/Sydney"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2019-03-03T19:00:52Z in Australia/Sydney using date",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "date",
+          "formatted": "2019-03-04",
+          "input_instant": "2019-03-03T19:00:52Z",
+          "offset_seconds": 39600,
+          "zone": "Australia/Sydney"
+        }
+      },
+      "id": "iso.0069",
+      "request": {
+        "format": "date",
+        "instant": "2019-03-03T19:00:52Z",
+        "op": "format_instant",
+        "zone": "Australia/Sydney"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2019-03-03T19:00:52Z in Australia/Sydney using time",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "time",
+          "formatted": "06:00:52+11:00",
+          "input_instant": "2019-03-03T19:00:52Z",
+          "offset_seconds": 39600,
+          "zone": "Australia/Sydney"
+        }
+      },
+      "id": "iso.0070",
+      "request": {
+        "format": "time",
+        "instant": "2019-03-03T19:00:52Z",
+        "op": "format_instant",
+        "zone": "Australia/Sydney"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2025-10-26T00:30:00Z in America/New_York using extended",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "extended",
+          "formatted": "2025-10-25T20:30:00-04:00",
+          "input_instant": "2025-10-26T00:30:00Z",
+          "offset_seconds": -14400,
+          "zone": "America/New_York"
+        }
+      },
+      "id": "iso.0071",
+      "request": {
+        "format": "extended",
+        "instant": "2025-10-26T00:30:00Z",
+        "op": "format_instant",
+        "zone": "America/New_York"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2025-10-26T00:30:00Z in America/New_York using basic",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "basic",
+          "formatted": "20251025T203000-0400",
+          "input_instant": "2025-10-26T00:30:00Z",
+          "offset_seconds": -14400,
+          "zone": "America/New_York"
+        }
+      },
+      "id": "iso.0072",
+      "request": {
+        "format": "basic",
+        "instant": "2025-10-26T00:30:00Z",
+        "op": "format_instant",
+        "zone": "America/New_York"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2025-10-26T00:30:00Z in America/New_York using date",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "date",
+          "formatted": "2025-10-25",
+          "input_instant": "2025-10-26T00:30:00Z",
+          "offset_seconds": -14400,
+          "zone": "America/New_York"
+        }
+      },
+      "id": "iso.0073",
+      "request": {
+        "format": "date",
+        "instant": "2025-10-26T00:30:00Z",
+        "op": "format_instant",
+        "zone": "America/New_York"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2025-10-26T00:30:00Z in America/New_York using time",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "time",
+          "formatted": "20:30:00-04:00",
+          "input_instant": "2025-10-26T00:30:00Z",
+          "offset_seconds": -14400,
+          "zone": "America/New_York"
+        }
+      },
+      "id": "iso.0074",
+      "request": {
+        "format": "time",
+        "instant": "2025-10-26T00:30:00Z",
+        "op": "format_instant",
+        "zone": "America/New_York"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2025-10-26T00:30:00Z in Europe/London using extended",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "extended",
+          "formatted": "2025-10-26T01:30:00+01:00",
+          "input_instant": "2025-10-26T00:30:00Z",
+          "offset_seconds": 3600,
+          "zone": "Europe/London"
+        }
+      },
+      "id": "iso.0075",
+      "request": {
+        "format": "extended",
+        "instant": "2025-10-26T00:30:00Z",
+        "op": "format_instant",
+        "zone": "Europe/London"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2025-10-26T00:30:00Z in Europe/London using basic",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "basic",
+          "formatted": "20251026T013000+0100",
+          "input_instant": "2025-10-26T00:30:00Z",
+          "offset_seconds": 3600,
+          "zone": "Europe/London"
+        }
+      },
+      "id": "iso.0076",
+      "request": {
+        "format": "basic",
+        "instant": "2025-10-26T00:30:00Z",
+        "op": "format_instant",
+        "zone": "Europe/London"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2025-10-26T00:30:00Z in Europe/London using date",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "date",
+          "formatted": "2025-10-26",
+          "input_instant": "2025-10-26T00:30:00Z",
+          "offset_seconds": 3600,
+          "zone": "Europe/London"
+        }
+      },
+      "id": "iso.0077",
+      "request": {
+        "format": "date",
+        "instant": "2025-10-26T00:30:00Z",
+        "op": "format_instant",
+        "zone": "Europe/London"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2025-10-26T00:30:00Z in Europe/London using time",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "time",
+          "formatted": "01:30:00+01:00",
+          "input_instant": "2025-10-26T00:30:00Z",
+          "offset_seconds": 3600,
+          "zone": "Europe/London"
+        }
+      },
+      "id": "iso.0078",
+      "request": {
+        "format": "time",
+        "instant": "2025-10-26T00:30:00Z",
+        "op": "format_instant",
+        "zone": "Europe/London"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2025-10-26T00:30:00Z in Asia/Singapore using extended",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "extended",
+          "formatted": "2025-10-26T08:30:00+08:00",
+          "input_instant": "2025-10-26T00:30:00Z",
+          "offset_seconds": 28800,
+          "zone": "Asia/Singapore"
+        }
+      },
+      "id": "iso.0079",
+      "request": {
+        "format": "extended",
+        "instant": "2025-10-26T00:30:00Z",
+        "op": "format_instant",
+        "zone": "Asia/Singapore"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2025-10-26T00:30:00Z in Asia/Singapore using basic",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "basic",
+          "formatted": "20251026T083000+0800",
+          "input_instant": "2025-10-26T00:30:00Z",
+          "offset_seconds": 28800,
+          "zone": "Asia/Singapore"
+        }
+      },
+      "id": "iso.0080",
+      "request": {
+        "format": "basic",
+        "instant": "2025-10-26T00:30:00Z",
+        "op": "format_instant",
+        "zone": "Asia/Singapore"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2025-10-26T00:30:00Z in Asia/Singapore using date",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "date",
+          "formatted": "2025-10-26",
+          "input_instant": "2025-10-26T00:30:00Z",
+          "offset_seconds": 28800,
+          "zone": "Asia/Singapore"
+        }
+      },
+      "id": "iso.0081",
+      "request": {
+        "format": "date",
+        "instant": "2025-10-26T00:30:00Z",
+        "op": "format_instant",
+        "zone": "Asia/Singapore"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2025-10-26T00:30:00Z in Asia/Singapore using time",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "time",
+          "formatted": "08:30:00+08:00",
+          "input_instant": "2025-10-26T00:30:00Z",
+          "offset_seconds": 28800,
+          "zone": "Asia/Singapore"
+        }
+      },
+      "id": "iso.0082",
+      "request": {
+        "format": "time",
+        "instant": "2025-10-26T00:30:00Z",
+        "op": "format_instant",
+        "zone": "Asia/Singapore"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2025-10-26T00:30:00Z in Pacific/Auckland using extended",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "extended",
+          "formatted": "2025-10-26T13:30:00+13:00",
+          "input_instant": "2025-10-26T00:30:00Z",
+          "offset_seconds": 46800,
+          "zone": "Pacific/Auckland"
+        }
+      },
+      "id": "iso.0083",
+      "request": {
+        "format": "extended",
+        "instant": "2025-10-26T00:30:00Z",
+        "op": "format_instant",
+        "zone": "Pacific/Auckland"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2025-10-26T00:30:00Z in Pacific/Auckland using basic",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "basic",
+          "formatted": "20251026T133000+1300",
+          "input_instant": "2025-10-26T00:30:00Z",
+          "offset_seconds": 46800,
+          "zone": "Pacific/Auckland"
+        }
+      },
+      "id": "iso.0084",
+      "request": {
+        "format": "basic",
+        "instant": "2025-10-26T00:30:00Z",
+        "op": "format_instant",
+        "zone": "Pacific/Auckland"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2025-10-26T00:30:00Z in Pacific/Auckland using date",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "date",
+          "formatted": "2025-10-26",
+          "input_instant": "2025-10-26T00:30:00Z",
+          "offset_seconds": 46800,
+          "zone": "Pacific/Auckland"
+        }
+      },
+      "id": "iso.0085",
+      "request": {
+        "format": "date",
+        "instant": "2025-10-26T00:30:00Z",
+        "op": "format_instant",
+        "zone": "Pacific/Auckland"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2025-10-26T00:30:00Z in Pacific/Auckland using time",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "time",
+          "formatted": "13:30:00+13:00",
+          "input_instant": "2025-10-26T00:30:00Z",
+          "offset_seconds": 46800,
+          "zone": "Pacific/Auckland"
+        }
+      },
+      "id": "iso.0086",
+      "request": {
+        "format": "time",
+        "instant": "2025-10-26T00:30:00Z",
+        "op": "format_instant",
+        "zone": "Pacific/Auckland"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2025-10-26T00:30:00Z in Australia/Sydney using extended",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "extended",
+          "formatted": "2025-10-26T11:30:00+11:00",
+          "input_instant": "2025-10-26T00:30:00Z",
+          "offset_seconds": 39600,
+          "zone": "Australia/Sydney"
+        }
+      },
+      "id": "iso.0087",
+      "request": {
+        "format": "extended",
+        "instant": "2025-10-26T00:30:00Z",
+        "op": "format_instant",
+        "zone": "Australia/Sydney"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2025-10-26T00:30:00Z in Australia/Sydney using basic",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "basic",
+          "formatted": "20251026T113000+1100",
+          "input_instant": "2025-10-26T00:30:00Z",
+          "offset_seconds": 39600,
+          "zone": "Australia/Sydney"
+        }
+      },
+      "id": "iso.0088",
+      "request": {
+        "format": "basic",
+        "instant": "2025-10-26T00:30:00Z",
+        "op": "format_instant",
+        "zone": "Australia/Sydney"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2025-10-26T00:30:00Z in Australia/Sydney using date",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "date",
+          "formatted": "2025-10-26",
+          "input_instant": "2025-10-26T00:30:00Z",
+          "offset_seconds": 39600,
+          "zone": "Australia/Sydney"
+        }
+      },
+      "id": "iso.0089",
+      "request": {
+        "format": "date",
+        "instant": "2025-10-26T00:30:00Z",
+        "op": "format_instant",
+        "zone": "Australia/Sydney"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2025-10-26T00:30:00Z in Australia/Sydney using time",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "time",
+          "formatted": "11:30:00+11:00",
+          "input_instant": "2025-10-26T00:30:00Z",
+          "offset_seconds": 39600,
+          "zone": "Australia/Sydney"
+        }
+      },
+      "id": "iso.0090",
+      "request": {
+        "format": "time",
+        "instant": "2025-10-26T00:30:00Z",
+        "op": "format_instant",
+        "zone": "Australia/Sydney"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2025-03-30T00:30:00Z in America/New_York using extended",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "extended",
+          "formatted": "2025-03-29T20:30:00-04:00",
+          "input_instant": "2025-03-30T00:30:00Z",
+          "offset_seconds": -14400,
+          "zone": "America/New_York"
+        }
+      },
+      "id": "iso.0091",
+      "request": {
+        "format": "extended",
+        "instant": "2025-03-30T00:30:00Z",
+        "op": "format_instant",
+        "zone": "America/New_York"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2025-03-30T00:30:00Z in America/New_York using basic",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "basic",
+          "formatted": "20250329T203000-0400",
+          "input_instant": "2025-03-30T00:30:00Z",
+          "offset_seconds": -14400,
+          "zone": "America/New_York"
+        }
+      },
+      "id": "iso.0092",
+      "request": {
+        "format": "basic",
+        "instant": "2025-03-30T00:30:00Z",
+        "op": "format_instant",
+        "zone": "America/New_York"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2025-03-30T00:30:00Z in America/New_York using date",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "date",
+          "formatted": "2025-03-29",
+          "input_instant": "2025-03-30T00:30:00Z",
+          "offset_seconds": -14400,
+          "zone": "America/New_York"
+        }
+      },
+      "id": "iso.0093",
+      "request": {
+        "format": "date",
+        "instant": "2025-03-30T00:30:00Z",
+        "op": "format_instant",
+        "zone": "America/New_York"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2025-03-30T00:30:00Z in America/New_York using time",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "time",
+          "formatted": "20:30:00-04:00",
+          "input_instant": "2025-03-30T00:30:00Z",
+          "offset_seconds": -14400,
+          "zone": "America/New_York"
+        }
+      },
+      "id": "iso.0094",
+      "request": {
+        "format": "time",
+        "instant": "2025-03-30T00:30:00Z",
+        "op": "format_instant",
+        "zone": "America/New_York"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2025-03-30T00:30:00Z in Europe/London using extended",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "extended",
+          "formatted": "2025-03-30T00:30:00Z",
+          "input_instant": "2025-03-30T00:30:00Z",
+          "offset_seconds": 0,
+          "zone": "Europe/London"
+        }
+      },
+      "id": "iso.0095",
+      "request": {
+        "format": "extended",
+        "instant": "2025-03-30T00:30:00Z",
+        "op": "format_instant",
+        "zone": "Europe/London"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2025-03-30T00:30:00Z in Europe/London using basic",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "basic",
+          "formatted": "20250330T003000Z",
+          "input_instant": "2025-03-30T00:30:00Z",
+          "offset_seconds": 0,
+          "zone": "Europe/London"
+        }
+      },
+      "id": "iso.0096",
+      "request": {
+        "format": "basic",
+        "instant": "2025-03-30T00:30:00Z",
+        "op": "format_instant",
+        "zone": "Europe/London"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2025-03-30T00:30:00Z in Europe/London using date",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "date",
+          "formatted": "2025-03-30",
+          "input_instant": "2025-03-30T00:30:00Z",
+          "offset_seconds": 0,
+          "zone": "Europe/London"
+        }
+      },
+      "id": "iso.0097",
+      "request": {
+        "format": "date",
+        "instant": "2025-03-30T00:30:00Z",
+        "op": "format_instant",
+        "zone": "Europe/London"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2025-03-30T00:30:00Z in Europe/London using time",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "time",
+          "formatted": "00:30:00Z",
+          "input_instant": "2025-03-30T00:30:00Z",
+          "offset_seconds": 0,
+          "zone": "Europe/London"
+        }
+      },
+      "id": "iso.0098",
+      "request": {
+        "format": "time",
+        "instant": "2025-03-30T00:30:00Z",
+        "op": "format_instant",
+        "zone": "Europe/London"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2025-03-30T00:30:00Z in Asia/Singapore using extended",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "extended",
+          "formatted": "2025-03-30T08:30:00+08:00",
+          "input_instant": "2025-03-30T00:30:00Z",
+          "offset_seconds": 28800,
+          "zone": "Asia/Singapore"
+        }
+      },
+      "id": "iso.0099",
+      "request": {
+        "format": "extended",
+        "instant": "2025-03-30T00:30:00Z",
+        "op": "format_instant",
+        "zone": "Asia/Singapore"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2025-03-30T00:30:00Z in Asia/Singapore using basic",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "basic",
+          "formatted": "20250330T083000+0800",
+          "input_instant": "2025-03-30T00:30:00Z",
+          "offset_seconds": 28800,
+          "zone": "Asia/Singapore"
+        }
+      },
+      "id": "iso.0100",
+      "request": {
+        "format": "basic",
+        "instant": "2025-03-30T00:30:00Z",
+        "op": "format_instant",
+        "zone": "Asia/Singapore"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2025-03-30T00:30:00Z in Asia/Singapore using date",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "date",
+          "formatted": "2025-03-30",
+          "input_instant": "2025-03-30T00:30:00Z",
+          "offset_seconds": 28800,
+          "zone": "Asia/Singapore"
+        }
+      },
+      "id": "iso.0101",
+      "request": {
+        "format": "date",
+        "instant": "2025-03-30T00:30:00Z",
+        "op": "format_instant",
+        "zone": "Asia/Singapore"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2025-03-30T00:30:00Z in Asia/Singapore using time",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "time",
+          "formatted": "08:30:00+08:00",
+          "input_instant": "2025-03-30T00:30:00Z",
+          "offset_seconds": 28800,
+          "zone": "Asia/Singapore"
+        }
+      },
+      "id": "iso.0102",
+      "request": {
+        "format": "time",
+        "instant": "2025-03-30T00:30:00Z",
+        "op": "format_instant",
+        "zone": "Asia/Singapore"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2025-03-30T00:30:00Z in Pacific/Auckland using extended",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "extended",
+          "formatted": "2025-03-30T13:30:00+13:00",
+          "input_instant": "2025-03-30T00:30:00Z",
+          "offset_seconds": 46800,
+          "zone": "Pacific/Auckland"
+        }
+      },
+      "id": "iso.0103",
+      "request": {
+        "format": "extended",
+        "instant": "2025-03-30T00:30:00Z",
+        "op": "format_instant",
+        "zone": "Pacific/Auckland"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2025-03-30T00:30:00Z in Pacific/Auckland using basic",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "basic",
+          "formatted": "20250330T133000+1300",
+          "input_instant": "2025-03-30T00:30:00Z",
+          "offset_seconds": 46800,
+          "zone": "Pacific/Auckland"
+        }
+      },
+      "id": "iso.0104",
+      "request": {
+        "format": "basic",
+        "instant": "2025-03-30T00:30:00Z",
+        "op": "format_instant",
+        "zone": "Pacific/Auckland"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2025-03-30T00:30:00Z in Pacific/Auckland using date",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "date",
+          "formatted": "2025-03-30",
+          "input_instant": "2025-03-30T00:30:00Z",
+          "offset_seconds": 46800,
+          "zone": "Pacific/Auckland"
+        }
+      },
+      "id": "iso.0105",
+      "request": {
+        "format": "date",
+        "instant": "2025-03-30T00:30:00Z",
+        "op": "format_instant",
+        "zone": "Pacific/Auckland"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2025-03-30T00:30:00Z in Pacific/Auckland using time",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "time",
+          "formatted": "13:30:00+13:00",
+          "input_instant": "2025-03-30T00:30:00Z",
+          "offset_seconds": 46800,
+          "zone": "Pacific/Auckland"
+        }
+      },
+      "id": "iso.0106",
+      "request": {
+        "format": "time",
+        "instant": "2025-03-30T00:30:00Z",
+        "op": "format_instant",
+        "zone": "Pacific/Auckland"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2025-03-30T00:30:00Z in Australia/Sydney using extended",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "extended",
+          "formatted": "2025-03-30T11:30:00+11:00",
+          "input_instant": "2025-03-30T00:30:00Z",
+          "offset_seconds": 39600,
+          "zone": "Australia/Sydney"
+        }
+      },
+      "id": "iso.0107",
+      "request": {
+        "format": "extended",
+        "instant": "2025-03-30T00:30:00Z",
+        "op": "format_instant",
+        "zone": "Australia/Sydney"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2025-03-30T00:30:00Z in Australia/Sydney using basic",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "basic",
+          "formatted": "20250330T113000+1100",
+          "input_instant": "2025-03-30T00:30:00Z",
+          "offset_seconds": 39600,
+          "zone": "Australia/Sydney"
+        }
+      },
+      "id": "iso.0108",
+      "request": {
+        "format": "basic",
+        "instant": "2025-03-30T00:30:00Z",
+        "op": "format_instant",
+        "zone": "Australia/Sydney"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2025-03-30T00:30:00Z in Australia/Sydney using date",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "date",
+          "formatted": "2025-03-30",
+          "input_instant": "2025-03-30T00:30:00Z",
+          "offset_seconds": 39600,
+          "zone": "Australia/Sydney"
+        }
+      },
+      "id": "iso.0109",
+      "request": {
+        "format": "date",
+        "instant": "2025-03-30T00:30:00Z",
+        "op": "format_instant",
+        "zone": "Australia/Sydney"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_instant",
+      "description": "Format 2025-03-30T00:30:00Z in Australia/Sydney using time",
+      "expected": {
+        "ok": true,
+        "value": {
+          "format": "time",
+          "formatted": "11:30:00+11:00",
+          "input_instant": "2025-03-30T00:30:00Z",
+          "offset_seconds": 39600,
+          "zone": "Australia/Sydney"
+        }
+      },
+      "id": "iso.0110",
+      "request": {
+        "format": "time",
+        "instant": "2025-03-30T00:30:00Z",
+        "op": "format_instant",
+        "zone": "Australia/Sydney"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO formatting shape and offset rendering",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+        }
+      ]
+    }
+  ],
+  "generated_at": "2026-02-26T20:43:57.020638+00:00",
+  "suite": "iso_rfc3339",
+  "upstream_basis": [
+    {
+      "library": "date-fns",
+      "note": "ISO parsing, timezone offsets, invalid date handling, DST gap compatibility",
+      "path": "conform/upstreams/typescript/date-fns__date-fns/src/parseISO/test.ts"
+    },
+    {
+      "library": "date-fns",
+      "note": "ISO formatting shape and offset rendering",
+      "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISO/test.ts"
+    }
+  ]
+}

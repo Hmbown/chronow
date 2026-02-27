@@ -1,0 +1,580 @@
+{
+  "cases": [
+    {
+      "category": "normalize_intent",
+      "description": "Normalize intent: tomorrow at 09:30",
+      "expected": {
+        "ok": true,
+        "value": {
+          "kind": "one_off",
+          "local": "2026-01-11T09:30:00",
+          "normalized_request": {
+            "disambiguation": "compatible",
+            "local": "2026-01-11T09:30:00",
+            "op": "resolve_local",
+            "zone": "America/New_York"
+          },
+          "source": "tomorrow at 09:30",
+          "zone": "America/New_York"
+        }
+      },
+      "id": "nlp.0001",
+      "request": {
+        "default_zone": "America/New_York",
+        "input": "tomorrow at 09:30",
+        "op": "normalize_intent",
+        "reference_local": "2026-01-10T12:00:00"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO parsing, timezone offsets, invalid date handling, DST gap compatibility",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/parseISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "normalize_intent",
+      "description": "Normalize intent: tomorrow at 21:45 in America/Los_Angeles",
+      "expected": {
+        "ok": true,
+        "value": {
+          "kind": "one_off",
+          "local": "2026-01-11T21:45:00",
+          "normalized_request": {
+            "disambiguation": "compatible",
+            "local": "2026-01-11T21:45:00",
+            "op": "resolve_local",
+            "zone": "America/Los_Angeles"
+          },
+          "source": "tomorrow at 21:45 in America/Los_Angeles",
+          "zone": "America/Los_Angeles"
+        }
+      },
+      "id": "nlp.0002",
+      "request": {
+        "default_zone": "America/New_York",
+        "input": "tomorrow at 21:45 in America/Los_Angeles",
+        "op": "normalize_intent",
+        "reference_local": "2026-01-10T12:00:00"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO parsing, timezone offsets, invalid date handling, DST gap compatibility",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/parseISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "normalize_intent",
+      "description": "Normalize intent: next monday at 08:00",
+      "expected": {
+        "ok": true,
+        "value": {
+          "kind": "one_off",
+          "local": "2026-01-12T08:00:00",
+          "normalized_request": {
+            "disambiguation": "compatible",
+            "local": "2026-01-12T08:00:00",
+            "op": "resolve_local",
+            "zone": "America/New_York"
+          },
+          "source": "next monday at 08:00",
+          "zone": "America/New_York"
+        }
+      },
+      "id": "nlp.0003",
+      "request": {
+        "default_zone": "America/New_York",
+        "input": "next monday at 08:00",
+        "op": "normalize_intent",
+        "reference_local": "2026-01-10T12:00:00"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO parsing, timezone offsets, invalid date handling, DST gap compatibility",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/parseISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "normalize_intent",
+      "description": "Normalize intent: next friday at 17:15 in Europe/London",
+      "expected": {
+        "ok": true,
+        "value": {
+          "kind": "one_off",
+          "local": "2026-01-16T17:15:00",
+          "normalized_request": {
+            "disambiguation": "compatible",
+            "local": "2026-01-16T17:15:00",
+            "op": "resolve_local",
+            "zone": "Europe/London"
+          },
+          "source": "next friday at 17:15 in Europe/London",
+          "zone": "Europe/London"
+        }
+      },
+      "id": "nlp.0004",
+      "request": {
+        "default_zone": "America/New_York",
+        "input": "next friday at 17:15 in Europe/London",
+        "op": "normalize_intent",
+        "reference_local": "2026-01-10T12:00:00"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO parsing, timezone offsets, invalid date handling, DST gap compatibility",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/parseISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "normalize_intent",
+      "description": "Normalize intent: in 3 days at 10:00",
+      "expected": {
+        "ok": true,
+        "value": {
+          "kind": "one_off",
+          "local": "2026-01-13T10:00:00",
+          "normalized_request": {
+            "disambiguation": "compatible",
+            "local": "2026-01-13T10:00:00",
+            "op": "resolve_local",
+            "zone": "America/New_York"
+          },
+          "source": "in 3 days at 10:00",
+          "zone": "America/New_York"
+        }
+      },
+      "id": "nlp.0005",
+      "request": {
+        "default_zone": "America/New_York",
+        "input": "in 3 days at 10:00",
+        "op": "normalize_intent",
+        "reference_local": "2026-01-10T12:00:00"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO parsing, timezone offsets, invalid date handling, DST gap compatibility",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/parseISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "normalize_intent",
+      "description": "Normalize intent: in 14 days at 06:30 in Asia/Singapore",
+      "expected": {
+        "ok": true,
+        "value": {
+          "kind": "one_off",
+          "local": "2026-01-24T06:30:00",
+          "normalized_request": {
+            "disambiguation": "compatible",
+            "local": "2026-01-24T06:30:00",
+            "op": "resolve_local",
+            "zone": "Asia/Singapore"
+          },
+          "source": "in 14 days at 06:30 in Asia/Singapore",
+          "zone": "Asia/Singapore"
+        }
+      },
+      "id": "nlp.0006",
+      "request": {
+        "default_zone": "America/New_York",
+        "input": "in 14 days at 06:30 in Asia/Singapore",
+        "op": "normalize_intent",
+        "reference_local": "2026-01-10T12:00:00"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO parsing, timezone offsets, invalid date handling, DST gap compatibility",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/parseISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "normalize_intent",
+      "description": "Normalize intent: on 2026-03-15 at 12:30",
+      "expected": {
+        "ok": true,
+        "value": {
+          "kind": "one_off",
+          "local": "2026-03-15T12:30:00",
+          "normalized_request": {
+            "disambiguation": "compatible",
+            "local": "2026-03-15T12:30:00",
+            "op": "resolve_local",
+            "zone": "America/New_York"
+          },
+          "source": "on 2026-03-15 at 12:30",
+          "zone": "America/New_York"
+        }
+      },
+      "id": "nlp.0007",
+      "request": {
+        "default_zone": "America/New_York",
+        "input": "on 2026-03-15 at 12:30",
+        "op": "normalize_intent",
+        "reference_local": "2026-01-10T12:00:00"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO parsing, timezone offsets, invalid date handling, DST gap compatibility",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/parseISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "normalize_intent",
+      "description": "Normalize intent: on 2026-12-31 at 23:00 in Pacific/Auckland",
+      "expected": {
+        "ok": true,
+        "value": {
+          "kind": "one_off",
+          "local": "2026-12-31T23:00:00",
+          "normalized_request": {
+            "disambiguation": "compatible",
+            "local": "2026-12-31T23:00:00",
+            "op": "resolve_local",
+            "zone": "Pacific/Auckland"
+          },
+          "source": "on 2026-12-31 at 23:00 in Pacific/Auckland",
+          "zone": "Pacific/Auckland"
+        }
+      },
+      "id": "nlp.0008",
+      "request": {
+        "default_zone": "America/New_York",
+        "input": "on 2026-12-31 at 23:00 in Pacific/Auckland",
+        "op": "normalize_intent",
+        "reference_local": "2026-01-10T12:00:00"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO parsing, timezone offsets, invalid date handling, DST gap compatibility",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/parseISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "normalize_intent",
+      "description": "Normalize intent: every weekday at 09:00",
+      "expected": {
+        "ok": true,
+        "value": {
+          "kind": "recurrence",
+          "normalized_request": {
+            "business_calendar": {
+              "exclude_weekends": true,
+              "holidays": []
+            },
+            "disambiguation": "compatible",
+            "op": "recurrence_preview",
+            "rule": {
+              "by_weekdays": [
+                "monday",
+                "tuesday",
+                "wednesday",
+                "thursday",
+                "friday"
+              ],
+              "count": 10,
+              "frequency": "weekly",
+              "interval": 1
+            },
+            "start_local": "2026-01-11T09:00:00",
+            "zone": "America/New_York"
+          },
+          "source": "every weekday at 09:00",
+          "start_local": "2026-01-11T09:00:00",
+          "zone": "America/New_York"
+        }
+      },
+      "id": "nlp.0009",
+      "request": {
+        "default_zone": "America/New_York",
+        "input": "every weekday at 09:00",
+        "op": "normalize_intent",
+        "reference_local": "2026-01-10T12:00:00"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO parsing, timezone offsets, invalid date handling, DST gap compatibility",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/parseISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "normalize_intent",
+      "description": "Normalize intent: every weekday at 09:00 in America/New_York for 12 occurrences",
+      "expected": {
+        "ok": true,
+        "value": {
+          "kind": "recurrence",
+          "normalized_request": {
+            "business_calendar": {
+              "exclude_weekends": true,
+              "holidays": []
+            },
+            "disambiguation": "compatible",
+            "op": "recurrence_preview",
+            "rule": {
+              "by_weekdays": [
+                "monday",
+                "tuesday",
+                "wednesday",
+                "thursday",
+                "friday"
+              ],
+              "count": 12,
+              "frequency": "weekly",
+              "interval": 1
+            },
+            "start_local": "2026-01-11T09:00:00",
+            "zone": "America/New_York"
+          },
+          "source": "every weekday at 09:00 in America/New_York for 12 occurrences",
+          "start_local": "2026-01-11T09:00:00",
+          "zone": "America/New_York"
+        }
+      },
+      "id": "nlp.0010",
+      "request": {
+        "default_zone": "America/New_York",
+        "input": "every weekday at 09:00 in America/New_York for 12 occurrences",
+        "op": "normalize_intent",
+        "reference_local": "2026-01-10T12:00:00"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO parsing, timezone offsets, invalid date handling, DST gap compatibility",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/parseISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "normalize_intent",
+      "description": "Normalize intent: every tuesday at 14:00",
+      "expected": {
+        "ok": true,
+        "value": {
+          "kind": "recurrence",
+          "normalized_request": {
+            "business_calendar": {
+              "exclude_weekends": false,
+              "holidays": []
+            },
+            "disambiguation": "compatible",
+            "op": "recurrence_preview",
+            "rule": {
+              "by_weekdays": [
+                "tuesday"
+              ],
+              "count": 8,
+              "frequency": "weekly",
+              "interval": 1
+            },
+            "start_local": "2026-01-11T14:00:00",
+            "zone": "America/New_York"
+          },
+          "source": "every tuesday at 14:00",
+          "start_local": "2026-01-11T14:00:00",
+          "zone": "America/New_York"
+        }
+      },
+      "id": "nlp.0011",
+      "request": {
+        "default_zone": "America/New_York",
+        "input": "every tuesday at 14:00",
+        "op": "normalize_intent",
+        "reference_local": "2026-01-10T12:00:00"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO parsing, timezone offsets, invalid date handling, DST gap compatibility",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/parseISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "normalize_intent",
+      "description": "Normalize intent: every sunday at 07:30 in Europe/Berlin for 5 occurrences",
+      "expected": {
+        "ok": true,
+        "value": {
+          "kind": "recurrence",
+          "normalized_request": {
+            "business_calendar": {
+              "exclude_weekends": false,
+              "holidays": []
+            },
+            "disambiguation": "compatible",
+            "op": "recurrence_preview",
+            "rule": {
+              "by_weekdays": [
+                "sunday"
+              ],
+              "count": 5,
+              "frequency": "weekly",
+              "interval": 1
+            },
+            "start_local": "2026-01-11T07:30:00",
+            "zone": "Europe/Berlin"
+          },
+          "source": "every sunday at 07:30 in Europe/Berlin for 5 occurrences",
+          "start_local": "2026-01-11T07:30:00",
+          "zone": "Europe/Berlin"
+        }
+      },
+      "id": "nlp.0012",
+      "request": {
+        "default_zone": "America/New_York",
+        "input": "every sunday at 07:30 in Europe/Berlin for 5 occurrences",
+        "op": "normalize_intent",
+        "reference_local": "2026-01-10T12:00:00"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO parsing, timezone offsets, invalid date handling, DST gap compatibility",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/parseISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "normalize_intent",
+      "description": "Normalize intent: every saturday at 11:00",
+      "expected": {
+        "ok": true,
+        "value": {
+          "kind": "recurrence",
+          "normalized_request": {
+            "business_calendar": {
+              "exclude_weekends": false,
+              "holidays": []
+            },
+            "disambiguation": "compatible",
+            "op": "recurrence_preview",
+            "rule": {
+              "by_weekdays": [
+                "saturday"
+              ],
+              "count": 8,
+              "frequency": "weekly",
+              "interval": 1
+            },
+            "start_local": "2026-01-11T11:00:00",
+            "zone": "America/New_York"
+          },
+          "source": "every saturday at 11:00",
+          "start_local": "2026-01-11T11:00:00",
+          "zone": "America/New_York"
+        }
+      },
+      "id": "nlp.0013",
+      "request": {
+        "default_zone": "America/New_York",
+        "input": "every saturday at 11:00",
+        "op": "normalize_intent",
+        "reference_local": "2026-01-10T12:00:00"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO parsing, timezone offsets, invalid date handling, DST gap compatibility",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/parseISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "normalize_intent",
+      "description": "Normalize intent: every monday at 08:15 in Australia/Sydney for 9 occurrences",
+      "expected": {
+        "ok": true,
+        "value": {
+          "kind": "recurrence",
+          "normalized_request": {
+            "business_calendar": {
+              "exclude_weekends": false,
+              "holidays": []
+            },
+            "disambiguation": "compatible",
+            "op": "recurrence_preview",
+            "rule": {
+              "by_weekdays": [
+                "monday"
+              ],
+              "count": 9,
+              "frequency": "weekly",
+              "interval": 1
+            },
+            "start_local": "2026-01-11T08:15:00",
+            "zone": "Australia/Sydney"
+          },
+          "source": "every monday at 08:15 in Australia/Sydney for 9 occurrences",
+          "start_local": "2026-01-11T08:15:00",
+          "zone": "Australia/Sydney"
+        }
+      },
+      "id": "nlp.0014",
+      "request": {
+        "default_zone": "America/New_York",
+        "input": "every monday at 08:15 in Australia/Sydney for 9 occurrences",
+        "op": "normalize_intent",
+        "reference_local": "2026-01-10T12:00:00"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO parsing, timezone offsets, invalid date handling, DST gap compatibility",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/parseISO/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "normalize_intent",
+      "description": "Normalize intent: unsupported freeform text",
+      "expected": {
+        "error": {
+          "code": "unsupported_intent",
+          "message": "input does not match deterministic grammar"
+        },
+        "ok": false
+      },
+      "id": "nlp.0015",
+      "request": {
+        "default_zone": "America/New_York",
+        "input": "unsupported freeform text",
+        "op": "normalize_intent",
+        "reference_local": "2026-01-10T12:00:00"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO parsing, timezone offsets, invalid date handling, DST gap compatibility",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/parseISO/test.ts"
+        }
+      ]
+    }
+  ],
+  "generated_at": "2026-02-26T20:43:58.977077+00:00",
+  "suite": "natural_language_intent",
+  "upstream_basis": [
+    {
+      "library": "date-fns",
+      "note": "ISO parsing, timezone offsets, invalid date handling, DST gap compatibility",
+      "path": "conform/upstreams/typescript/date-fns__date-fns/src/parseISO/test.ts"
+    }
+  ]
+}

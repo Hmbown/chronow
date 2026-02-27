@@ -1,0 +1,969 @@
+{
+  "cases": [
+    {
+      "category": "parse_duration",
+      "description": "Parse duration: P1Y",
+      "expected": {
+        "ok": true,
+        "value": {
+          "days": 0,
+          "hours": 0,
+          "minutes": 0,
+          "months": 0,
+          "seconds": 0,
+          "weeks": 0,
+          "years": 1
+        }
+      },
+      "id": "dur.0001",
+      "request": {
+        "input": "P1Y",
+        "op": "parse_duration"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO 8601 duration formatting",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISODuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "parse_duration",
+      "description": "Parse duration: P1M",
+      "expected": {
+        "ok": true,
+        "value": {
+          "days": 0,
+          "hours": 0,
+          "minutes": 0,
+          "months": 1,
+          "seconds": 0,
+          "weeks": 0,
+          "years": 0
+        }
+      },
+      "id": "dur.0002",
+      "request": {
+        "input": "P1M",
+        "op": "parse_duration"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO 8601 duration formatting",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISODuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "parse_duration",
+      "description": "Parse duration: P1W",
+      "expected": {
+        "ok": true,
+        "value": {
+          "days": 0,
+          "hours": 0,
+          "minutes": 0,
+          "months": 0,
+          "seconds": 0,
+          "weeks": 1,
+          "years": 0
+        }
+      },
+      "id": "dur.0003",
+      "request": {
+        "input": "P1W",
+        "op": "parse_duration"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO 8601 duration formatting",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISODuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "parse_duration",
+      "description": "Parse duration: P1D",
+      "expected": {
+        "ok": true,
+        "value": {
+          "days": 1,
+          "hours": 0,
+          "minutes": 0,
+          "months": 0,
+          "seconds": 0,
+          "weeks": 0,
+          "years": 0
+        }
+      },
+      "id": "dur.0004",
+      "request": {
+        "input": "P1D",
+        "op": "parse_duration"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO 8601 duration formatting",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISODuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "parse_duration",
+      "description": "Parse duration: PT1H",
+      "expected": {
+        "ok": true,
+        "value": {
+          "days": 0,
+          "hours": 1,
+          "minutes": 0,
+          "months": 0,
+          "seconds": 0,
+          "weeks": 0,
+          "years": 0
+        }
+      },
+      "id": "dur.0005",
+      "request": {
+        "input": "PT1H",
+        "op": "parse_duration"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO 8601 duration formatting",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISODuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "parse_duration",
+      "description": "Parse duration: PT1M",
+      "expected": {
+        "ok": true,
+        "value": {
+          "days": 0,
+          "hours": 0,
+          "minutes": 1,
+          "months": 0,
+          "seconds": 0,
+          "weeks": 0,
+          "years": 0
+        }
+      },
+      "id": "dur.0006",
+      "request": {
+        "input": "PT1M",
+        "op": "parse_duration"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO 8601 duration formatting",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISODuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "parse_duration",
+      "description": "Parse duration: PT1S",
+      "expected": {
+        "ok": true,
+        "value": {
+          "days": 0,
+          "hours": 0,
+          "minutes": 0,
+          "months": 0,
+          "seconds": 1,
+          "weeks": 0,
+          "years": 0
+        }
+      },
+      "id": "dur.0007",
+      "request": {
+        "input": "PT1S",
+        "op": "parse_duration"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO 8601 duration formatting",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISODuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "parse_duration",
+      "description": "Parse duration: P1Y2M3DT4H5M6S",
+      "expected": {
+        "ok": true,
+        "value": {
+          "days": 3,
+          "hours": 4,
+          "minutes": 5,
+          "months": 2,
+          "seconds": 6,
+          "weeks": 0,
+          "years": 1
+        }
+      },
+      "id": "dur.0008",
+      "request": {
+        "input": "P1Y2M3DT4H5M6S",
+        "op": "parse_duration"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO 8601 duration formatting",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISODuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "parse_duration",
+      "description": "Parse duration: P1Y6M",
+      "expected": {
+        "ok": true,
+        "value": {
+          "days": 0,
+          "hours": 0,
+          "minutes": 0,
+          "months": 6,
+          "seconds": 0,
+          "weeks": 0,
+          "years": 1
+        }
+      },
+      "id": "dur.0009",
+      "request": {
+        "input": "P1Y6M",
+        "op": "parse_duration"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO 8601 duration formatting",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISODuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "parse_duration",
+      "description": "Parse duration: P2W",
+      "expected": {
+        "ok": true,
+        "value": {
+          "days": 0,
+          "hours": 0,
+          "minutes": 0,
+          "months": 0,
+          "seconds": 0,
+          "weeks": 2,
+          "years": 0
+        }
+      },
+      "id": "dur.0010",
+      "request": {
+        "input": "P2W",
+        "op": "parse_duration"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO 8601 duration formatting",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISODuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "parse_duration",
+      "description": "Parse duration: P0Y0M0DT0H0M0S",
+      "expected": {
+        "ok": true,
+        "value": {
+          "days": 0,
+          "hours": 0,
+          "minutes": 0,
+          "months": 0,
+          "seconds": 0,
+          "weeks": 0,
+          "years": 0
+        }
+      },
+      "id": "dur.0011",
+      "request": {
+        "input": "P0Y0M0DT0H0M0S",
+        "op": "parse_duration"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO 8601 duration formatting",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISODuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "parse_duration",
+      "description": "Parse duration: P1MT1M",
+      "expected": {
+        "ok": true,
+        "value": {
+          "days": 0,
+          "hours": 0,
+          "minutes": 1,
+          "months": 1,
+          "seconds": 0,
+          "weeks": 0,
+          "years": 0
+        }
+      },
+      "id": "dur.0012",
+      "request": {
+        "input": "P1MT1M",
+        "op": "parse_duration"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO 8601 duration formatting",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISODuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "parse_duration",
+      "description": "Parse duration: P10Y",
+      "expected": {
+        "ok": true,
+        "value": {
+          "days": 0,
+          "hours": 0,
+          "minutes": 0,
+          "months": 0,
+          "seconds": 0,
+          "weeks": 0,
+          "years": 10
+        }
+      },
+      "id": "dur.0013",
+      "request": {
+        "input": "P10Y",
+        "op": "parse_duration"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO 8601 duration formatting",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISODuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "parse_duration",
+      "description": "Parse duration: PT3600S",
+      "expected": {
+        "ok": true,
+        "value": {
+          "days": 0,
+          "hours": 0,
+          "minutes": 0,
+          "months": 0,
+          "seconds": 3600,
+          "weeks": 0,
+          "years": 0
+        }
+      },
+      "id": "dur.0014",
+      "request": {
+        "input": "PT3600S",
+        "op": "parse_duration"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO 8601 duration formatting",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISODuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "parse_duration",
+      "description": "Parse duration: P365D",
+      "expected": {
+        "ok": true,
+        "value": {
+          "days": 365,
+          "hours": 0,
+          "minutes": 0,
+          "months": 0,
+          "seconds": 0,
+          "weeks": 0,
+          "years": 0
+        }
+      },
+      "id": "dur.0015",
+      "request": {
+        "input": "P365D",
+        "op": "parse_duration"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO 8601 duration formatting",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISODuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "parse_duration",
+      "description": "Parse duration: P1Y1M1W1DT1H1M1S",
+      "expected": {
+        "ok": true,
+        "value": {
+          "days": 1,
+          "hours": 1,
+          "minutes": 1,
+          "months": 1,
+          "seconds": 1,
+          "weeks": 1,
+          "years": 1
+        }
+      },
+      "id": "dur.0016",
+      "request": {
+        "input": "P1Y1M1W1DT1H1M1S",
+        "op": "parse_duration"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO 8601 duration formatting",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISODuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "parse_duration",
+      "description": "Parse duration: P12M",
+      "expected": {
+        "ok": true,
+        "value": {
+          "days": 0,
+          "hours": 0,
+          "minutes": 0,
+          "months": 12,
+          "seconds": 0,
+          "weeks": 0,
+          "years": 0
+        }
+      },
+      "id": "dur.0017",
+      "request": {
+        "input": "P12M",
+        "op": "parse_duration"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO 8601 duration formatting",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISODuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "parse_duration",
+      "description": "Parse duration: PT90M",
+      "expected": {
+        "ok": true,
+        "value": {
+          "days": 0,
+          "hours": 0,
+          "minutes": 90,
+          "months": 0,
+          "seconds": 0,
+          "weeks": 0,
+          "years": 0
+        }
+      },
+      "id": "dur.0018",
+      "request": {
+        "input": "PT90M",
+        "op": "parse_duration"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO 8601 duration formatting",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISODuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "parse_duration",
+      "description": "Parse duration: P3M15DT8H",
+      "expected": {
+        "ok": true,
+        "value": {
+          "days": 15,
+          "hours": 8,
+          "minutes": 0,
+          "months": 3,
+          "seconds": 0,
+          "weeks": 0,
+          "years": 0
+        }
+      },
+      "id": "dur.0019",
+      "request": {
+        "input": "P3M15DT8H",
+        "op": "parse_duration"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO 8601 duration formatting",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISODuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "parse_duration",
+      "description": "Parse duration: P100D",
+      "expected": {
+        "ok": true,
+        "value": {
+          "days": 100,
+          "hours": 0,
+          "minutes": 0,
+          "months": 0,
+          "seconds": 0,
+          "weeks": 0,
+          "years": 0
+        }
+      },
+      "id": "dur.0020",
+      "request": {
+        "input": "P100D",
+        "op": "parse_duration"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO 8601 duration formatting",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISODuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "parse_duration_error",
+      "description": "Invalid duration: ''",
+      "expected": {
+        "error": {
+          "code": "invalid_duration",
+          "message": "invalid ISO 8601 duration: "
+        },
+        "ok": false
+      },
+      "id": "dur.0021",
+      "request": {
+        "input": "",
+        "op": "parse_duration"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO 8601 duration formatting",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISODuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "parse_duration_error",
+      "description": "Invalid duration: 'P'",
+      "expected": {
+        "error": {
+          "code": "invalid_duration",
+          "message": "empty duration: P"
+        },
+        "ok": false
+      },
+      "id": "dur.0022",
+      "request": {
+        "input": "P",
+        "op": "parse_duration"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO 8601 duration formatting",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISODuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "parse_duration_error",
+      "description": "Invalid duration: 'PT'",
+      "expected": {
+        "error": {
+          "code": "invalid_duration",
+          "message": "empty duration: PT"
+        },
+        "ok": false
+      },
+      "id": "dur.0023",
+      "request": {
+        "input": "PT",
+        "op": "parse_duration"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO 8601 duration formatting",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISODuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "parse_duration_error",
+      "description": "Invalid duration: 'not-a-duration'",
+      "expected": {
+        "error": {
+          "code": "invalid_duration",
+          "message": "invalid ISO 8601 duration: not-a-duration"
+        },
+        "ok": false
+      },
+      "id": "dur.0024",
+      "request": {
+        "input": "not-a-duration",
+        "op": "parse_duration"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO 8601 duration formatting",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISODuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "parse_duration_error",
+      "description": "Invalid duration: '1Y2M'",
+      "expected": {
+        "error": {
+          "code": "invalid_duration",
+          "message": "invalid ISO 8601 duration: 1Y2M"
+        },
+        "ok": false
+      },
+      "id": "dur.0025",
+      "request": {
+        "input": "1Y2M",
+        "op": "parse_duration"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO 8601 duration formatting",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISODuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "parse_duration_error",
+      "description": "Invalid duration: 'P1Y2M3D4H'",
+      "expected": {
+        "error": {
+          "code": "invalid_duration",
+          "message": "invalid ISO 8601 duration: P1Y2M3D4H"
+        },
+        "ok": false
+      },
+      "id": "dur.0026",
+      "request": {
+        "input": "P1Y2M3D4H",
+        "op": "parse_duration"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO 8601 duration formatting",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISODuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "parse_duration_error",
+      "description": "Invalid duration: 'PxY'",
+      "expected": {
+        "error": {
+          "code": "invalid_duration",
+          "message": "invalid ISO 8601 duration: PxY"
+        },
+        "ok": false
+      },
+      "id": "dur.0027",
+      "request": {
+        "input": "PxY",
+        "op": "parse_duration"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO 8601 duration formatting",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISODuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_duration",
+      "description": "Format duration: {'years': 1, 'months': 2, 'days': 3, 'hours': 4, 'minutes': 5, 'seconds': 6}",
+      "expected": {
+        "ok": true,
+        "value": {
+          "formatted": "P1Y2M3DT4H5M6S"
+        }
+      },
+      "id": "dur.0028",
+      "request": {
+        "duration": {
+          "days": 3,
+          "hours": 4,
+          "minutes": 5,
+          "months": 2,
+          "seconds": 6,
+          "years": 1
+        },
+        "op": "format_duration"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO 8601 duration formatting",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISODuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_duration",
+      "description": "Format duration: {'years': 0, 'months': 0, 'days': 0, 'hours': 0, 'minutes': 0, 'seconds': 0}",
+      "expected": {
+        "ok": true,
+        "value": {
+          "formatted": "P0Y0M0DT0H0M0S"
+        }
+      },
+      "id": "dur.0029",
+      "request": {
+        "duration": {
+          "days": 0,
+          "hours": 0,
+          "minutes": 0,
+          "months": 0,
+          "seconds": 0,
+          "years": 0
+        },
+        "op": "format_duration"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO 8601 duration formatting",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISODuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_duration",
+      "description": "Format duration: {'years': 1}",
+      "expected": {
+        "ok": true,
+        "value": {
+          "formatted": "P1Y0M0DT0H0M0S"
+        }
+      },
+      "id": "dur.0030",
+      "request": {
+        "duration": {
+          "years": 1
+        },
+        "op": "format_duration"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO 8601 duration formatting",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISODuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_duration",
+      "description": "Format duration: {'months': 6}",
+      "expected": {
+        "ok": true,
+        "value": {
+          "formatted": "P0Y6M0DT0H0M0S"
+        }
+      },
+      "id": "dur.0031",
+      "request": {
+        "duration": {
+          "months": 6
+        },
+        "op": "format_duration"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO 8601 duration formatting",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISODuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_duration",
+      "description": "Format duration: {'weeks': 2}",
+      "expected": {
+        "ok": true,
+        "value": {
+          "formatted": "P0Y0M14DT0H0M0S"
+        }
+      },
+      "id": "dur.0032",
+      "request": {
+        "duration": {
+          "weeks": 2
+        },
+        "op": "format_duration"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO 8601 duration formatting",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISODuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_duration",
+      "description": "Format duration: {'days': 30, 'hours': 12}",
+      "expected": {
+        "ok": true,
+        "value": {
+          "formatted": "P0Y0M30DT12H0M0S"
+        }
+      },
+      "id": "dur.0033",
+      "request": {
+        "duration": {
+          "days": 30,
+          "hours": 12
+        },
+        "op": "format_duration"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO 8601 duration formatting",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISODuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_duration",
+      "description": "Format duration: {'hours': 1, 'minutes': 30, 'seconds': 45}",
+      "expected": {
+        "ok": true,
+        "value": {
+          "formatted": "P0Y0M0DT1H30M45S"
+        }
+      },
+      "id": "dur.0034",
+      "request": {
+        "duration": {
+          "hours": 1,
+          "minutes": 30,
+          "seconds": 45
+        },
+        "op": "format_duration"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO 8601 duration formatting",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISODuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_duration",
+      "description": "Format duration: {'years': 10, 'months': 11, 'days': 29, 'hours': 23, 'minutes': 59, 'seconds': 59}",
+      "expected": {
+        "ok": true,
+        "value": {
+          "formatted": "P10Y11M29DT23H59M59S"
+        }
+      },
+      "id": "dur.0035",
+      "request": {
+        "duration": {
+          "days": 29,
+          "hours": 23,
+          "minutes": 59,
+          "months": 11,
+          "seconds": 59,
+          "years": 10
+        },
+        "op": "format_duration"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO 8601 duration formatting",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISODuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "format_duration",
+      "description": "Format duration: {'weeks': 1, 'days': 3}",
+      "expected": {
+        "ok": true,
+        "value": {
+          "formatted": "P0Y0M10DT0H0M0S"
+        }
+      },
+      "id": "dur.0036",
+      "request": {
+        "duration": {
+          "days": 3,
+          "weeks": 1
+        },
+        "op": "format_duration"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "ISO 8601 duration formatting",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISODuration/test.ts"
+        }
+      ]
+    }
+  ],
+  "generated_at": "2026-02-26T20:44:00.631276+00:00",
+  "suite": "duration_parsing",
+  "upstream_basis": [
+    {
+      "library": "date-fns",
+      "note": "ISO 8601 duration formatting",
+      "path": "conform/upstreams/typescript/date-fns__date-fns/src/formatISODuration/test.ts"
+    }
+  ]
+}

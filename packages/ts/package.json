@@ -1,0 +1,21 @@
+{
+  "name": "chronow-ts",
+  "version": "0.1.0",
+  "description": "Chronow TypeScript bindings (WASM-ready + deterministic CLI bridge)",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "wasm"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "eval-corpus": "npm run build && node ./scripts/eval-corpus.mjs",
+    "test": "npm run build && node ./scripts/test-conformance.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "^24.4.0",
+    "typescript": "^5.9.2"
+  }
+}

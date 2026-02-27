@@ -1,0 +1,969 @@
+{
+  "cases": [
+    {
+      "category": "interval_check",
+      "description": "Interval overlap: overlapping",
+      "expected": {
+        "ok": true,
+        "value": {
+          "mode": "overlap",
+          "result": true
+        }
+      },
+      "id": "intv.0001",
+      "request": {
+        "interval_a": {
+          "end": "2024-01-10T00:00:00Z",
+          "start": "2024-01-01T00:00:00Z"
+        },
+        "interval_b": {
+          "end": "2024-01-20T00:00:00Z",
+          "start": "2024-01-05T00:00:00Z"
+        },
+        "mode": "overlap",
+        "op": "interval_check"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "areIntervalsOverlapping, isWithinInterval",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/areIntervalsOverlapping/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "interval_check",
+      "description": "Interval contains: overlapping",
+      "expected": {
+        "ok": true,
+        "value": {
+          "mode": "contains",
+          "result": false
+        }
+      },
+      "id": "intv.0002",
+      "request": {
+        "interval_a": {
+          "end": "2024-01-10T00:00:00Z",
+          "start": "2024-01-01T00:00:00Z"
+        },
+        "interval_b": {
+          "end": "2024-01-20T00:00:00Z",
+          "start": "2024-01-05T00:00:00Z"
+        },
+        "mode": "contains",
+        "op": "interval_check"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "areIntervalsOverlapping, isWithinInterval",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/areIntervalsOverlapping/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "interval_check",
+      "description": "Interval gap: overlapping",
+      "expected": {
+        "ok": true,
+        "value": {
+          "gap": null,
+          "mode": "gap",
+          "result": false
+        }
+      },
+      "id": "intv.0003",
+      "request": {
+        "interval_a": {
+          "end": "2024-01-10T00:00:00Z",
+          "start": "2024-01-01T00:00:00Z"
+        },
+        "interval_b": {
+          "end": "2024-01-20T00:00:00Z",
+          "start": "2024-01-05T00:00:00Z"
+        },
+        "mode": "gap",
+        "op": "interval_check"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "areIntervalsOverlapping, isWithinInterval",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/areIntervalsOverlapping/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "interval_check",
+      "description": "Interval overlap: touching endpoints",
+      "expected": {
+        "ok": true,
+        "value": {
+          "mode": "overlap",
+          "result": false
+        }
+      },
+      "id": "intv.0004",
+      "request": {
+        "interval_a": {
+          "end": "2024-01-10T00:00:00Z",
+          "start": "2024-01-01T00:00:00Z"
+        },
+        "interval_b": {
+          "end": "2024-01-20T00:00:00Z",
+          "start": "2024-01-10T00:00:00Z"
+        },
+        "mode": "overlap",
+        "op": "interval_check"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "areIntervalsOverlapping, isWithinInterval",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/areIntervalsOverlapping/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "interval_check",
+      "description": "Interval contains: touching endpoints",
+      "expected": {
+        "ok": true,
+        "value": {
+          "mode": "contains",
+          "result": false
+        }
+      },
+      "id": "intv.0005",
+      "request": {
+        "interval_a": {
+          "end": "2024-01-10T00:00:00Z",
+          "start": "2024-01-01T00:00:00Z"
+        },
+        "interval_b": {
+          "end": "2024-01-20T00:00:00Z",
+          "start": "2024-01-10T00:00:00Z"
+        },
+        "mode": "contains",
+        "op": "interval_check"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "areIntervalsOverlapping, isWithinInterval",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/areIntervalsOverlapping/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "interval_check",
+      "description": "Interval gap: touching endpoints",
+      "expected": {
+        "ok": true,
+        "value": {
+          "gap": {
+            "end": "2024-01-10T00:00:00Z",
+            "seconds": 0,
+            "start": "2024-01-10T00:00:00Z"
+          },
+          "mode": "gap",
+          "result": true
+        }
+      },
+      "id": "intv.0006",
+      "request": {
+        "interval_a": {
+          "end": "2024-01-10T00:00:00Z",
+          "start": "2024-01-01T00:00:00Z"
+        },
+        "interval_b": {
+          "end": "2024-01-20T00:00:00Z",
+          "start": "2024-01-10T00:00:00Z"
+        },
+        "mode": "gap",
+        "op": "interval_check"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "areIntervalsOverlapping, isWithinInterval",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/areIntervalsOverlapping/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "interval_check",
+      "description": "Interval overlap: disjoint",
+      "expected": {
+        "ok": true,
+        "value": {
+          "mode": "overlap",
+          "result": false
+        }
+      },
+      "id": "intv.0007",
+      "request": {
+        "interval_a": {
+          "end": "2024-01-10T00:00:00Z",
+          "start": "2024-01-01T00:00:00Z"
+        },
+        "interval_b": {
+          "end": "2024-01-20T00:00:00Z",
+          "start": "2024-01-15T00:00:00Z"
+        },
+        "mode": "overlap",
+        "op": "interval_check"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "areIntervalsOverlapping, isWithinInterval",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/areIntervalsOverlapping/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "interval_check",
+      "description": "Interval contains: disjoint",
+      "expected": {
+        "ok": true,
+        "value": {
+          "mode": "contains",
+          "result": false
+        }
+      },
+      "id": "intv.0008",
+      "request": {
+        "interval_a": {
+          "end": "2024-01-10T00:00:00Z",
+          "start": "2024-01-01T00:00:00Z"
+        },
+        "interval_b": {
+          "end": "2024-01-20T00:00:00Z",
+          "start": "2024-01-15T00:00:00Z"
+        },
+        "mode": "contains",
+        "op": "interval_check"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "areIntervalsOverlapping, isWithinInterval",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/areIntervalsOverlapping/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "interval_check",
+      "description": "Interval gap: disjoint",
+      "expected": {
+        "ok": true,
+        "value": {
+          "gap": {
+            "end": "2024-01-15T00:00:00Z",
+            "seconds": 432000,
+            "start": "2024-01-10T00:00:00Z"
+          },
+          "mode": "gap",
+          "result": true
+        }
+      },
+      "id": "intv.0009",
+      "request": {
+        "interval_a": {
+          "end": "2024-01-10T00:00:00Z",
+          "start": "2024-01-01T00:00:00Z"
+        },
+        "interval_b": {
+          "end": "2024-01-20T00:00:00Z",
+          "start": "2024-01-15T00:00:00Z"
+        },
+        "mode": "gap",
+        "op": "interval_check"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "areIntervalsOverlapping, isWithinInterval",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/areIntervalsOverlapping/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "interval_check",
+      "description": "Interval overlap: a inside b",
+      "expected": {
+        "ok": true,
+        "value": {
+          "mode": "overlap",
+          "result": true
+        }
+      },
+      "id": "intv.0010",
+      "request": {
+        "interval_a": {
+          "end": "2024-01-15T00:00:00Z",
+          "start": "2024-01-05T00:00:00Z"
+        },
+        "interval_b": {
+          "end": "2024-01-20T00:00:00Z",
+          "start": "2024-01-01T00:00:00Z"
+        },
+        "mode": "overlap",
+        "op": "interval_check"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "areIntervalsOverlapping, isWithinInterval",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/areIntervalsOverlapping/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "interval_check",
+      "description": "Interval contains: a inside b",
+      "expected": {
+        "ok": true,
+        "value": {
+          "mode": "contains",
+          "result": false
+        }
+      },
+      "id": "intv.0011",
+      "request": {
+        "interval_a": {
+          "end": "2024-01-15T00:00:00Z",
+          "start": "2024-01-05T00:00:00Z"
+        },
+        "interval_b": {
+          "end": "2024-01-20T00:00:00Z",
+          "start": "2024-01-01T00:00:00Z"
+        },
+        "mode": "contains",
+        "op": "interval_check"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "areIntervalsOverlapping, isWithinInterval",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/areIntervalsOverlapping/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "interval_check",
+      "description": "Interval gap: a inside b",
+      "expected": {
+        "ok": true,
+        "value": {
+          "gap": null,
+          "mode": "gap",
+          "result": false
+        }
+      },
+      "id": "intv.0012",
+      "request": {
+        "interval_a": {
+          "end": "2024-01-15T00:00:00Z",
+          "start": "2024-01-05T00:00:00Z"
+        },
+        "interval_b": {
+          "end": "2024-01-20T00:00:00Z",
+          "start": "2024-01-01T00:00:00Z"
+        },
+        "mode": "gap",
+        "op": "interval_check"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "areIntervalsOverlapping, isWithinInterval",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/areIntervalsOverlapping/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "interval_check",
+      "description": "Interval overlap: b inside a",
+      "expected": {
+        "ok": true,
+        "value": {
+          "mode": "overlap",
+          "result": true
+        }
+      },
+      "id": "intv.0013",
+      "request": {
+        "interval_a": {
+          "end": "2024-01-20T00:00:00Z",
+          "start": "2024-01-01T00:00:00Z"
+        },
+        "interval_b": {
+          "end": "2024-01-15T00:00:00Z",
+          "start": "2024-01-05T00:00:00Z"
+        },
+        "mode": "overlap",
+        "op": "interval_check"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "areIntervalsOverlapping, isWithinInterval",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/areIntervalsOverlapping/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "interval_check",
+      "description": "Interval contains: b inside a",
+      "expected": {
+        "ok": true,
+        "value": {
+          "mode": "contains",
+          "result": true
+        }
+      },
+      "id": "intv.0014",
+      "request": {
+        "interval_a": {
+          "end": "2024-01-20T00:00:00Z",
+          "start": "2024-01-01T00:00:00Z"
+        },
+        "interval_b": {
+          "end": "2024-01-15T00:00:00Z",
+          "start": "2024-01-05T00:00:00Z"
+        },
+        "mode": "contains",
+        "op": "interval_check"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "areIntervalsOverlapping, isWithinInterval",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/areIntervalsOverlapping/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "interval_check",
+      "description": "Interval gap: b inside a",
+      "expected": {
+        "ok": true,
+        "value": {
+          "gap": null,
+          "mode": "gap",
+          "result": false
+        }
+      },
+      "id": "intv.0015",
+      "request": {
+        "interval_a": {
+          "end": "2024-01-20T00:00:00Z",
+          "start": "2024-01-01T00:00:00Z"
+        },
+        "interval_b": {
+          "end": "2024-01-15T00:00:00Z",
+          "start": "2024-01-05T00:00:00Z"
+        },
+        "mode": "gap",
+        "op": "interval_check"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "areIntervalsOverlapping, isWithinInterval",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/areIntervalsOverlapping/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "interval_check",
+      "description": "Interval overlap: identical",
+      "expected": {
+        "ok": true,
+        "value": {
+          "mode": "overlap",
+          "result": true
+        }
+      },
+      "id": "intv.0016",
+      "request": {
+        "interval_a": {
+          "end": "2024-01-10T00:00:00Z",
+          "start": "2024-01-01T00:00:00Z"
+        },
+        "interval_b": {
+          "end": "2024-01-10T00:00:00Z",
+          "start": "2024-01-01T00:00:00Z"
+        },
+        "mode": "overlap",
+        "op": "interval_check"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "areIntervalsOverlapping, isWithinInterval",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/areIntervalsOverlapping/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "interval_check",
+      "description": "Interval contains: identical",
+      "expected": {
+        "ok": true,
+        "value": {
+          "mode": "contains",
+          "result": true
+        }
+      },
+      "id": "intv.0017",
+      "request": {
+        "interval_a": {
+          "end": "2024-01-10T00:00:00Z",
+          "start": "2024-01-01T00:00:00Z"
+        },
+        "interval_b": {
+          "end": "2024-01-10T00:00:00Z",
+          "start": "2024-01-01T00:00:00Z"
+        },
+        "mode": "contains",
+        "op": "interval_check"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "areIntervalsOverlapping, isWithinInterval",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/areIntervalsOverlapping/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "interval_check",
+      "description": "Interval gap: identical",
+      "expected": {
+        "ok": true,
+        "value": {
+          "gap": null,
+          "mode": "gap",
+          "result": false
+        }
+      },
+      "id": "intv.0018",
+      "request": {
+        "interval_a": {
+          "end": "2024-01-10T00:00:00Z",
+          "start": "2024-01-01T00:00:00Z"
+        },
+        "interval_b": {
+          "end": "2024-01-10T00:00:00Z",
+          "start": "2024-01-01T00:00:00Z"
+        },
+        "mode": "gap",
+        "op": "interval_check"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "areIntervalsOverlapping, isWithinInterval",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/areIntervalsOverlapping/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "interval_check",
+      "description": "Interval overlap: reversed a",
+      "expected": {
+        "ok": true,
+        "value": {
+          "mode": "overlap",
+          "result": true
+        }
+      },
+      "id": "intv.0019",
+      "request": {
+        "interval_a": {
+          "end": "2024-01-01T00:00:00Z",
+          "start": "2024-01-10T00:00:00Z"
+        },
+        "interval_b": {
+          "end": "2024-01-15T00:00:00Z",
+          "start": "2024-01-05T00:00:00Z"
+        },
+        "mode": "overlap",
+        "op": "interval_check"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "areIntervalsOverlapping, isWithinInterval",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/areIntervalsOverlapping/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "interval_check",
+      "description": "Interval contains: reversed a",
+      "expected": {
+        "ok": true,
+        "value": {
+          "mode": "contains",
+          "result": false
+        }
+      },
+      "id": "intv.0020",
+      "request": {
+        "interval_a": {
+          "end": "2024-01-01T00:00:00Z",
+          "start": "2024-01-10T00:00:00Z"
+        },
+        "interval_b": {
+          "end": "2024-01-15T00:00:00Z",
+          "start": "2024-01-05T00:00:00Z"
+        },
+        "mode": "contains",
+        "op": "interval_check"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "areIntervalsOverlapping, isWithinInterval",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/areIntervalsOverlapping/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "interval_check",
+      "description": "Interval gap: reversed a",
+      "expected": {
+        "ok": true,
+        "value": {
+          "gap": null,
+          "mode": "gap",
+          "result": false
+        }
+      },
+      "id": "intv.0021",
+      "request": {
+        "interval_a": {
+          "end": "2024-01-01T00:00:00Z",
+          "start": "2024-01-10T00:00:00Z"
+        },
+        "interval_b": {
+          "end": "2024-01-15T00:00:00Z",
+          "start": "2024-01-05T00:00:00Z"
+        },
+        "mode": "gap",
+        "op": "interval_check"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "areIntervalsOverlapping, isWithinInterval",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/areIntervalsOverlapping/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "interval_check",
+      "description": "Interval edge overlap: zero-length a",
+      "expected": {
+        "ok": true,
+        "value": {
+          "mode": "overlap",
+          "result": false
+        }
+      },
+      "id": "intv.0022",
+      "request": {
+        "interval_a": {
+          "end": "2024-01-01T00:00:00Z",
+          "start": "2024-01-01T00:00:00Z"
+        },
+        "interval_b": {
+          "end": "2024-01-02T00:00:00Z",
+          "start": "2024-01-01T00:00:00Z"
+        },
+        "mode": "overlap",
+        "op": "interval_check"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "areIntervalsOverlapping, isWithinInterval",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/areIntervalsOverlapping/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "interval_check",
+      "description": "Interval edge contains: zero-length a",
+      "expected": {
+        "ok": true,
+        "value": {
+          "mode": "contains",
+          "result": false
+        }
+      },
+      "id": "intv.0023",
+      "request": {
+        "interval_a": {
+          "end": "2024-01-01T00:00:00Z",
+          "start": "2024-01-01T00:00:00Z"
+        },
+        "interval_b": {
+          "end": "2024-01-02T00:00:00Z",
+          "start": "2024-01-01T00:00:00Z"
+        },
+        "mode": "contains",
+        "op": "interval_check"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "areIntervalsOverlapping, isWithinInterval",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/areIntervalsOverlapping/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "interval_check",
+      "description": "Interval edge gap: zero-length a",
+      "expected": {
+        "ok": true,
+        "value": {
+          "gap": {
+            "end": "2024-01-01T00:00:00Z",
+            "seconds": 0,
+            "start": "2024-01-01T00:00:00Z"
+          },
+          "mode": "gap",
+          "result": true
+        }
+      },
+      "id": "intv.0024",
+      "request": {
+        "interval_a": {
+          "end": "2024-01-01T00:00:00Z",
+          "start": "2024-01-01T00:00:00Z"
+        },
+        "interval_b": {
+          "end": "2024-01-02T00:00:00Z",
+          "start": "2024-01-01T00:00:00Z"
+        },
+        "mode": "gap",
+        "op": "interval_check"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "areIntervalsOverlapping, isWithinInterval",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/areIntervalsOverlapping/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "interval_check",
+      "description": "Interval edge overlap: 1-second overlap",
+      "expected": {
+        "ok": true,
+        "value": {
+          "mode": "overlap",
+          "result": true
+        }
+      },
+      "id": "intv.0025",
+      "request": {
+        "interval_a": {
+          "end": "2024-01-10T00:00:00Z",
+          "start": "2024-01-01T00:00:00Z"
+        },
+        "interval_b": {
+          "end": "2024-01-20T00:00:00Z",
+          "start": "2024-01-09T23:59:59Z"
+        },
+        "mode": "overlap",
+        "op": "interval_check"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "areIntervalsOverlapping, isWithinInterval",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/areIntervalsOverlapping/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "interval_check",
+      "description": "Interval edge contains: 1-second overlap",
+      "expected": {
+        "ok": true,
+        "value": {
+          "mode": "contains",
+          "result": false
+        }
+      },
+      "id": "intv.0026",
+      "request": {
+        "interval_a": {
+          "end": "2024-01-10T00:00:00Z",
+          "start": "2024-01-01T00:00:00Z"
+        },
+        "interval_b": {
+          "end": "2024-01-20T00:00:00Z",
+          "start": "2024-01-09T23:59:59Z"
+        },
+        "mode": "contains",
+        "op": "interval_check"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "areIntervalsOverlapping, isWithinInterval",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/areIntervalsOverlapping/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "interval_check",
+      "description": "Interval edge gap: 1-second overlap",
+      "expected": {
+        "ok": true,
+        "value": {
+          "gap": null,
+          "mode": "gap",
+          "result": false
+        }
+      },
+      "id": "intv.0027",
+      "request": {
+        "interval_a": {
+          "end": "2024-01-10T00:00:00Z",
+          "start": "2024-01-01T00:00:00Z"
+        },
+        "interval_b": {
+          "end": "2024-01-20T00:00:00Z",
+          "start": "2024-01-09T23:59:59Z"
+        },
+        "mode": "gap",
+        "op": "interval_check"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "areIntervalsOverlapping, isWithinInterval",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/areIntervalsOverlapping/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "interval_check",
+      "description": "Interval edge overlap: 1-second gap",
+      "expected": {
+        "ok": true,
+        "value": {
+          "mode": "overlap",
+          "result": false
+        }
+      },
+      "id": "intv.0028",
+      "request": {
+        "interval_a": {
+          "end": "2024-01-10T00:00:00Z",
+          "start": "2024-01-01T00:00:00Z"
+        },
+        "interval_b": {
+          "end": "2024-01-20T00:00:00Z",
+          "start": "2024-01-10T00:00:01Z"
+        },
+        "mode": "overlap",
+        "op": "interval_check"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "areIntervalsOverlapping, isWithinInterval",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/areIntervalsOverlapping/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "interval_check",
+      "description": "Interval edge contains: 1-second gap",
+      "expected": {
+        "ok": true,
+        "value": {
+          "mode": "contains",
+          "result": false
+        }
+      },
+      "id": "intv.0029",
+      "request": {
+        "interval_a": {
+          "end": "2024-01-10T00:00:00Z",
+          "start": "2024-01-01T00:00:00Z"
+        },
+        "interval_b": {
+          "end": "2024-01-20T00:00:00Z",
+          "start": "2024-01-10T00:00:01Z"
+        },
+        "mode": "contains",
+        "op": "interval_check"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "areIntervalsOverlapping, isWithinInterval",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/areIntervalsOverlapping/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "interval_check",
+      "description": "Interval edge gap: 1-second gap",
+      "expected": {
+        "ok": true,
+        "value": {
+          "gap": {
+            "end": "2024-01-10T00:00:01Z",
+            "seconds": 1,
+            "start": "2024-01-10T00:00:00Z"
+          },
+          "mode": "gap",
+          "result": true
+        }
+      },
+      "id": "intv.0030",
+      "request": {
+        "interval_a": {
+          "end": "2024-01-10T00:00:00Z",
+          "start": "2024-01-01T00:00:00Z"
+        },
+        "interval_b": {
+          "end": "2024-01-20T00:00:00Z",
+          "start": "2024-01-10T00:00:01Z"
+        },
+        "mode": "gap",
+        "op": "interval_check"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "areIntervalsOverlapping, isWithinInterval",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/areIntervalsOverlapping/test.ts"
+        }
+      ]
+    }
+  ],
+  "generated_at": "2026-02-26T20:44:00.785141+00:00",
+  "suite": "interval_check",
+  "upstream_basis": [
+    {
+      "library": "date-fns",
+      "note": "areIntervalsOverlapping, isWithinInterval",
+      "path": "conform/upstreams/typescript/date-fns__date-fns/src/areIntervalsOverlapping/test.ts"
+    }
+  ]
+}

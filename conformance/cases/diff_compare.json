@@ -1,0 +1,1051 @@
+{
+  "cases": [
+    {
+      "category": "diff_instants",
+      "description": "Diff: same instant",
+      "expected": {
+        "ok": true,
+        "value": {
+          "days": 0,
+          "hours": 0,
+          "minutes": 0,
+          "months": 0,
+          "seconds": 0,
+          "total_seconds": 0,
+          "years": 0
+        }
+      },
+      "id": "diff.0001",
+      "request": {
+        "end": "2024-01-01T00:00:00Z",
+        "op": "diff_instants",
+        "start": "2024-01-01T00:00:00Z",
+        "zone": "UTC"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "diff, compare, intervalToDuration, differenceInMonths, compareAsc",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/intervalToDuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "diff_instants",
+      "description": "Diff: full year span",
+      "expected": {
+        "ok": true,
+        "value": {
+          "days": 30,
+          "hours": 23,
+          "minutes": 59,
+          "months": 11,
+          "seconds": 59,
+          "total_seconds": 31622399,
+          "years": 0
+        }
+      },
+      "id": "diff.0002",
+      "request": {
+        "end": "2024-12-31T23:59:59Z",
+        "op": "diff_instants",
+        "start": "2024-01-01T00:00:00Z",
+        "zone": "UTC"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "diff, compare, intervalToDuration, differenceInMonths, compareAsc",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/intervalToDuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "diff_instants",
+      "description": "Diff: month clamping (leap year)",
+      "expected": {
+        "ok": true,
+        "value": {
+          "days": 0,
+          "hours": 0,
+          "minutes": 0,
+          "months": 1,
+          "seconds": 0,
+          "total_seconds": 2505600,
+          "years": 0
+        }
+      },
+      "id": "diff.0003",
+      "request": {
+        "end": "2024-02-29T00:00:00Z",
+        "op": "diff_instants",
+        "start": "2024-01-31T00:00:00Z",
+        "zone": "UTC"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "diff, compare, intervalToDuration, differenceInMonths, compareAsc",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/intervalToDuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "diff_instants",
+      "description": "Diff: month clamping (non-leap)",
+      "expected": {
+        "ok": true,
+        "value": {
+          "days": 0,
+          "hours": 0,
+          "minutes": 0,
+          "months": 1,
+          "seconds": 0,
+          "total_seconds": 2419200,
+          "years": 0
+        }
+      },
+      "id": "diff.0004",
+      "request": {
+        "end": "2023-02-28T00:00:00Z",
+        "op": "diff_instants",
+        "start": "2023-01-31T00:00:00Z",
+        "zone": "UTC"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "diff, compare, intervalToDuration, differenceInMonths, compareAsc",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/intervalToDuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "diff_instants",
+      "description": "Diff: negative diff",
+      "expected": {
+        "ok": true,
+        "value": {
+          "days": 0,
+          "hours": 0,
+          "minutes": 0,
+          "months": -2,
+          "seconds": 0,
+          "total_seconds": -5184000,
+          "years": 0
+        }
+      },
+      "id": "diff.0005",
+      "request": {
+        "end": "2024-01-01T00:00:00Z",
+        "op": "diff_instants",
+        "start": "2024-03-01T00:00:00Z",
+        "zone": "UTC"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "diff, compare, intervalToDuration, differenceInMonths, compareAsc",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/intervalToDuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "diff_instants",
+      "description": "Diff: same day hour diff",
+      "expected": {
+        "ok": true,
+        "value": {
+          "days": 0,
+          "hours": 4,
+          "minutes": 15,
+          "months": 0,
+          "seconds": 30,
+          "total_seconds": 15330,
+          "years": 0
+        }
+      },
+      "id": "diff.0006",
+      "request": {
+        "end": "2024-06-15T14:45:30Z",
+        "op": "diff_instants",
+        "start": "2024-06-15T10:30:00Z",
+        "zone": "UTC"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "diff, compare, intervalToDuration, differenceInMonths, compareAsc",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/intervalToDuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "diff_instants",
+      "description": "Diff: leap to non-leap year",
+      "expected": {
+        "ok": true,
+        "value": {
+          "days": 0,
+          "hours": 0,
+          "minutes": 0,
+          "months": 0,
+          "seconds": 0,
+          "total_seconds": 31536000,
+          "years": 1
+        }
+      },
+      "id": "diff.0007",
+      "request": {
+        "end": "2021-02-28T00:00:00Z",
+        "op": "diff_instants",
+        "start": "2020-02-29T00:00:00Z",
+        "zone": "UTC"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "diff, compare, intervalToDuration, differenceInMonths, compareAsc",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/intervalToDuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "diff_instants",
+      "description": "Diff: multi-year diff",
+      "expected": {
+        "ok": true,
+        "value": {
+          "days": 14,
+          "hours": 12,
+          "minutes": 30,
+          "months": 5,
+          "seconds": 45,
+          "total_seconds": 45923445,
+          "years": 1
+        }
+      },
+      "id": "diff.0008",
+      "request": {
+        "end": "2025-06-15T12:30:45Z",
+        "op": "diff_instants",
+        "start": "2024-01-01T00:00:00Z",
+        "zone": "UTC"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "diff, compare, intervalToDuration, differenceInMonths, compareAsc",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/intervalToDuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "diff_instants",
+      "description": "Diff: across DST spring forward",
+      "expected": {
+        "ok": true,
+        "value": {
+          "days": 0,
+          "hours": 3,
+          "minutes": 0,
+          "months": 0,
+          "seconds": 0,
+          "total_seconds": 7200,
+          "years": 0
+        }
+      },
+      "id": "diff.0009",
+      "request": {
+        "end": "2024-03-10T08:00:00Z",
+        "op": "diff_instants",
+        "start": "2024-03-10T06:00:00Z",
+        "zone": "America/New_York"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "diff, compare, intervalToDuration, differenceInMonths, compareAsc",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/intervalToDuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "diff_instants",
+      "description": "Diff: across DST fall back",
+      "expected": {
+        "ok": true,
+        "value": {
+          "days": 0,
+          "hours": 1,
+          "minutes": 0,
+          "months": 0,
+          "seconds": 0,
+          "total_seconds": 7200,
+          "years": 0
+        }
+      },
+      "id": "diff.0010",
+      "request": {
+        "end": "2024-11-03T07:00:00Z",
+        "op": "diff_instants",
+        "start": "2024-11-03T05:00:00Z",
+        "zone": "America/New_York"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "diff, compare, intervalToDuration, differenceInMonths, compareAsc",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/intervalToDuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "diff_instants",
+      "description": "Diff: 5 day diff in UTC",
+      "expected": {
+        "ok": true,
+        "value": {
+          "days": 5,
+          "hours": 4,
+          "minutes": 30,
+          "months": 0,
+          "seconds": 0,
+          "total_seconds": 448200,
+          "years": 0
+        }
+      },
+      "id": "diff.0011",
+      "request": {
+        "end": "2024-01-20T14:30:00Z",
+        "op": "diff_instants",
+        "start": "2024-01-15T10:00:00Z",
+        "zone": "UTC"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "diff, compare, intervalToDuration, differenceInMonths, compareAsc",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/intervalToDuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "diff_instants",
+      "description": "Diff: half year in UTC",
+      "expected": {
+        "ok": true,
+        "value": {
+          "days": 0,
+          "hours": 0,
+          "minutes": 0,
+          "months": 6,
+          "seconds": 0,
+          "total_seconds": 15724800,
+          "years": 0
+        }
+      },
+      "id": "diff.0012",
+      "request": {
+        "end": "2024-07-01T00:00:00Z",
+        "op": "diff_instants",
+        "start": "2024-01-01T00:00:00Z",
+        "zone": "UTC"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "diff, compare, intervalToDuration, differenceInMonths, compareAsc",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/intervalToDuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "diff_instants",
+      "description": "Diff: exact 1 year in UTC",
+      "expected": {
+        "ok": true,
+        "value": {
+          "days": 0,
+          "hours": 0,
+          "minutes": 0,
+          "months": 0,
+          "seconds": 0,
+          "total_seconds": 31536000,
+          "years": 1
+        }
+      },
+      "id": "diff.0013",
+      "request": {
+        "end": "2025-03-15T08:00:00Z",
+        "op": "diff_instants",
+        "start": "2024-03-15T08:00:00Z",
+        "zone": "UTC"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "diff, compare, intervalToDuration, differenceInMonths, compareAsc",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/intervalToDuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "diff_instants",
+      "description": "Diff: 5 day diff in America/New_York",
+      "expected": {
+        "ok": true,
+        "value": {
+          "days": 5,
+          "hours": 4,
+          "minutes": 30,
+          "months": 0,
+          "seconds": 0,
+          "total_seconds": 448200,
+          "years": 0
+        }
+      },
+      "id": "diff.0014",
+      "request": {
+        "end": "2024-01-20T14:30:00Z",
+        "op": "diff_instants",
+        "start": "2024-01-15T10:00:00Z",
+        "zone": "America/New_York"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "diff, compare, intervalToDuration, differenceInMonths, compareAsc",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/intervalToDuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "diff_instants",
+      "description": "Diff: half year in America/New_York",
+      "expected": {
+        "ok": true,
+        "value": {
+          "days": 0,
+          "hours": 1,
+          "minutes": 0,
+          "months": 6,
+          "seconds": 0,
+          "total_seconds": 15724800,
+          "years": 0
+        }
+      },
+      "id": "diff.0015",
+      "request": {
+        "end": "2024-07-01T00:00:00Z",
+        "op": "diff_instants",
+        "start": "2024-01-01T00:00:00Z",
+        "zone": "America/New_York"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "diff, compare, intervalToDuration, differenceInMonths, compareAsc",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/intervalToDuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "diff_instants",
+      "description": "Diff: exact 1 year in America/New_York",
+      "expected": {
+        "ok": true,
+        "value": {
+          "days": 0,
+          "hours": 0,
+          "minutes": 0,
+          "months": 0,
+          "seconds": 0,
+          "total_seconds": 31536000,
+          "years": 1
+        }
+      },
+      "id": "diff.0016",
+      "request": {
+        "end": "2025-03-15T08:00:00Z",
+        "op": "diff_instants",
+        "start": "2024-03-15T08:00:00Z",
+        "zone": "America/New_York"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "diff, compare, intervalToDuration, differenceInMonths, compareAsc",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/intervalToDuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "diff_instants",
+      "description": "Diff: 5 day diff in Europe/London",
+      "expected": {
+        "ok": true,
+        "value": {
+          "days": 5,
+          "hours": 4,
+          "minutes": 30,
+          "months": 0,
+          "seconds": 0,
+          "total_seconds": 448200,
+          "years": 0
+        }
+      },
+      "id": "diff.0017",
+      "request": {
+        "end": "2024-01-20T14:30:00Z",
+        "op": "diff_instants",
+        "start": "2024-01-15T10:00:00Z",
+        "zone": "Europe/London"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "diff, compare, intervalToDuration, differenceInMonths, compareAsc",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/intervalToDuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "diff_instants",
+      "description": "Diff: half year in Europe/London",
+      "expected": {
+        "ok": true,
+        "value": {
+          "days": 0,
+          "hours": 1,
+          "minutes": 0,
+          "months": 6,
+          "seconds": 0,
+          "total_seconds": 15724800,
+          "years": 0
+        }
+      },
+      "id": "diff.0018",
+      "request": {
+        "end": "2024-07-01T00:00:00Z",
+        "op": "diff_instants",
+        "start": "2024-01-01T00:00:00Z",
+        "zone": "Europe/London"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "diff, compare, intervalToDuration, differenceInMonths, compareAsc",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/intervalToDuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "diff_instants",
+      "description": "Diff: exact 1 year in Europe/London",
+      "expected": {
+        "ok": true,
+        "value": {
+          "days": 0,
+          "hours": 0,
+          "minutes": 0,
+          "months": 0,
+          "seconds": 0,
+          "total_seconds": 31536000,
+          "years": 1
+        }
+      },
+      "id": "diff.0019",
+      "request": {
+        "end": "2025-03-15T08:00:00Z",
+        "op": "diff_instants",
+        "start": "2024-03-15T08:00:00Z",
+        "zone": "Europe/London"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "diff, compare, intervalToDuration, differenceInMonths, compareAsc",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/intervalToDuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "diff_instants",
+      "description": "Diff: 5 day diff in Asia/Tokyo",
+      "expected": {
+        "ok": true,
+        "value": {
+          "days": 5,
+          "hours": 4,
+          "minutes": 30,
+          "months": 0,
+          "seconds": 0,
+          "total_seconds": 448200,
+          "years": 0
+        }
+      },
+      "id": "diff.0020",
+      "request": {
+        "end": "2024-01-20T14:30:00Z",
+        "op": "diff_instants",
+        "start": "2024-01-15T10:00:00Z",
+        "zone": "Asia/Tokyo"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "diff, compare, intervalToDuration, differenceInMonths, compareAsc",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/intervalToDuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "diff_instants",
+      "description": "Diff: half year in Asia/Tokyo",
+      "expected": {
+        "ok": true,
+        "value": {
+          "days": 0,
+          "hours": 0,
+          "minutes": 0,
+          "months": 6,
+          "seconds": 0,
+          "total_seconds": 15724800,
+          "years": 0
+        }
+      },
+      "id": "diff.0021",
+      "request": {
+        "end": "2024-07-01T00:00:00Z",
+        "op": "diff_instants",
+        "start": "2024-01-01T00:00:00Z",
+        "zone": "Asia/Tokyo"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "diff, compare, intervalToDuration, differenceInMonths, compareAsc",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/intervalToDuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "diff_instants",
+      "description": "Diff: exact 1 year in Asia/Tokyo",
+      "expected": {
+        "ok": true,
+        "value": {
+          "days": 0,
+          "hours": 0,
+          "minutes": 0,
+          "months": 0,
+          "seconds": 0,
+          "total_seconds": 31536000,
+          "years": 1
+        }
+      },
+      "id": "diff.0022",
+      "request": {
+        "end": "2025-03-15T08:00:00Z",
+        "op": "diff_instants",
+        "start": "2024-03-15T08:00:00Z",
+        "zone": "Asia/Tokyo"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "diff, compare, intervalToDuration, differenceInMonths, compareAsc",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/intervalToDuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "compare_instants",
+      "description": "Compare: a < b",
+      "expected": {
+        "ok": true,
+        "value": {
+          "result": -1
+        }
+      },
+      "id": "diff.0023",
+      "request": {
+        "a": "2024-01-01T00:00:00Z",
+        "b": "2024-06-01T00:00:00Z",
+        "op": "compare_instants"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "diff, compare, intervalToDuration, differenceInMonths, compareAsc",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/intervalToDuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "compare_instants",
+      "description": "Compare: a > b",
+      "expected": {
+        "ok": true,
+        "value": {
+          "result": 1
+        }
+      },
+      "id": "diff.0024",
+      "request": {
+        "a": "2024-06-01T00:00:00Z",
+        "b": "2024-01-01T00:00:00Z",
+        "op": "compare_instants"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "diff, compare, intervalToDuration, differenceInMonths, compareAsc",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/intervalToDuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "compare_instants",
+      "description": "Compare: a == b",
+      "expected": {
+        "ok": true,
+        "value": {
+          "result": 0
+        }
+      },
+      "id": "diff.0025",
+      "request": {
+        "a": "2024-01-01T00:00:00Z",
+        "b": "2024-01-01T00:00:00Z",
+        "op": "compare_instants"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "diff, compare, intervalToDuration, differenceInMonths, compareAsc",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/intervalToDuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "compare_instants",
+      "description": "Compare: same instant different offsets",
+      "expected": {
+        "ok": true,
+        "value": {
+          "result": 0
+        }
+      },
+      "id": "diff.0026",
+      "request": {
+        "a": "2024-01-01T00:00:00+05:00",
+        "b": "2023-12-31T19:00:00Z",
+        "op": "compare_instants"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "diff, compare, intervalToDuration, differenceInMonths, compareAsc",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/intervalToDuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "compare_instants",
+      "description": "Compare: leap day vs next day",
+      "expected": {
+        "ok": true,
+        "value": {
+          "result": -1
+        }
+      },
+      "id": "diff.0027",
+      "request": {
+        "a": "2024-02-29T12:00:00Z",
+        "b": "2024-03-01T12:00:00Z",
+        "op": "compare_instants"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "diff, compare, intervalToDuration, differenceInMonths, compareAsc",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/intervalToDuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "compare_instants",
+      "description": "Compare: century span",
+      "expected": {
+        "ok": true,
+        "value": {
+          "result": -1
+        }
+      },
+      "id": "diff.0028",
+      "request": {
+        "a": "2000-01-01T00:00:00Z",
+        "b": "2099-12-31T23:59:59Z",
+        "op": "compare_instants"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "diff, compare, intervalToDuration, differenceInMonths, compareAsc",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/intervalToDuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "diff_instants",
+      "description": "Month boundary diff 2024-01-28 -> 2024-02-29",
+      "expected": {
+        "ok": true,
+        "value": {
+          "days": 1,
+          "hours": 0,
+          "minutes": 0,
+          "months": 1,
+          "seconds": 0,
+          "total_seconds": 2764800,
+          "years": 0
+        }
+      },
+      "id": "diff.0029",
+      "request": {
+        "end": "2024-02-29T00:00:00Z",
+        "op": "diff_instants",
+        "start": "2024-01-28T00:00:00Z",
+        "zone": "UTC"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "diff, compare, intervalToDuration, differenceInMonths, compareAsc",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/intervalToDuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "diff_instants",
+      "description": "Month boundary diff 2024-01-29 -> 2024-02-29",
+      "expected": {
+        "ok": true,
+        "value": {
+          "days": 0,
+          "hours": 0,
+          "minutes": 0,
+          "months": 1,
+          "seconds": 0,
+          "total_seconds": 2678400,
+          "years": 0
+        }
+      },
+      "id": "diff.0030",
+      "request": {
+        "end": "2024-02-29T00:00:00Z",
+        "op": "diff_instants",
+        "start": "2024-01-29T00:00:00Z",
+        "zone": "UTC"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "diff, compare, intervalToDuration, differenceInMonths, compareAsc",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/intervalToDuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "diff_instants",
+      "description": "Month boundary diff 2024-01-30 -> 2024-02-29",
+      "expected": {
+        "ok": true,
+        "value": {
+          "days": 0,
+          "hours": 0,
+          "minutes": 0,
+          "months": 1,
+          "seconds": 0,
+          "total_seconds": 2592000,
+          "years": 0
+        }
+      },
+      "id": "diff.0031",
+      "request": {
+        "end": "2024-02-29T00:00:00Z",
+        "op": "diff_instants",
+        "start": "2024-01-30T00:00:00Z",
+        "zone": "UTC"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "diff, compare, intervalToDuration, differenceInMonths, compareAsc",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/intervalToDuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "diff_instants",
+      "description": "Month boundary diff 2024-03-31 -> 2024-04-30",
+      "expected": {
+        "ok": true,
+        "value": {
+          "days": 0,
+          "hours": 0,
+          "minutes": 0,
+          "months": 1,
+          "seconds": 0,
+          "total_seconds": 2592000,
+          "years": 0
+        }
+      },
+      "id": "diff.0032",
+      "request": {
+        "end": "2024-04-30T00:00:00Z",
+        "op": "diff_instants",
+        "start": "2024-03-31T00:00:00Z",
+        "zone": "UTC"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "diff, compare, intervalToDuration, differenceInMonths, compareAsc",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/intervalToDuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "diff_instants",
+      "description": "Month boundary diff 2024-05-31 -> 2024-06-30",
+      "expected": {
+        "ok": true,
+        "value": {
+          "days": 0,
+          "hours": 0,
+          "minutes": 0,
+          "months": 1,
+          "seconds": 0,
+          "total_seconds": 2592000,
+          "years": 0
+        }
+      },
+      "id": "diff.0033",
+      "request": {
+        "end": "2024-06-30T00:00:00Z",
+        "op": "diff_instants",
+        "start": "2024-05-31T00:00:00Z",
+        "zone": "UTC"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "diff, compare, intervalToDuration, differenceInMonths, compareAsc",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/intervalToDuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "diff_instants",
+      "description": "Month boundary diff 2024-01-31 -> 2024-03-31",
+      "expected": {
+        "ok": true,
+        "value": {
+          "days": 0,
+          "hours": 0,
+          "minutes": 0,
+          "months": 2,
+          "seconds": 0,
+          "total_seconds": 5184000,
+          "years": 0
+        }
+      },
+      "id": "diff.0034",
+      "request": {
+        "end": "2024-03-31T00:00:00Z",
+        "op": "diff_instants",
+        "start": "2024-01-31T00:00:00Z",
+        "zone": "UTC"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "diff, compare, intervalToDuration, differenceInMonths, compareAsc",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/intervalToDuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "diff_instants",
+      "description": "Month boundary diff 2024-08-31 -> 2024-09-30",
+      "expected": {
+        "ok": true,
+        "value": {
+          "days": 0,
+          "hours": 0,
+          "minutes": 0,
+          "months": 1,
+          "seconds": 0,
+          "total_seconds": 2592000,
+          "years": 0
+        }
+      },
+      "id": "diff.0035",
+      "request": {
+        "end": "2024-09-30T00:00:00Z",
+        "op": "diff_instants",
+        "start": "2024-08-31T00:00:00Z",
+        "zone": "UTC"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "diff, compare, intervalToDuration, differenceInMonths, compareAsc",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/intervalToDuration/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "diff_instants",
+      "description": "Month boundary diff 2024-02-29 -> 2025-02-28",
+      "expected": {
+        "ok": true,
+        "value": {
+          "days": 0,
+          "hours": 0,
+          "minutes": 0,
+          "months": 0,
+          "seconds": 0,
+          "total_seconds": 31536000,
+          "years": 1
+        }
+      },
+      "id": "diff.0036",
+      "request": {
+        "end": "2025-02-28T00:00:00Z",
+        "op": "diff_instants",
+        "start": "2024-02-29T00:00:00Z",
+        "zone": "UTC"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "diff, compare, intervalToDuration, differenceInMonths, compareAsc",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/intervalToDuration/test.ts"
+        }
+      ]
+    }
+  ],
+  "generated_at": "2026-02-26T20:43:59.151732+00:00",
+  "suite": "diff_compare",
+  "upstream_basis": [
+    {
+      "library": "date-fns",
+      "note": "diff, compare, intervalToDuration, differenceInMonths, compareAsc",
+      "path": "conform/upstreams/typescript/date-fns__date-fns/src/intervalToDuration/test.ts"
+    }
+  ]
+}

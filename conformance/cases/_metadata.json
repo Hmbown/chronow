@@ -1,0 +1,39 @@
+{
+  "available_upstream": [
+    "date-fns"
+  ],
+  "generated_at": "2026-02-26T20:44:01.027849+00:00",
+  "major_zones": [
+    "America/New_York",
+    "America/Los_Angeles",
+    "America/Chicago",
+    "America/Denver",
+    "America/Toronto",
+    "America/Halifax",
+    "America/Anchorage",
+    "Europe/London",
+    "Europe/Paris",
+    "Europe/Berlin",
+    "Europe/Madrid",
+    "Europe/Rome",
+    "Europe/Amsterdam",
+    "Europe/Stockholm",
+    "Europe/Vienna",
+    "Australia/Sydney",
+    "Australia/Melbourne",
+    "Australia/Adelaide",
+    "Australia/Hobart",
+    "Pacific/Auckland"
+  ],
+  "total_cases": 865,
+  "unavailable_in_corpus": [
+    "dayjs",
+    "luxon",
+    "pendulum",
+    "arrow",
+    "dateparser",
+    "chrono",
+    "jiff",
+    "nodatime"
+  ]
+}

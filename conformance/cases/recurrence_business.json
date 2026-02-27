@@ -1,0 +1,1823 @@
+{
+  "cases": [
+    {
+      "category": "recurrence_preview",
+      "description": "Recurrence preview in America/New_York (daily)",
+      "expected": {
+        "ok": true,
+        "value": {
+          "business_calendar": {
+            "exclude_weekends": false,
+            "holidays": []
+          },
+          "occurrences": [
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-01-05T14:00:00Z",
+              "local": "2026-01-05T09:00:00",
+              "offset_seconds": -18000,
+              "resolved_local": "2026-01-05T09:00:00",
+              "zoned": "2026-01-05T09:00:00-05:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-01-06T14:00:00Z",
+              "local": "2026-01-06T09:00:00",
+              "offset_seconds": -18000,
+              "resolved_local": "2026-01-06T09:00:00",
+              "zoned": "2026-01-06T09:00:00-05:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-01-07T14:00:00Z",
+              "local": "2026-01-07T09:00:00",
+              "offset_seconds": -18000,
+              "resolved_local": "2026-01-07T09:00:00",
+              "zoned": "2026-01-07T09:00:00-05:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-01-08T14:00:00Z",
+              "local": "2026-01-08T09:00:00",
+              "offset_seconds": -18000,
+              "resolved_local": "2026-01-08T09:00:00",
+              "zoned": "2026-01-08T09:00:00-05:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-01-09T14:00:00Z",
+              "local": "2026-01-09T09:00:00",
+              "offset_seconds": -18000,
+              "resolved_local": "2026-01-09T09:00:00",
+              "zoned": "2026-01-09T09:00:00-05:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-01-10T14:00:00Z",
+              "local": "2026-01-10T09:00:00",
+              "offset_seconds": -18000,
+              "resolved_local": "2026-01-10T09:00:00",
+              "zoned": "2026-01-10T09:00:00-05:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-01-11T14:00:00Z",
+              "local": "2026-01-11T09:00:00",
+              "offset_seconds": -18000,
+              "resolved_local": "2026-01-11T09:00:00",
+              "zoned": "2026-01-11T09:00:00-05:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-01-12T14:00:00Z",
+              "local": "2026-01-12T09:00:00",
+              "offset_seconds": -18000,
+              "resolved_local": "2026-01-12T09:00:00",
+              "zoned": "2026-01-12T09:00:00-05:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-01-13T14:00:00Z",
+              "local": "2026-01-13T09:00:00",
+              "offset_seconds": -18000,
+              "resolved_local": "2026-01-13T09:00:00",
+              "zoned": "2026-01-13T09:00:00-05:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-01-14T14:00:00Z",
+              "local": "2026-01-14T09:00:00",
+              "offset_seconds": -18000,
+              "resolved_local": "2026-01-14T09:00:00",
+              "zoned": "2026-01-14T09:00:00-05:00"
+            }
+          ],
+          "rule": {
+            "by_weekdays": [],
+            "count": 10,
+            "frequency": "daily",
+            "interval": 1
+          },
+          "start_local": "2026-01-05T09:00:00",
+          "zone": "America/New_York"
+        }
+      },
+      "id": "rec.0001",
+      "request": {
+        "business_calendar": {
+          "exclude_weekends": false,
+          "holidays": []
+        },
+        "disambiguation": "compatible",
+        "op": "recurrence_preview",
+        "rule": {
+          "count": 10,
+          "frequency": "daily",
+          "interval": 1
+        },
+        "start_local": "2026-01-05T09:00:00",
+        "zone": "America/New_York"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "interval inclusivity and directional day stepping",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/eachDayOfInterval/test.ts"
+        },
+        {
+          "library": "date-fns",
+          "note": "business-day semantics and weekend skipping",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/addBusinessDays/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "recurrence_preview",
+      "description": "Recurrence preview in America/New_York (daily)",
+      "expected": {
+        "ok": true,
+        "value": {
+          "business_calendar": {
+            "exclude_weekends": true,
+            "holidays": [
+              "2026-01-19"
+            ]
+          },
+          "occurrences": [
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-01-05T14:00:00Z",
+              "local": "2026-01-05T09:00:00",
+              "offset_seconds": -18000,
+              "resolved_local": "2026-01-05T09:00:00",
+              "zoned": "2026-01-05T09:00:00-05:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-01-06T14:00:00Z",
+              "local": "2026-01-06T09:00:00",
+              "offset_seconds": -18000,
+              "resolved_local": "2026-01-06T09:00:00",
+              "zoned": "2026-01-06T09:00:00-05:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-01-07T14:00:00Z",
+              "local": "2026-01-07T09:00:00",
+              "offset_seconds": -18000,
+              "resolved_local": "2026-01-07T09:00:00",
+              "zoned": "2026-01-07T09:00:00-05:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-01-08T14:00:00Z",
+              "local": "2026-01-08T09:00:00",
+              "offset_seconds": -18000,
+              "resolved_local": "2026-01-08T09:00:00",
+              "zoned": "2026-01-08T09:00:00-05:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-01-09T14:00:00Z",
+              "local": "2026-01-09T09:00:00",
+              "offset_seconds": -18000,
+              "resolved_local": "2026-01-09T09:00:00",
+              "zoned": "2026-01-09T09:00:00-05:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-01-12T14:00:00Z",
+              "local": "2026-01-12T09:00:00",
+              "offset_seconds": -18000,
+              "resolved_local": "2026-01-12T09:00:00",
+              "zoned": "2026-01-12T09:00:00-05:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-01-13T14:00:00Z",
+              "local": "2026-01-13T09:00:00",
+              "offset_seconds": -18000,
+              "resolved_local": "2026-01-13T09:00:00",
+              "zoned": "2026-01-13T09:00:00-05:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-01-14T14:00:00Z",
+              "local": "2026-01-14T09:00:00",
+              "offset_seconds": -18000,
+              "resolved_local": "2026-01-14T09:00:00",
+              "zoned": "2026-01-14T09:00:00-05:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-01-15T14:00:00Z",
+              "local": "2026-01-15T09:00:00",
+              "offset_seconds": -18000,
+              "resolved_local": "2026-01-15T09:00:00",
+              "zoned": "2026-01-15T09:00:00-05:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-01-16T14:00:00Z",
+              "local": "2026-01-16T09:00:00",
+              "offset_seconds": -18000,
+              "resolved_local": "2026-01-16T09:00:00",
+              "zoned": "2026-01-16T09:00:00-05:00"
+            }
+          ],
+          "rule": {
+            "by_weekdays": [],
+            "count": 10,
+            "frequency": "daily",
+            "interval": 1
+          },
+          "start_local": "2026-01-05T09:00:00",
+          "zone": "America/New_York"
+        }
+      },
+      "id": "rec.0002",
+      "request": {
+        "business_calendar": {
+          "exclude_weekends": true,
+          "holidays": [
+            "2026-01-19"
+          ]
+        },
+        "disambiguation": "compatible",
+        "op": "recurrence_preview",
+        "rule": {
+          "count": 10,
+          "frequency": "daily",
+          "interval": 1
+        },
+        "start_local": "2026-01-05T09:00:00",
+        "zone": "America/New_York"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "interval inclusivity and directional day stepping",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/eachDayOfInterval/test.ts"
+        },
+        {
+          "library": "date-fns",
+          "note": "business-day semantics and weekend skipping",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/addBusinessDays/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "recurrence_preview",
+      "description": "Recurrence preview in Europe/London (weekly)",
+      "expected": {
+        "ok": true,
+        "value": {
+          "business_calendar": {
+            "exclude_weekends": false,
+            "holidays": [
+              "2026-03-20"
+            ]
+          },
+          "occurrences": [
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-02T08:30:00Z",
+              "local": "2026-03-02T08:30:00",
+              "offset_seconds": 0,
+              "resolved_local": "2026-03-02T08:30:00",
+              "zoned": "2026-03-02T08:30:00Z"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-04T08:30:00Z",
+              "local": "2026-03-04T08:30:00",
+              "offset_seconds": 0,
+              "resolved_local": "2026-03-04T08:30:00",
+              "zoned": "2026-03-04T08:30:00Z"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-06T08:30:00Z",
+              "local": "2026-03-06T08:30:00",
+              "offset_seconds": 0,
+              "resolved_local": "2026-03-06T08:30:00",
+              "zoned": "2026-03-06T08:30:00Z"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-09T08:30:00Z",
+              "local": "2026-03-09T08:30:00",
+              "offset_seconds": 0,
+              "resolved_local": "2026-03-09T08:30:00",
+              "zoned": "2026-03-09T08:30:00Z"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-11T08:30:00Z",
+              "local": "2026-03-11T08:30:00",
+              "offset_seconds": 0,
+              "resolved_local": "2026-03-11T08:30:00",
+              "zoned": "2026-03-11T08:30:00Z"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-13T08:30:00Z",
+              "local": "2026-03-13T08:30:00",
+              "offset_seconds": 0,
+              "resolved_local": "2026-03-13T08:30:00",
+              "zoned": "2026-03-13T08:30:00Z"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-16T08:30:00Z",
+              "local": "2026-03-16T08:30:00",
+              "offset_seconds": 0,
+              "resolved_local": "2026-03-16T08:30:00",
+              "zoned": "2026-03-16T08:30:00Z"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-18T08:30:00Z",
+              "local": "2026-03-18T08:30:00",
+              "offset_seconds": 0,
+              "resolved_local": "2026-03-18T08:30:00",
+              "zoned": "2026-03-18T08:30:00Z"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-23T08:30:00Z",
+              "local": "2026-03-23T08:30:00",
+              "offset_seconds": 0,
+              "resolved_local": "2026-03-23T08:30:00",
+              "zoned": "2026-03-23T08:30:00Z"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-25T08:30:00Z",
+              "local": "2026-03-25T08:30:00",
+              "offset_seconds": 0,
+              "resolved_local": "2026-03-25T08:30:00",
+              "zoned": "2026-03-25T08:30:00Z"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-27T08:30:00Z",
+              "local": "2026-03-27T08:30:00",
+              "offset_seconds": 0,
+              "resolved_local": "2026-03-27T08:30:00",
+              "zoned": "2026-03-27T08:30:00Z"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-30T07:30:00Z",
+              "local": "2026-03-30T08:30:00",
+              "offset_seconds": 3600,
+              "resolved_local": "2026-03-30T08:30:00",
+              "zoned": "2026-03-30T08:30:00+01:00"
+            }
+          ],
+          "rule": {
+            "by_weekdays": [
+              "monday",
+              "wednesday",
+              "friday"
+            ],
+            "count": 12,
+            "frequency": "weekly",
+            "interval": 1
+          },
+          "start_local": "2026-03-01T08:30:00",
+          "zone": "Europe/London"
+        }
+      },
+      "id": "rec.0003",
+      "request": {
+        "business_calendar": {
+          "exclude_weekends": false,
+          "holidays": [
+            "2026-03-20"
+          ]
+        },
+        "disambiguation": "compatible",
+        "op": "recurrence_preview",
+        "rule": {
+          "by_weekdays": [
+            "monday",
+            "wednesday",
+            "friday"
+          ],
+          "count": 12,
+          "frequency": "weekly",
+          "interval": 1
+        },
+        "start_local": "2026-03-01T08:30:00",
+        "zone": "Europe/London"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "interval inclusivity and directional day stepping",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/eachDayOfInterval/test.ts"
+        },
+        {
+          "library": "date-fns",
+          "note": "business-day semantics and weekend skipping",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/addBusinessDays/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "recurrence_preview",
+      "description": "Recurrence preview in Australia/Sydney (monthly)",
+      "expected": {
+        "ok": true,
+        "value": {
+          "business_calendar": {
+            "exclude_weekends": false,
+            "holidays": []
+          },
+          "occurrences": [
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-01-30T23:00:00Z",
+              "local": "2026-01-31T10:00:00",
+              "offset_seconds": 39600,
+              "resolved_local": "2026-01-31T10:00:00",
+              "zoned": "2026-01-31T10:00:00+11:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-02-27T23:00:00Z",
+              "local": "2026-02-28T10:00:00",
+              "offset_seconds": 39600,
+              "resolved_local": "2026-02-28T10:00:00",
+              "zoned": "2026-02-28T10:00:00+11:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-30T23:00:00Z",
+              "local": "2026-03-31T10:00:00",
+              "offset_seconds": 39600,
+              "resolved_local": "2026-03-31T10:00:00",
+              "zoned": "2026-03-31T10:00:00+11:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-04-30T00:00:00Z",
+              "local": "2026-04-30T10:00:00",
+              "offset_seconds": 36000,
+              "resolved_local": "2026-04-30T10:00:00",
+              "zoned": "2026-04-30T10:00:00+10:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-05-31T00:00:00Z",
+              "local": "2026-05-31T10:00:00",
+              "offset_seconds": 36000,
+              "resolved_local": "2026-05-31T10:00:00",
+              "zoned": "2026-05-31T10:00:00+10:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-06-30T00:00:00Z",
+              "local": "2026-06-30T10:00:00",
+              "offset_seconds": 36000,
+              "resolved_local": "2026-06-30T10:00:00",
+              "zoned": "2026-06-30T10:00:00+10:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-07-31T00:00:00Z",
+              "local": "2026-07-31T10:00:00",
+              "offset_seconds": 36000,
+              "resolved_local": "2026-07-31T10:00:00",
+              "zoned": "2026-07-31T10:00:00+10:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-08-31T00:00:00Z",
+              "local": "2026-08-31T10:00:00",
+              "offset_seconds": 36000,
+              "resolved_local": "2026-08-31T10:00:00",
+              "zoned": "2026-08-31T10:00:00+10:00"
+            }
+          ],
+          "rule": {
+            "by_weekdays": [],
+            "count": 8,
+            "frequency": "monthly",
+            "interval": 1
+          },
+          "start_local": "2026-01-31T10:00:00",
+          "zone": "Australia/Sydney"
+        }
+      },
+      "id": "rec.0004",
+      "request": {
+        "business_calendar": {
+          "exclude_weekends": false,
+          "holidays": []
+        },
+        "disambiguation": "compatible",
+        "op": "recurrence_preview",
+        "rule": {
+          "count": 8,
+          "frequency": "monthly",
+          "interval": 1
+        },
+        "start_local": "2026-01-31T10:00:00",
+        "zone": "Australia/Sydney"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "interval inclusivity and directional day stepping",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/eachDayOfInterval/test.ts"
+        },
+        {
+          "library": "date-fns",
+          "note": "business-day semantics and weekend skipping",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/addBusinessDays/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "recurrence_preview",
+      "description": "Recurrence preview in America/New_York (weekly)",
+      "expected": {
+        "ok": true,
+        "value": {
+          "business_calendar": {
+            "exclude_weekends": false,
+            "holidays": []
+          },
+          "occurrences": [
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-10-25T05:30:00Z",
+              "local": "2026-10-25T01:30:00",
+              "offset_seconds": -14400,
+              "resolved_local": "2026-10-25T01:30:00",
+              "zoned": "2026-10-25T01:30:00-04:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-11-08T06:30:00Z",
+              "local": "2026-11-08T01:30:00",
+              "offset_seconds": -18000,
+              "resolved_local": "2026-11-08T01:30:00",
+              "zoned": "2026-11-08T01:30:00-05:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-11-22T06:30:00Z",
+              "local": "2026-11-22T01:30:00",
+              "offset_seconds": -18000,
+              "resolved_local": "2026-11-22T01:30:00",
+              "zoned": "2026-11-22T01:30:00-05:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-12-06T06:30:00Z",
+              "local": "2026-12-06T01:30:00",
+              "offset_seconds": -18000,
+              "resolved_local": "2026-12-06T01:30:00",
+              "zoned": "2026-12-06T01:30:00-05:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-12-20T06:30:00Z",
+              "local": "2026-12-20T01:30:00",
+              "offset_seconds": -18000,
+              "resolved_local": "2026-12-20T01:30:00",
+              "zoned": "2026-12-20T01:30:00-05:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2027-01-03T06:30:00Z",
+              "local": "2027-01-03T01:30:00",
+              "offset_seconds": -18000,
+              "resolved_local": "2027-01-03T01:30:00",
+              "zoned": "2027-01-03T01:30:00-05:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2027-01-17T06:30:00Z",
+              "local": "2027-01-17T01:30:00",
+              "offset_seconds": -18000,
+              "resolved_local": "2027-01-17T01:30:00",
+              "zoned": "2027-01-17T01:30:00-05:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2027-01-31T06:30:00Z",
+              "local": "2027-01-31T01:30:00",
+              "offset_seconds": -18000,
+              "resolved_local": "2027-01-31T01:30:00",
+              "zoned": "2027-01-31T01:30:00-05:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2027-02-14T06:30:00Z",
+              "local": "2027-02-14T01:30:00",
+              "offset_seconds": -18000,
+              "resolved_local": "2027-02-14T01:30:00",
+              "zoned": "2027-02-14T01:30:00-05:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2027-02-28T06:30:00Z",
+              "local": "2027-02-28T01:30:00",
+              "offset_seconds": -18000,
+              "resolved_local": "2027-02-28T01:30:00",
+              "zoned": "2027-02-28T01:30:00-05:00"
+            }
+          ],
+          "rule": {
+            "by_weekdays": [
+              "sunday"
+            ],
+            "count": 10,
+            "frequency": "weekly",
+            "interval": 2
+          },
+          "start_local": "2026-10-25T01:30:00",
+          "zone": "America/New_York"
+        }
+      },
+      "id": "rec.0005",
+      "request": {
+        "business_calendar": {
+          "exclude_weekends": false,
+          "holidays": []
+        },
+        "disambiguation": "later",
+        "op": "recurrence_preview",
+        "rule": {
+          "by_weekdays": [
+            "sunday"
+          ],
+          "count": 10,
+          "frequency": "weekly",
+          "interval": 2
+        },
+        "start_local": "2026-10-25T01:30:00",
+        "zone": "America/New_York"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "interval inclusivity and directional day stepping",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/eachDayOfInterval/test.ts"
+        },
+        {
+          "library": "date-fns",
+          "note": "business-day semantics and weekend skipping",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/addBusinessDays/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "recurrence_preview",
+      "description": "Recurrence preview in America/New_York (weekly)",
+      "expected": {
+        "ok": true,
+        "value": {
+          "business_calendar": {
+            "exclude_weekends": true,
+            "holidays": [
+              "2026-03-17"
+            ]
+          },
+          "occurrences": [
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-02T14:00:00Z",
+              "local": "2026-03-02T09:00:00",
+              "offset_seconds": -18000,
+              "resolved_local": "2026-03-02T09:00:00",
+              "zoned": "2026-03-02T09:00:00-05:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-03T14:00:00Z",
+              "local": "2026-03-03T09:00:00",
+              "offset_seconds": -18000,
+              "resolved_local": "2026-03-03T09:00:00",
+              "zoned": "2026-03-03T09:00:00-05:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-04T14:00:00Z",
+              "local": "2026-03-04T09:00:00",
+              "offset_seconds": -18000,
+              "resolved_local": "2026-03-04T09:00:00",
+              "zoned": "2026-03-04T09:00:00-05:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-05T14:00:00Z",
+              "local": "2026-03-05T09:00:00",
+              "offset_seconds": -18000,
+              "resolved_local": "2026-03-05T09:00:00",
+              "zoned": "2026-03-05T09:00:00-05:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-06T14:00:00Z",
+              "local": "2026-03-06T09:00:00",
+              "offset_seconds": -18000,
+              "resolved_local": "2026-03-06T09:00:00",
+              "zoned": "2026-03-06T09:00:00-05:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-09T13:00:00Z",
+              "local": "2026-03-09T09:00:00",
+              "offset_seconds": -14400,
+              "resolved_local": "2026-03-09T09:00:00",
+              "zoned": "2026-03-09T09:00:00-04:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-10T13:00:00Z",
+              "local": "2026-03-10T09:00:00",
+              "offset_seconds": -14400,
+              "resolved_local": "2026-03-10T09:00:00",
+              "zoned": "2026-03-10T09:00:00-04:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-11T13:00:00Z",
+              "local": "2026-03-11T09:00:00",
+              "offset_seconds": -14400,
+              "resolved_local": "2026-03-11T09:00:00",
+              "zoned": "2026-03-11T09:00:00-04:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-12T13:00:00Z",
+              "local": "2026-03-12T09:00:00",
+              "offset_seconds": -14400,
+              "resolved_local": "2026-03-12T09:00:00",
+              "zoned": "2026-03-12T09:00:00-04:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-13T13:00:00Z",
+              "local": "2026-03-13T09:00:00",
+              "offset_seconds": -14400,
+              "resolved_local": "2026-03-13T09:00:00",
+              "zoned": "2026-03-13T09:00:00-04:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-16T13:00:00Z",
+              "local": "2026-03-16T09:00:00",
+              "offset_seconds": -14400,
+              "resolved_local": "2026-03-16T09:00:00",
+              "zoned": "2026-03-16T09:00:00-04:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-18T13:00:00Z",
+              "local": "2026-03-18T09:00:00",
+              "offset_seconds": -14400,
+              "resolved_local": "2026-03-18T09:00:00",
+              "zoned": "2026-03-18T09:00:00-04:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-19T13:00:00Z",
+              "local": "2026-03-19T09:00:00",
+              "offset_seconds": -14400,
+              "resolved_local": "2026-03-19T09:00:00",
+              "zoned": "2026-03-19T09:00:00-04:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-20T13:00:00Z",
+              "local": "2026-03-20T09:00:00",
+              "offset_seconds": -14400,
+              "resolved_local": "2026-03-20T09:00:00",
+              "zoned": "2026-03-20T09:00:00-04:00"
+            }
+          ],
+          "rule": {
+            "by_weekdays": [
+              "monday",
+              "tuesday",
+              "wednesday",
+              "thursday",
+              "friday"
+            ],
+            "count": 14,
+            "frequency": "weekly",
+            "interval": 1
+          },
+          "start_local": "2026-03-01T09:00:00",
+          "zone": "America/New_York"
+        }
+      },
+      "id": "rec.0006",
+      "request": {
+        "business_calendar": {
+          "exclude_weekends": true,
+          "holidays": [
+            "2026-03-17"
+          ]
+        },
+        "disambiguation": "compatible",
+        "op": "recurrence_preview",
+        "rule": {
+          "by_weekdays": [
+            "monday",
+            "tuesday",
+            "wednesday",
+            "thursday",
+            "friday"
+          ],
+          "count": 14,
+          "frequency": "weekly",
+          "interval": 1
+        },
+        "start_local": "2026-03-01T09:00:00",
+        "zone": "America/New_York"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "interval inclusivity and directional day stepping",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/eachDayOfInterval/test.ts"
+        },
+        {
+          "library": "date-fns",
+          "note": "business-day semantics and weekend skipping",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/addBusinessDays/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "recurrence_preview",
+      "description": "Recurrence preview in Europe/Berlin (weekly)",
+      "expected": {
+        "ok": true,
+        "value": {
+          "business_calendar": {
+            "exclude_weekends": false,
+            "holidays": []
+          },
+          "occurrences": [
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-10-24T23:30:00Z",
+              "local": "2026-10-25T01:30:00",
+              "offset_seconds": 7200,
+              "resolved_local": "2026-10-25T01:30:00",
+              "zoned": "2026-10-25T01:30:00+02:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-11-08T00:30:00Z",
+              "local": "2026-11-08T01:30:00",
+              "offset_seconds": 3600,
+              "resolved_local": "2026-11-08T01:30:00",
+              "zoned": "2026-11-08T01:30:00+01:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-11-22T00:30:00Z",
+              "local": "2026-11-22T01:30:00",
+              "offset_seconds": 3600,
+              "resolved_local": "2026-11-22T01:30:00",
+              "zoned": "2026-11-22T01:30:00+01:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-12-06T00:30:00Z",
+              "local": "2026-12-06T01:30:00",
+              "offset_seconds": 3600,
+              "resolved_local": "2026-12-06T01:30:00",
+              "zoned": "2026-12-06T01:30:00+01:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-12-20T00:30:00Z",
+              "local": "2026-12-20T01:30:00",
+              "offset_seconds": 3600,
+              "resolved_local": "2026-12-20T01:30:00",
+              "zoned": "2026-12-20T01:30:00+01:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2027-01-03T00:30:00Z",
+              "local": "2027-01-03T01:30:00",
+              "offset_seconds": 3600,
+              "resolved_local": "2027-01-03T01:30:00",
+              "zoned": "2027-01-03T01:30:00+01:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2027-01-17T00:30:00Z",
+              "local": "2027-01-17T01:30:00",
+              "offset_seconds": 3600,
+              "resolved_local": "2027-01-17T01:30:00",
+              "zoned": "2027-01-17T01:30:00+01:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2027-01-31T00:30:00Z",
+              "local": "2027-01-31T01:30:00",
+              "offset_seconds": 3600,
+              "resolved_local": "2027-01-31T01:30:00",
+              "zoned": "2027-01-31T01:30:00+01:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2027-02-14T00:30:00Z",
+              "local": "2027-02-14T01:30:00",
+              "offset_seconds": 3600,
+              "resolved_local": "2027-02-14T01:30:00",
+              "zoned": "2027-02-14T01:30:00+01:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2027-02-28T00:30:00Z",
+              "local": "2027-02-28T01:30:00",
+              "offset_seconds": 3600,
+              "resolved_local": "2027-02-28T01:30:00",
+              "zoned": "2027-02-28T01:30:00+01:00"
+            }
+          ],
+          "rule": {
+            "by_weekdays": [
+              "sunday"
+            ],
+            "count": 10,
+            "frequency": "weekly",
+            "interval": 2
+          },
+          "start_local": "2026-10-25T01:30:00",
+          "zone": "Europe/Berlin"
+        }
+      },
+      "id": "rec.0007",
+      "request": {
+        "business_calendar": {
+          "exclude_weekends": false,
+          "holidays": []
+        },
+        "disambiguation": "later",
+        "op": "recurrence_preview",
+        "rule": {
+          "by_weekdays": [
+            "sunday"
+          ],
+          "count": 10,
+          "frequency": "weekly",
+          "interval": 2
+        },
+        "start_local": "2026-10-25T01:30:00",
+        "zone": "Europe/Berlin"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "interval inclusivity and directional day stepping",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/eachDayOfInterval/test.ts"
+        },
+        {
+          "library": "date-fns",
+          "note": "business-day semantics and weekend skipping",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/addBusinessDays/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "recurrence_preview",
+      "description": "Recurrence preview in Europe/Berlin (weekly)",
+      "expected": {
+        "ok": true,
+        "value": {
+          "business_calendar": {
+            "exclude_weekends": true,
+            "holidays": [
+              "2026-03-17"
+            ]
+          },
+          "occurrences": [
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-02T08:00:00Z",
+              "local": "2026-03-02T09:00:00",
+              "offset_seconds": 3600,
+              "resolved_local": "2026-03-02T09:00:00",
+              "zoned": "2026-03-02T09:00:00+01:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-03T08:00:00Z",
+              "local": "2026-03-03T09:00:00",
+              "offset_seconds": 3600,
+              "resolved_local": "2026-03-03T09:00:00",
+              "zoned": "2026-03-03T09:00:00+01:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-04T08:00:00Z",
+              "local": "2026-03-04T09:00:00",
+              "offset_seconds": 3600,
+              "resolved_local": "2026-03-04T09:00:00",
+              "zoned": "2026-03-04T09:00:00+01:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-05T08:00:00Z",
+              "local": "2026-03-05T09:00:00",
+              "offset_seconds": 3600,
+              "resolved_local": "2026-03-05T09:00:00",
+              "zoned": "2026-03-05T09:00:00+01:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-06T08:00:00Z",
+              "local": "2026-03-06T09:00:00",
+              "offset_seconds": 3600,
+              "resolved_local": "2026-03-06T09:00:00",
+              "zoned": "2026-03-06T09:00:00+01:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-09T08:00:00Z",
+              "local": "2026-03-09T09:00:00",
+              "offset_seconds": 3600,
+              "resolved_local": "2026-03-09T09:00:00",
+              "zoned": "2026-03-09T09:00:00+01:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-10T08:00:00Z",
+              "local": "2026-03-10T09:00:00",
+              "offset_seconds": 3600,
+              "resolved_local": "2026-03-10T09:00:00",
+              "zoned": "2026-03-10T09:00:00+01:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-11T08:00:00Z",
+              "local": "2026-03-11T09:00:00",
+              "offset_seconds": 3600,
+              "resolved_local": "2026-03-11T09:00:00",
+              "zoned": "2026-03-11T09:00:00+01:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-12T08:00:00Z",
+              "local": "2026-03-12T09:00:00",
+              "offset_seconds": 3600,
+              "resolved_local": "2026-03-12T09:00:00",
+              "zoned": "2026-03-12T09:00:00+01:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-13T08:00:00Z",
+              "local": "2026-03-13T09:00:00",
+              "offset_seconds": 3600,
+              "resolved_local": "2026-03-13T09:00:00",
+              "zoned": "2026-03-13T09:00:00+01:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-16T08:00:00Z",
+              "local": "2026-03-16T09:00:00",
+              "offset_seconds": 3600,
+              "resolved_local": "2026-03-16T09:00:00",
+              "zoned": "2026-03-16T09:00:00+01:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-18T08:00:00Z",
+              "local": "2026-03-18T09:00:00",
+              "offset_seconds": 3600,
+              "resolved_local": "2026-03-18T09:00:00",
+              "zoned": "2026-03-18T09:00:00+01:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-19T08:00:00Z",
+              "local": "2026-03-19T09:00:00",
+              "offset_seconds": 3600,
+              "resolved_local": "2026-03-19T09:00:00",
+              "zoned": "2026-03-19T09:00:00+01:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-20T08:00:00Z",
+              "local": "2026-03-20T09:00:00",
+              "offset_seconds": 3600,
+              "resolved_local": "2026-03-20T09:00:00",
+              "zoned": "2026-03-20T09:00:00+01:00"
+            }
+          ],
+          "rule": {
+            "by_weekdays": [
+              "monday",
+              "tuesday",
+              "wednesday",
+              "thursday",
+              "friday"
+            ],
+            "count": 14,
+            "frequency": "weekly",
+            "interval": 1
+          },
+          "start_local": "2026-03-01T09:00:00",
+          "zone": "Europe/Berlin"
+        }
+      },
+      "id": "rec.0008",
+      "request": {
+        "business_calendar": {
+          "exclude_weekends": true,
+          "holidays": [
+            "2026-03-17"
+          ]
+        },
+        "disambiguation": "compatible",
+        "op": "recurrence_preview",
+        "rule": {
+          "by_weekdays": [
+            "monday",
+            "tuesday",
+            "wednesday",
+            "thursday",
+            "friday"
+          ],
+          "count": 14,
+          "frequency": "weekly",
+          "interval": 1
+        },
+        "start_local": "2026-03-01T09:00:00",
+        "zone": "Europe/Berlin"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "interval inclusivity and directional day stepping",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/eachDayOfInterval/test.ts"
+        },
+        {
+          "library": "date-fns",
+          "note": "business-day semantics and weekend skipping",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/addBusinessDays/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "recurrence_preview",
+      "description": "Recurrence preview in Asia/Tokyo (weekly)",
+      "expected": {
+        "ok": true,
+        "value": {
+          "business_calendar": {
+            "exclude_weekends": false,
+            "holidays": []
+          },
+          "occurrences": [
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-10-24T16:30:00Z",
+              "local": "2026-10-25T01:30:00",
+              "offset_seconds": 32400,
+              "resolved_local": "2026-10-25T01:30:00",
+              "zoned": "2026-10-25T01:30:00+09:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-11-07T16:30:00Z",
+              "local": "2026-11-08T01:30:00",
+              "offset_seconds": 32400,
+              "resolved_local": "2026-11-08T01:30:00",
+              "zoned": "2026-11-08T01:30:00+09:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-11-21T16:30:00Z",
+              "local": "2026-11-22T01:30:00",
+              "offset_seconds": 32400,
+              "resolved_local": "2026-11-22T01:30:00",
+              "zoned": "2026-11-22T01:30:00+09:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-12-05T16:30:00Z",
+              "local": "2026-12-06T01:30:00",
+              "offset_seconds": 32400,
+              "resolved_local": "2026-12-06T01:30:00",
+              "zoned": "2026-12-06T01:30:00+09:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-12-19T16:30:00Z",
+              "local": "2026-12-20T01:30:00",
+              "offset_seconds": 32400,
+              "resolved_local": "2026-12-20T01:30:00",
+              "zoned": "2026-12-20T01:30:00+09:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2027-01-02T16:30:00Z",
+              "local": "2027-01-03T01:30:00",
+              "offset_seconds": 32400,
+              "resolved_local": "2027-01-03T01:30:00",
+              "zoned": "2027-01-03T01:30:00+09:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2027-01-16T16:30:00Z",
+              "local": "2027-01-17T01:30:00",
+              "offset_seconds": 32400,
+              "resolved_local": "2027-01-17T01:30:00",
+              "zoned": "2027-01-17T01:30:00+09:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2027-01-30T16:30:00Z",
+              "local": "2027-01-31T01:30:00",
+              "offset_seconds": 32400,
+              "resolved_local": "2027-01-31T01:30:00",
+              "zoned": "2027-01-31T01:30:00+09:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2027-02-13T16:30:00Z",
+              "local": "2027-02-14T01:30:00",
+              "offset_seconds": 32400,
+              "resolved_local": "2027-02-14T01:30:00",
+              "zoned": "2027-02-14T01:30:00+09:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2027-02-27T16:30:00Z",
+              "local": "2027-02-28T01:30:00",
+              "offset_seconds": 32400,
+              "resolved_local": "2027-02-28T01:30:00",
+              "zoned": "2027-02-28T01:30:00+09:00"
+            }
+          ],
+          "rule": {
+            "by_weekdays": [
+              "sunday"
+            ],
+            "count": 10,
+            "frequency": "weekly",
+            "interval": 2
+          },
+          "start_local": "2026-10-25T01:30:00",
+          "zone": "Asia/Tokyo"
+        }
+      },
+      "id": "rec.0009",
+      "request": {
+        "business_calendar": {
+          "exclude_weekends": false,
+          "holidays": []
+        },
+        "disambiguation": "later",
+        "op": "recurrence_preview",
+        "rule": {
+          "by_weekdays": [
+            "sunday"
+          ],
+          "count": 10,
+          "frequency": "weekly",
+          "interval": 2
+        },
+        "start_local": "2026-10-25T01:30:00",
+        "zone": "Asia/Tokyo"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "interval inclusivity and directional day stepping",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/eachDayOfInterval/test.ts"
+        },
+        {
+          "library": "date-fns",
+          "note": "business-day semantics and weekend skipping",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/addBusinessDays/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "recurrence_preview",
+      "description": "Recurrence preview in Asia/Tokyo (weekly)",
+      "expected": {
+        "ok": true,
+        "value": {
+          "business_calendar": {
+            "exclude_weekends": true,
+            "holidays": [
+              "2026-03-17"
+            ]
+          },
+          "occurrences": [
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-02T00:00:00Z",
+              "local": "2026-03-02T09:00:00",
+              "offset_seconds": 32400,
+              "resolved_local": "2026-03-02T09:00:00",
+              "zoned": "2026-03-02T09:00:00+09:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-03T00:00:00Z",
+              "local": "2026-03-03T09:00:00",
+              "offset_seconds": 32400,
+              "resolved_local": "2026-03-03T09:00:00",
+              "zoned": "2026-03-03T09:00:00+09:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-04T00:00:00Z",
+              "local": "2026-03-04T09:00:00",
+              "offset_seconds": 32400,
+              "resolved_local": "2026-03-04T09:00:00",
+              "zoned": "2026-03-04T09:00:00+09:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-05T00:00:00Z",
+              "local": "2026-03-05T09:00:00",
+              "offset_seconds": 32400,
+              "resolved_local": "2026-03-05T09:00:00",
+              "zoned": "2026-03-05T09:00:00+09:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-06T00:00:00Z",
+              "local": "2026-03-06T09:00:00",
+              "offset_seconds": 32400,
+              "resolved_local": "2026-03-06T09:00:00",
+              "zoned": "2026-03-06T09:00:00+09:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-09T00:00:00Z",
+              "local": "2026-03-09T09:00:00",
+              "offset_seconds": 32400,
+              "resolved_local": "2026-03-09T09:00:00",
+              "zoned": "2026-03-09T09:00:00+09:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-10T00:00:00Z",
+              "local": "2026-03-10T09:00:00",
+              "offset_seconds": 32400,
+              "resolved_local": "2026-03-10T09:00:00",
+              "zoned": "2026-03-10T09:00:00+09:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-11T00:00:00Z",
+              "local": "2026-03-11T09:00:00",
+              "offset_seconds": 32400,
+              "resolved_local": "2026-03-11T09:00:00",
+              "zoned": "2026-03-11T09:00:00+09:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-12T00:00:00Z",
+              "local": "2026-03-12T09:00:00",
+              "offset_seconds": 32400,
+              "resolved_local": "2026-03-12T09:00:00",
+              "zoned": "2026-03-12T09:00:00+09:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-13T00:00:00Z",
+              "local": "2026-03-13T09:00:00",
+              "offset_seconds": 32400,
+              "resolved_local": "2026-03-13T09:00:00",
+              "zoned": "2026-03-13T09:00:00+09:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-16T00:00:00Z",
+              "local": "2026-03-16T09:00:00",
+              "offset_seconds": 32400,
+              "resolved_local": "2026-03-16T09:00:00",
+              "zoned": "2026-03-16T09:00:00+09:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-18T00:00:00Z",
+              "local": "2026-03-18T09:00:00",
+              "offset_seconds": 32400,
+              "resolved_local": "2026-03-18T09:00:00",
+              "zoned": "2026-03-18T09:00:00+09:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-19T00:00:00Z",
+              "local": "2026-03-19T09:00:00",
+              "offset_seconds": 32400,
+              "resolved_local": "2026-03-19T09:00:00",
+              "zoned": "2026-03-19T09:00:00+09:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-20T00:00:00Z",
+              "local": "2026-03-20T09:00:00",
+              "offset_seconds": 32400,
+              "resolved_local": "2026-03-20T09:00:00",
+              "zoned": "2026-03-20T09:00:00+09:00"
+            }
+          ],
+          "rule": {
+            "by_weekdays": [
+              "monday",
+              "tuesday",
+              "wednesday",
+              "thursday",
+              "friday"
+            ],
+            "count": 14,
+            "frequency": "weekly",
+            "interval": 1
+          },
+          "start_local": "2026-03-01T09:00:00",
+          "zone": "Asia/Tokyo"
+        }
+      },
+      "id": "rec.0010",
+      "request": {
+        "business_calendar": {
+          "exclude_weekends": true,
+          "holidays": [
+            "2026-03-17"
+          ]
+        },
+        "disambiguation": "compatible",
+        "op": "recurrence_preview",
+        "rule": {
+          "by_weekdays": [
+            "monday",
+            "tuesday",
+            "wednesday",
+            "thursday",
+            "friday"
+          ],
+          "count": 14,
+          "frequency": "weekly",
+          "interval": 1
+        },
+        "start_local": "2026-03-01T09:00:00",
+        "zone": "Asia/Tokyo"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "interval inclusivity and directional day stepping",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/eachDayOfInterval/test.ts"
+        },
+        {
+          "library": "date-fns",
+          "note": "business-day semantics and weekend skipping",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/addBusinessDays/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "recurrence_preview",
+      "description": "Recurrence preview in Pacific/Auckland (weekly)",
+      "expected": {
+        "ok": true,
+        "value": {
+          "business_calendar": {
+            "exclude_weekends": false,
+            "holidays": []
+          },
+          "occurrences": [
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-10-24T12:30:00Z",
+              "local": "2026-10-25T01:30:00",
+              "offset_seconds": 46800,
+              "resolved_local": "2026-10-25T01:30:00",
+              "zoned": "2026-10-25T01:30:00+13:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-11-07T12:30:00Z",
+              "local": "2026-11-08T01:30:00",
+              "offset_seconds": 46800,
+              "resolved_local": "2026-11-08T01:30:00",
+              "zoned": "2026-11-08T01:30:00+13:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-11-21T12:30:00Z",
+              "local": "2026-11-22T01:30:00",
+              "offset_seconds": 46800,
+              "resolved_local": "2026-11-22T01:30:00",
+              "zoned": "2026-11-22T01:30:00+13:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-12-05T12:30:00Z",
+              "local": "2026-12-06T01:30:00",
+              "offset_seconds": 46800,
+              "resolved_local": "2026-12-06T01:30:00",
+              "zoned": "2026-12-06T01:30:00+13:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-12-19T12:30:00Z",
+              "local": "2026-12-20T01:30:00",
+              "offset_seconds": 46800,
+              "resolved_local": "2026-12-20T01:30:00",
+              "zoned": "2026-12-20T01:30:00+13:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2027-01-02T12:30:00Z",
+              "local": "2027-01-03T01:30:00",
+              "offset_seconds": 46800,
+              "resolved_local": "2027-01-03T01:30:00",
+              "zoned": "2027-01-03T01:30:00+13:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2027-01-16T12:30:00Z",
+              "local": "2027-01-17T01:30:00",
+              "offset_seconds": 46800,
+              "resolved_local": "2027-01-17T01:30:00",
+              "zoned": "2027-01-17T01:30:00+13:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2027-01-30T12:30:00Z",
+              "local": "2027-01-31T01:30:00",
+              "offset_seconds": 46800,
+              "resolved_local": "2027-01-31T01:30:00",
+              "zoned": "2027-01-31T01:30:00+13:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2027-02-13T12:30:00Z",
+              "local": "2027-02-14T01:30:00",
+              "offset_seconds": 46800,
+              "resolved_local": "2027-02-14T01:30:00",
+              "zoned": "2027-02-14T01:30:00+13:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2027-02-27T12:30:00Z",
+              "local": "2027-02-28T01:30:00",
+              "offset_seconds": 46800,
+              "resolved_local": "2027-02-28T01:30:00",
+              "zoned": "2027-02-28T01:30:00+13:00"
+            }
+          ],
+          "rule": {
+            "by_weekdays": [
+              "sunday"
+            ],
+            "count": 10,
+            "frequency": "weekly",
+            "interval": 2
+          },
+          "start_local": "2026-10-25T01:30:00",
+          "zone": "Pacific/Auckland"
+        }
+      },
+      "id": "rec.0011",
+      "request": {
+        "business_calendar": {
+          "exclude_weekends": false,
+          "holidays": []
+        },
+        "disambiguation": "later",
+        "op": "recurrence_preview",
+        "rule": {
+          "by_weekdays": [
+            "sunday"
+          ],
+          "count": 10,
+          "frequency": "weekly",
+          "interval": 2
+        },
+        "start_local": "2026-10-25T01:30:00",
+        "zone": "Pacific/Auckland"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "interval inclusivity and directional day stepping",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/eachDayOfInterval/test.ts"
+        },
+        {
+          "library": "date-fns",
+          "note": "business-day semantics and weekend skipping",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/addBusinessDays/test.ts"
+        }
+      ]
+    },
+    {
+      "category": "recurrence_preview",
+      "description": "Recurrence preview in Pacific/Auckland (weekly)",
+      "expected": {
+        "ok": true,
+        "value": {
+          "business_calendar": {
+            "exclude_weekends": true,
+            "holidays": [
+              "2026-03-17"
+            ]
+          },
+          "occurrences": [
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-01T20:00:00Z",
+              "local": "2026-03-02T09:00:00",
+              "offset_seconds": 46800,
+              "resolved_local": "2026-03-02T09:00:00",
+              "zoned": "2026-03-02T09:00:00+13:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-02T20:00:00Z",
+              "local": "2026-03-03T09:00:00",
+              "offset_seconds": 46800,
+              "resolved_local": "2026-03-03T09:00:00",
+              "zoned": "2026-03-03T09:00:00+13:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-03T20:00:00Z",
+              "local": "2026-03-04T09:00:00",
+              "offset_seconds": 46800,
+              "resolved_local": "2026-03-04T09:00:00",
+              "zoned": "2026-03-04T09:00:00+13:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-04T20:00:00Z",
+              "local": "2026-03-05T09:00:00",
+              "offset_seconds": 46800,
+              "resolved_local": "2026-03-05T09:00:00",
+              "zoned": "2026-03-05T09:00:00+13:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-05T20:00:00Z",
+              "local": "2026-03-06T09:00:00",
+              "offset_seconds": 46800,
+              "resolved_local": "2026-03-06T09:00:00",
+              "zoned": "2026-03-06T09:00:00+13:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-08T20:00:00Z",
+              "local": "2026-03-09T09:00:00",
+              "offset_seconds": 46800,
+              "resolved_local": "2026-03-09T09:00:00",
+              "zoned": "2026-03-09T09:00:00+13:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-09T20:00:00Z",
+              "local": "2026-03-10T09:00:00",
+              "offset_seconds": 46800,
+              "resolved_local": "2026-03-10T09:00:00",
+              "zoned": "2026-03-10T09:00:00+13:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-10T20:00:00Z",
+              "local": "2026-03-11T09:00:00",
+              "offset_seconds": 46800,
+              "resolved_local": "2026-03-11T09:00:00",
+              "zoned": "2026-03-11T09:00:00+13:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-11T20:00:00Z",
+              "local": "2026-03-12T09:00:00",
+              "offset_seconds": 46800,
+              "resolved_local": "2026-03-12T09:00:00",
+              "zoned": "2026-03-12T09:00:00+13:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-12T20:00:00Z",
+              "local": "2026-03-13T09:00:00",
+              "offset_seconds": 46800,
+              "resolved_local": "2026-03-13T09:00:00",
+              "zoned": "2026-03-13T09:00:00+13:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-15T20:00:00Z",
+              "local": "2026-03-16T09:00:00",
+              "offset_seconds": 46800,
+              "resolved_local": "2026-03-16T09:00:00",
+              "zoned": "2026-03-16T09:00:00+13:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-17T20:00:00Z",
+              "local": "2026-03-18T09:00:00",
+              "offset_seconds": 46800,
+              "resolved_local": "2026-03-18T09:00:00",
+              "zoned": "2026-03-18T09:00:00+13:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-18T20:00:00Z",
+              "local": "2026-03-19T09:00:00",
+              "offset_seconds": 46800,
+              "resolved_local": "2026-03-19T09:00:00",
+              "zoned": "2026-03-19T09:00:00+13:00"
+            },
+            {
+              "disambiguation_applied": "exact",
+              "instant": "2026-03-19T20:00:00Z",
+              "local": "2026-03-20T09:00:00",
+              "offset_seconds": 46800,
+              "resolved_local": "2026-03-20T09:00:00",
+              "zoned": "2026-03-20T09:00:00+13:00"
+            }
+          ],
+          "rule": {
+            "by_weekdays": [
+              "monday",
+              "tuesday",
+              "wednesday",
+              "thursday",
+              "friday"
+            ],
+            "count": 14,
+            "frequency": "weekly",
+            "interval": 1
+          },
+          "start_local": "2026-03-01T09:00:00",
+          "zone": "Pacific/Auckland"
+        }
+      },
+      "id": "rec.0012",
+      "request": {
+        "business_calendar": {
+          "exclude_weekends": true,
+          "holidays": [
+            "2026-03-17"
+          ]
+        },
+        "disambiguation": "compatible",
+        "op": "recurrence_preview",
+        "rule": {
+          "by_weekdays": [
+            "monday",
+            "tuesday",
+            "wednesday",
+            "thursday",
+            "friday"
+          ],
+          "count": 14,
+          "frequency": "weekly",
+          "interval": 1
+        },
+        "start_local": "2026-03-01T09:00:00",
+        "zone": "Pacific/Auckland"
+      },
+      "sources": [
+        {
+          "library": "date-fns",
+          "note": "interval inclusivity and directional day stepping",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/eachDayOfInterval/test.ts"
+        },
+        {
+          "library": "date-fns",
+          "note": "business-day semantics and weekend skipping",
+          "path": "conform/upstreams/typescript/date-fns__date-fns/src/addBusinessDays/test.ts"
+        }
+      ]
+    }
+  ],
+  "generated_at": "2026-02-26T20:43:58.705737+00:00",
+  "suite": "recurrence_business",
+  "upstream_basis": [
+    {
+      "library": "date-fns",
+      "note": "interval inclusivity and directional day stepping",
+      "path": "conform/upstreams/typescript/date-fns__date-fns/src/eachDayOfInterval/test.ts"
+    },
+    {
+      "library": "date-fns",
+      "note": "business-day semantics and weekend skipping",
+      "path": "conform/upstreams/typescript/date-fns__date-fns/src/addBusinessDays/test.ts"
+    }
+  ]
+}
