@@ -2,7 +2,7 @@ use std::fs;
 use std::path::PathBuf;
 
 use chronow_core::{evaluate_request, evaluate_request_value, Disambiguation, Request};
-use clap::{Parser, Subcommand};
+use clap::{CommandFactory, Parser, Subcommand};
 use serde_json::{json, Value};
 
 /// Print a JSON error to stderr and exit with code 1.
@@ -173,6 +173,12 @@ enum Commands {
     EvalCorpus {
         #[arg(long)]
         cases_file: PathBuf,
+    },
+    /// Generate shell completion scripts
+    Completions {
+        /// Target shell (bash, zsh, fish, powershell)
+        #[arg(long)]
+        shell: String,
     },
 }
 
@@ -461,6 +467,13 @@ fn main() {
             };
 
             to_json_value(evaluate_request_value(req_json))
+        }
+        Commands::Completions { shell } => {
+            use clap_complete::{generate, Shell};
+            let shell = shell.parse::<Shell>().unwrap_or_else(|_| exit_error("invalid_argument", "unsupported shell"));
+            let mut cmd = Cli::command();
+            generate(shell, &mut cmd, "chronow", &mut std::io::stdout());
+            return;  // Don't go through the normal JSON output path
         }
         Commands::EvalCorpus { cases_file } => {
             let content = fs::read_to_string(&cases_file).unwrap_or_else(|e| {

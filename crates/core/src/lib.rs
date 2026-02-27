@@ -10,35 +10,50 @@ use std::collections::HashSet;
 #[cfg(feature = "wasm")]
 use wasm_bindgen::prelude::*;
 
+/// Errors returned by engine operations.
 #[derive(Debug, thiserror::Error)]
 pub enum EngineError {
+    /// The request JSON was malformed or contained invalid field values.
     #[error("invalid request: {0}")]
     InvalidRequest(String),
+    /// The provided IANA time-zone identifier could not be resolved.
     #[error("invalid zone: {0}")]
     InvalidZone(String),
+    /// A datetime string could not be parsed into a valid instant or local time.
     #[error("invalid datetime: {0}")]
     InvalidDateTime(String),
+    /// The local time is ambiguous (e.g. during a DST fall-back transition).
     #[error("ambiguous local time: {0}")]
     AmbiguousLocalTime(String),
+    /// The local time does not exist (e.g. during a DST spring-forward transition).
     #[error("non-existent local time: {0}")]
     NonExistentLocalTime(String),
+    /// The natural-language input did not match any supported grammar.
     #[error("unsupported intent grammar")]
     UnsupportedIntent,
+    /// An ISO 8601 duration string could not be parsed.
     #[error("invalid duration: {0}")]
     InvalidDuration(String),
 }
 
+/// Structured error payload included in an [`EngineResponse`] when `ok` is `false`.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ErrorPayload {
+    /// Machine-readable error code (e.g. `"invalid_zone"`).
     pub code: String,
+    /// Human-readable description of the error.
     pub message: String,
 }
 
+/// Top-level response envelope returned by every engine operation.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct EngineResponse {
+    /// `true` when the operation succeeded; `false` on error.
     pub ok: bool,
+    /// The operation result payload, present only on success.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub value: Option<Value>,
+    /// The error details, present only on failure.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub error: Option<ErrorPayload>,
 }
@@ -74,52 +89,76 @@ impl EngineResponse {
     }
 }
 
+/// Strategy for resolving ambiguous or non-existent local times during DST transitions.
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, Default)]
 #[serde(rename_all = "snake_case")]
 pub enum Disambiguation {
+    /// Use the offset that keeps wall-clock time moving forward (default).
     #[default]
     Compatible,
+    /// Pick the earlier of two ambiguous instants.
     Earlier,
+    /// Pick the later of two ambiguous instants.
     Later,
+    /// Return an error instead of silently choosing.
     Reject,
 }
 
+/// Controls how duration arithmetic is performed relative to a time zone.
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, Default)]
 #[serde(rename_all = "snake_case")]
 pub enum ArithmeticMode {
+    /// Add exact elapsed seconds, ignoring calendar boundaries and DST.
     Absolute,
+    /// Add calendar units in local time, then re-resolve through the time zone (default).
     #[default]
     Calendar,
 }
 
+/// Calendar unit to which an instant can be snapped (truncated or ceiled).
 #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum SnapUnit {
+    /// Snap to the boundary of a day.
     Day,
+    /// Snap to the boundary of a week.
     Week,
+    /// Snap to the boundary of a calendar month.
     Month,
+    /// Snap to the boundary of a calendar quarter.
     Quarter,
+    /// Snap to the boundary of a calendar year.
     Year,
 }
 
+/// Which edge of the calendar unit to snap to.
 #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum SnapEdge {
+    /// Snap to the start (floor) of the unit.
     Start,
+    /// Snap to the end (ceiling) of the unit.
     End,
 }
 
+/// Kind of relationship test to perform between two time intervals.
 #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum IntervalCheckMode {
+    /// Check whether the two intervals overlap.
     Overlap,
+    /// Check whether one interval fully contains the other.
     Contains,
+    /// Compute the gap (or overlap) between the two intervals.
     Gap,
 }
 
+/// A half-open time interval defined by two RFC 3339 instant strings.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TimeInterval {
+    /// Inclusive start instant (RFC 3339).
     pub start: String,
+    /// Exclusive end instant (RFC 3339).
     pub end: String,
 }
 
@@ -127,46 +166,68 @@ fn default_week_starts_on() -> String {
     "monday".to_string()
 }
 
+/// A decomposed duration with separate calendar and clock fields.
+///
+/// Fields default to zero when omitted from JSON input.
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct DurationSpec {
+    /// Number of years.
     #[serde(default)]
     pub years: i32,
+    /// Number of months.
     #[serde(default)]
     pub months: i32,
+    /// Number of weeks.
     #[serde(default)]
     pub weeks: i64,
+    /// Number of days.
     #[serde(default)]
     pub days: i64,
+    /// Number of hours.
     #[serde(default)]
     pub hours: i64,
+    /// Number of minutes.
     #[serde(default)]
     pub minutes: i64,
+    /// Number of seconds.
     #[serde(default)]
     pub seconds: i64,
 }
 
+/// Configuration for skipping non-business days in recurrence calculations.
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct BusinessCalendar {
+    /// When `true`, Saturday and Sunday are excluded from occurrences.
     #[serde(default)]
     pub exclude_weekends: bool,
+    /// ISO 8601 date strings (`YYYY-MM-DD`) of additional days to skip.
     #[serde(default)]
     pub holidays: Vec<String>,
 }
 
+/// Recurrence frequency for [`RecurrenceRule`].
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum Frequency {
+    /// Repeat every N days.
     Daily,
+    /// Repeat every N weeks.
     Weekly,
+    /// Repeat every N months.
     Monthly,
 }
 
+/// Describes a repeating schedule used by the `recurrence_preview` operation.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct RecurrenceRule {
+    /// How often the recurrence repeats (daily, weekly, or monthly).
     pub frequency: Frequency,
+    /// Step size between occurrences (e.g. `2` means every other period). Defaults to `1`.
     #[serde(default = "default_interval")]
     pub interval: u32,
+    /// Maximum number of occurrences to generate.
     pub count: usize,
+    /// Optional weekday filter (e.g. `["monday", "wednesday"]`).
     #[serde(default)]
     pub by_weekdays: Vec<String>,
 }
@@ -179,24 +240,29 @@ fn default_format() -> String {
     "extended".to_string()
 }
 
+/// A tagged-union request dispatched to the engine via the `"op"` field.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(tag = "op", rename_all = "snake_case")]
 pub enum Request {
+    /// Parse an RFC 3339 or ISO 8601 string into a UTC instant.
     ParseInstant {
         input: String,
     },
+    /// Format a UTC instant in a given time zone.
     FormatInstant {
         instant: String,
         zone: String,
         #[serde(default = "default_format")]
         format: String,
     },
+    /// Resolve a wall-clock local time to a UTC instant in the given zone.
     ResolveLocal {
         local: String,
         zone: String,
         #[serde(default)]
         disambiguation: Disambiguation,
     },
+    /// Add a duration to a UTC instant using the specified arithmetic mode.
     AddDuration {
         start: String,
         zone: String,
@@ -207,6 +273,7 @@ pub enum Request {
         #[serde(default)]
         disambiguation: Disambiguation,
     },
+    /// Generate a series of recurring occurrences from a start time and rule.
     RecurrencePreview {
         start_local: String,
         zone: String,
@@ -216,20 +283,24 @@ pub enum Request {
         #[serde(default)]
         disambiguation: Disambiguation,
     },
+    /// Convert a natural-language scheduling phrase into a structured request.
     NormalizeIntent {
         input: String,
         reference_local: String,
         default_zone: String,
     },
+    /// Compute the calendar difference between two instants.
     DiffInstants {
         start: String,
         end: String,
         zone: String,
     },
+    /// Compare two instants and return their ordering.
     CompareInstants {
         a: String,
         b: String,
     },
+    /// Snap (floor or ceil) an instant to a calendar-unit boundary in a given zone.
     SnapTo {
         instant: String,
         zone: String,
@@ -238,32 +309,39 @@ pub enum Request {
         #[serde(default = "default_week_starts_on")]
         week_starts_on: String,
     },
+    /// Parse an ISO 8601 duration string into a [`DurationSpec`].
     ParseDuration {
         input: String,
     },
+    /// Format a [`DurationSpec`] into an ISO 8601 duration string.
     FormatDuration {
         duration: DurationSpec,
     },
+    /// Test a relationship (overlap, containment, or gap) between two intervals.
     IntervalCheck {
         interval_a: TimeInterval,
         interval_b: TimeInterval,
         mode: IntervalCheckMode,
     },
+    /// Return metadata (offset, abbreviation) for a time zone at a given instant.
     ZoneInfo {
         zone: String,
         #[serde(default)]
         at: Option<String>,
     },
+    /// List all known IANA time zones, optionally filtered by region prefix.
     ListZones {
         #[serde(default)]
         region_filter: Option<String>,
     },
+    /// Return the current time, optionally projected into a specific zone.
     Now {
         #[serde(default)]
         zone: Option<String>,
     },
 }
 
+/// Evaluate a typed [`Request`] and return an [`EngineResponse`].
 pub fn evaluate_request(request: Request) -> EngineResponse {
     match evaluate_request_inner(request) {
         Ok(value) => EngineResponse::ok(value),
@@ -271,6 +349,7 @@ pub fn evaluate_request(request: Request) -> EngineResponse {
     }
 }
 
+/// Deserialize a [`serde_json::Value`] into a [`Request`] and evaluate it.
 pub fn evaluate_request_value(value: Value) -> EngineResponse {
     let parsed = serde_json::from_value::<Request>(value);
     match parsed {
@@ -279,6 +358,7 @@ pub fn evaluate_request_value(value: Value) -> EngineResponse {
     }
 }
 
+/// Parse a JSON string, evaluate the request, and return the response as a JSON string.
 pub fn evaluate_json(input: &str) -> Result<String, EngineError> {
     let value: Value =
         serde_json::from_str(input).map_err(|e| EngineError::InvalidRequest(e.to_string()))?;
@@ -286,6 +366,9 @@ pub fn evaluate_json(input: &str) -> Result<String, EngineError> {
     serde_json::to_string(&response).map_err(|e| EngineError::InvalidRequest(e.to_string()))
 }
 
+/// WASM entry-point: parse a JSON request string and return a JSON response string.
+///
+/// Always returns valid JSON; serialization failures produce a hard-coded error object.
 #[cfg(feature = "wasm")]
 #[wasm_bindgen]
 pub fn evaluate_json_wasm(input: &str) -> String {

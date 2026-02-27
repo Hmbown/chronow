@@ -3,7 +3,7 @@
 ## Environment
 - Host: local macOS dev machine
 - Build: `cargo build -p chronow-cli` (debug)
-- Corpus size: 457 cases
+- Corpus size: 865 cases
 
 ## Correctness
 Full matrix run:
@@ -18,7 +18,7 @@ Result:
 
 ## Benchmark snapshots
 Measured with repeated local runs:
-- `chronow eval-corpus` over 457 cases (Rust adapter):
+- `chronow eval-corpus` over 865 cases (Rust adapter):
   - runs: `0.1869s, 0.1855s, 0.1839s, 0.1888s, 0.1899s`
   - mean: `0.1870s`
 - Full matrix (`rust + ts + python`) strict run:
