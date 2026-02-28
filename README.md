@@ -1,12 +1,10 @@
 # Chronow
 
 [![CI](https://github.com/Hmbown/chronow/actions/workflows/ci.yml/badge.svg)](https://github.com/Hmbown/chronow/actions/workflows/ci.yml)
-[![crates.io](https://img.shields.io/crates/v/chronow-core)](https://crates.io/crates/chronow-core)
-[![npm](https://img.shields.io/npm/v/chronow)](https://www.npmjs.com/package/chronow)
 [![PyPI](https://img.shields.io/pypi/v/chronow)](https://pypi.org/project/chronow/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-**Deterministic temporal primitives for agents**: timezone-safe datetime operations for "Is today a trading day?", "When does this option expire?", "Schedule this for the next business day."
+**Deterministic temporal primitives for agents**: DST-safe timezone operations, recurrence generation, interval checks, and a strict cross-language conformance suite.
 
 ## Quick start
 
@@ -25,24 +23,39 @@ python3 conformance/runner/run.py --matrix rust ts python --strict
 
 ## The problem
 
-LLMs are bad at time. Ask an AI what day of the week March 14, 2025 falls on and it might guess wrong. Ask it whether US markets are open and it has no reliable way to check. Ask it to schedule something "next Tuesday at 3pm CST" and it may silently pick the wrong UTC instant because of DST.
+LLMs guess at time. DST, timezones, and business-day rules turn those guesses into real bugs.
 
-This isn't a model intelligence problem -- it's a tooling problem. Agents need deterministic temporal primitives the same way they need calculators for math. Chronow provides those primitives.
+Chronow gives agents deterministic time primitives (plus a test corpus) so scheduling, conversion, and "does this overlap?" become tool calls, not hallucinations.
+
+## Where it helps
+
+Chronow is useful when you care about correctness and reproducibility more than "best effort" parsing:
+
+- Agent runtimes: give the model tools like `now`, `resolve_local`, and `diff_instants` instead of letting it guess.
+- DST edges: pick an explicit policy for gaps/folds (`compatible`/`earlier`/`later`/`reject`) instead of getting silent one-hour bugs.
+- Multi-language stacks: CI enforces byte-identical JSON output across Rust/TypeScript/Python against an 865-case corpus.
+- Deterministic intent normalization: `normalize_intent` accepts a small, explicit grammar (24-hour `HH:MM`) and returns `unsupported_intent` for everything else.
+
+## What it isn't
+
+- A calendar integration (it does not talk to Google Calendar, Outlook, etc.).
+- A holiday database (you supply weekend/holiday rules via `business_calendar`).
+- A fuzzy natural-language date parser (that ambiguity is exactly what Chronow avoids).
 
 ## What it does
 
-Chronow is a Rust temporal engine exposing 15 pure-function operations across three surfaces:
+Chronow is a Rust temporal engine exposing 15 pure-function operations through:
 
-- **MCP server** -- plug into Claude Code, Claude Desktop, Cursor, or any MCP host. The agent calls tools like `now`, `diff_instants`, `recurrence_preview` instead of guessing.
-- **Library** -- Rust crate, TypeScript/WASM package, Python package. Same engine, byte-identical results across all three.
-- **CLI** -- parse, convert, diff, and recur from the terminal.
+- **MCP server (`chronow-mcp`)** -- stdio-based MCP server for Claude Code/Desktop, Cursor, or any MCP host.
+- **CLI (`chronow`)** -- parse/convert/resolve/diff/recur from the terminal (JSON in, JSON out).
+- **Adapters** -- TypeScript (WASM/CLI) and Python (CLI bridge), verified against the conformance suite.
 
 ### Key capabilities
 
 | What you need | Tool | Example |
 |---|---|---|
 | Current time in any timezone | `now` | "What time is it in Tokyo?" |
-| Is today a trading day? | `recurrence_preview` | Business calendar with weekends + holidays excluded |
+| Is today a trading day? | `recurrence_preview` | Business calendar (weekends + holiday list you supply) |
 | When does this option expire? | `add_duration`, `snap_to` | Add duration, snap to end of day/month |
 | Schedule a recurring meeting | `recurrence_preview` | Weekly MWF at 9am, auto-adjusts across DST |
 | Convert between timezones | `resolve_local` + `format_instant` | "3pm Chicago time in London" |
@@ -50,80 +63,43 @@ Chronow is a Rust temporal engine exposing 15 pure-function operations across th
 | Do these meetings overlap? | `interval_check` | Overlap/containment/gap detection |
 | What day of the week is March 14? | `format_instant` | Deterministic, no guessing |
 | Next business day after a holiday | `recurrence_preview` | Skip weekends + custom holiday list |
+| Normalize a deterministic phrase | `normalize_intent` | `next monday at 09:00 in America/New_York` |
 
 ### Why not just use date-fns / dayjs / pendulum?
 
 You can, and they're great for application code. Chronow is different in three ways:
 
 1. **Explicit DST disambiguation.** Four policies (`compatible`, `earlier`, `later`, `reject`) give deterministic control over gap and fold resolution. No silent "wrong by one hour" bugs.
-2. **Cross-language parity.** The same Rust engine powers TypeScript (WASM) and Python. All three produce byte-identical results, verified by 865 conformance cases. If your agent pipeline spans languages, results won't drift.
-3. **Agent-native.** The MCP server auto-detects the user's timezone, so agents don't need to ask. Every operation returns structured JSON that agents can reason over directly.
-
-## Use cases
-
-### Financial & trading
-- **Trading day validation.** "Is today a market day?" -- use `recurrence_preview` with `exclude_weekends: true` and a holiday list for NYSE/NASDAQ/etc. No more arguing with an AI about whether a particular Monday is indeed a trading day.
-- **Option expiration.** Third Friday of the month, snap to market close (4pm ET) -- `recurrence_preview` + `snap_to`.
-- **Settlement dates.** T+1 / T+2 calculations that correctly skip weekends and holidays.
-- **Market hours across timezones.** "Are Tokyo markets open right now?" -- `now` + `zone_info` + `interval_check`.
-
-### Agentic scheduling
-- **Calendar coordination.** Schedule across timezones without DST surprises. A weekly 9am standup doesn't silently shift an hour when clocks change.
-- **Deadline tracking.** "How many business days until the filing deadline?" -- deterministic answer, not a guess.
-- **Recurring tasks.** Generate the next N occurrences of a cron-like schedule, aware of DST transitions and business calendars.
-
-### The bigger picture
-These tools are temporal primitives. The hope is that operations like "is this a business day" and "what's the next occurrence of this schedule" become native capabilities in agent runtimes. Until then, the MCP server bridges the gap -- giving any MCP-compatible agent access to deterministic temporal reasoning today.
-
-## Architecture
-
-```
-                    +------------------+
-                    |   chronow-core   |   Rust temporal engine
-                    |  (crates/core)   |   15 pure-function ops
-                    +--------+---------+
-                             |
-              +--------------+--------------+
-              |              |              |
-     +--------v---+   +-----v------+  +----v-------+
-     | chronow CLI|   |chronow-mcp |  | WASM export|
-     | (cli/)     |   | (mcp/)     |  | (cdylib)   |
-     +-----+------+   +-----+------+  +-----+------+
-           |               |               |
-     +-----v------+  stdio transport  +----v-------+
-     | Python pkg |        |          |  TS package |
-     | (CLI bridge|  +-----v------+   | (WASM/CLI) |
-     +------------+  | AI agents  |   +------------+
-                     +------------+
-```
-
-**Conformance suite:** `conformance/cases/` (865 canonical JSON cases) + `conformance/runner/` (cross-language matrix runner verifying Rust, TypeScript, and Python parity).
+2. **Cross-language parity.** Rust is the reference engine; TypeScript (WASM/CLI) and Python (CLI bridge) are checked for byte-identical output against an 865-case conformance corpus. If your agent pipeline spans languages, results won't drift.
+3. **Agent-native.** The MCP server auto-detects the user's timezone. `normalize_intent` is deliberately strict: it normalizes a small grammar and rejects everything else instead of guessing.
 
 ## Install
 
-**Cargo (Rust library)**
+### Prebuilt binaries (recommended)
+
+Download from [Releases](https://github.com/Hmbown/chronow/releases) -- each archive includes both the `chronow` CLI and the `chronow-mcp` server for Linux, macOS, and Windows.
+
+### From source (CLI + MCP)
+
 ```bash
-cargo add chronow-core
+cargo build --release -p chronow-cli -p chronow-mcp
+
+# Or install into ~/.cargo/bin
+cargo install --path cli
+cargo install --path mcp
 ```
 
-**npm (TypeScript/Node.js)**
-```bash
-npm install chronow
-```
+### Python (PyPI)
 
-**pip (Python)**
 ```bash
 pip install chronow
 ```
 
-**Prebuilt binaries**
+The Python package shells out to the `chronow` CLI. Install the CLI (from a GitHub release or from source) and ensure `chronow` is on your `$PATH` (or set `CHRONOW_BIN`).
 
-Download from [Releases](https://github.com/Hmbown/chronow/releases) -- includes `chronow` CLI and `chronow-mcp` server for Linux, macOS, and Windows.
+### Rust / TypeScript bindings
 
-**Docker (MCP server)**
-```bash
-docker run -i ghcr.io/hmbown/chronow-mcp
-```
+Rust (`crates/core`) and TypeScript (`packages/ts`) bindings live in this repo and are exercised by the conformance suite. They are not published to crates.io/npm yet.
 
 ## MCP server
 
@@ -168,7 +144,7 @@ To override the detected timezone, set the env var in your MCP config:
 | `resolve_local` | Resolve a local datetime to UTC (DST-aware) |
 | `add_duration` | Add a duration using absolute or calendar arithmetic |
 | `recurrence_preview` | Generate recurring datetime occurrences |
-| `normalize_intent` | Parse natural-language temporal intent |
+| `normalize_intent` | Normalize a deterministic intent grammar into a structured request |
 | `diff_instants` | Calendar difference between two instants |
 | `compare_instants` | Compare two instants (-1, 0, 1) |
 | `snap_to` | Snap an instant to the edge of a calendar unit |
@@ -177,6 +153,8 @@ To override the detected timezone, set the env var in your MCP config:
 | `interval_check` | Check two intervals for overlap / containment / gap |
 | `zone_info` | Get timezone offset, DST status, abbreviation |
 | `list_zones` | List IANA timezone names |
+
+`normalize_intent` is intentionally strict (for determinism). It accepts patterns like `tomorrow at 15:30`, `next monday at 09:00`, `on 2026-03-01 at 09:00`, and returns `unsupported_intent` for everything else.
 
 ### Install the MCP server
 
@@ -204,6 +182,8 @@ archive, and place `chronow-mcp` somewhere on your `$PATH`.
 ```bash
 docker run -i ghcr.io/hmbown/chronow-mcp
 ```
+
+If `docker pull` is denied, use the GitHub release binaries instead (container publishing may lag behind tags).
 
 ### Configure your AI client
 
@@ -298,6 +278,8 @@ Expected result (timezone auto-detected; shape is the engine response):
   }
 }
 ```
+
+Note: if you test `chronow-mcp` by hand over stdin/stdout, you must send a `notifications/initialized` notification after the `initialize` request (MCP clients do this automatically).
 
 ## Deterministic conflict policy
 

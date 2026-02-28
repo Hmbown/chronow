@@ -16,21 +16,27 @@ place the `chronow` binary on your `$PATH`:
 
 ```bash
 # macOS / Linux example
-tar xzf chronow-v0.2.0-x86_64-linux.tar.gz
-sudo cp chronow /usr/local/bin/
+tar xzf chronow-v0.2.0-x86_64-unknown-linux-gnu.tar.gz
+sudo cp chronow chronow-mcp /usr/local/bin/
 chronow --help
 ```
 
-### Cargo (Rust)
+### From source (Rust toolchain)
 
 ```bash
-cargo install chronow-cli
+# From a clone of this repo:
+cargo install --path cli
+
+# Optional: also install the MCP server
+# cargo install --path mcp
 ```
 
-### npm (TypeScript / Node.js)
+### TypeScript (bindings in this repo)
+
+The TypeScript bindings are in `packages/ts` and used by the conformance suite. They are not published to npm yet.
 
 ```bash
-npm install chronow
+npm install --prefix packages/ts
 ```
 
 ### pip (Python)
