@@ -36,8 +36,10 @@ npm install chronow
 ### pip (Python)
 
 ```bash
-pip install chronow-python
+pip install chronow
 ```
+
+The Python package is a thin wrapper around the `chronow` CLI, so you still need the `chronow` binary on your `$PATH` (or set `CHRONOW_BIN`).
 
 Verify the CLI is available:
 

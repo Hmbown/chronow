@@ -6,7 +6,22 @@
 [![PyPI](https://img.shields.io/pypi/v/chronow)](https://pypi.org/project/chronow/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-**Deterministic temporal primitives for AI agents** -- timezone-safe datetime operations that give agents the same reliable building blocks humans take for granted: "Is today a trading day?", "When does this option expire?", "Schedule this for the next business day."
+**Deterministic temporal primitives for agents**: timezone-safe datetime operations for "Is today a trading day?", "When does this option expire?", "Schedule this for the next business day."
+
+## Quick start
+
+From the repo:
+
+```bash
+# Current time in a zone
+cargo run -p chronow-cli -- now --zone America/Chicago
+
+# Resolve a local time to a UTC instant (DST-safe, explicit disambiguation)
+cargo run -p chronow-cli -- resolve --local 2025-03-09T02:30:00 --zone America/New_York --disambiguation compatible
+
+# Run the cross-language conformance matrix (Rust/TS/Python)
+python3 conformance/runner/run.py --matrix rust ts python --strict
+```
 
 ## The problem
 
@@ -268,44 +283,21 @@ Ask your AI client to call the `now` tool -- it should return the current time i
 What time is it right now?
 ```
 
-Expected result (timezone auto-detected):
+Expected result (timezone auto-detected; shape is the engine response):
 
 ```json
 {
   "ok": true,
-  "op": "now",
-  "instant": "2024-06-15T17:30:00Z",
-  "local": "2024-06-15T12:30:00",
-  "zoned": "2024-06-15T12:30:00-05:00",
-  "zone": "America/Chicago"
+  "value": {
+    "epoch_seconds": 1718472600,
+    "instant": "2024-06-15T17:30:00Z",
+    "local": "2024-06-15T12:30:00",
+    "offset_seconds": -18000,
+    "zone": "America/Chicago",
+    "zoned": "2024-06-15T12:30:00-05:00"
+  }
 }
 ```
-
-Or test the binary directly:
-
-```bash
-echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"test","version":"0.1.0"}}}' | chronow-mcp
-```
-
-## Feature matrix
-
-| Operation | Rust | TypeScript | Python | MCP | CLI |
-|-----------|:----:|:----------:|:------:|:---:|:---:|
-| parse_instant | x | x | x | x | x |
-| format_instant | x | x | x | x | x |
-| resolve_local | x | x | x | x | x |
-| add_duration | x | x | x | x | x |
-| recurrence_preview | x | x | x | x | x |
-| normalize_intent | x | x | x | x | x |
-| diff_instants | x | x | x | x | x |
-| compare_instants | x | x | x | x | x |
-| snap_to | x | x | x | x | x |
-| parse_duration | x | x | x | x | x |
-| format_duration | x | x | x | x | x |
-| interval_check | x | x | x | x | x |
-| zone_info | x | x | x | x | x |
-| list_zones | x | x | x | x | x |
-| now | x | x | x | x | x |
 
 ## Deterministic conflict policy
 
@@ -317,25 +309,6 @@ For ambiguous/non-existent local times during DST transitions:
 | `earlier` | earlier offset | shift backward |
 | `later` | later offset | shift forward |
 | `reject` | error | error |
-
-## Quick start
-
-```bash
-# Parse a timestamp
-cargo run -p chronow-cli -- parse --input 2024-04-10T00:00:00Z
-
-# Convert to a timezone
-cargo run -p chronow-cli -- convert --input 2024-04-10T00:00:00Z --zone America/New_York
-
-# Generate recurring occurrences
-cargo run -p chronow-cli -- recur --start-local 2026-03-01T09:00:00 --zone America/New_York --freq daily --count 5
-```
-
-Run the full conformance matrix:
-
-```bash
-python3 conformance/runner/run.py --matrix rust ts python
-```
 
 ## Components
 
