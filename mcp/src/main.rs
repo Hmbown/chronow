@@ -28,17 +28,23 @@ use serde_json::json;
 /// 4. "UTC" as final fallback
 fn detect_default_zone() -> String {
     // 1. Explicit env var (highest priority — user configured this)
-    if let Ok(zone) = std::env::var("CHRONOW_DEFAULT_ZONE") && !zone.trim().is_empty() {
+    if let Ok(zone) = std::env::var("CHRONOW_DEFAULT_ZONE")
+        && !zone.trim().is_empty()
+    {
         return zone.trim().to_string();
     }
 
     // 2. System timezone (OS-level detection)
-    if let Ok(zone) = iana_time_zone::get_timezone() && !zone.trim().is_empty() {
+    if let Ok(zone) = iana_time_zone::get_timezone()
+        && !zone.trim().is_empty()
+    {
         return zone;
     }
 
     // 3. TZ env var
-    if let Ok(zone) = std::env::var("TZ") && !zone.trim().is_empty() {
+    if let Ok(zone) = std::env::var("TZ")
+        && !zone.trim().is_empty()
+    {
         return zone.trim().to_string();
     }
 
