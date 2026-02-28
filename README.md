@@ -108,6 +108,8 @@ exposes every temporal operation as a tool. It uses the **stdio transport**
 (JSON-RPC over stdin/stdout), so the host process launches it directly; no
 network ports or URLs are needed.
 
+The server also exposes a small set of `resources/*` text templates (policies + common workflows) that MCP clients can read and reuse.
+
 ### Timezone auto-detection
 
 The MCP server automatically detects the user's timezone at startup using this fallback chain:
