@@ -142,4 +142,5 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         env:
           CHRONOW_WASM: "1"
+          CHRONOW_BIN: ${{ github.workspace }}/target/debug/chronow
         run: npm test --prefix packages/ts

@@ -11,6 +11,7 @@ path = "src/main.rs"
 [dependencies]
 anyhow = "1"
 chronow-core = { path = "../crates/core" }
+iana-time-zone.workspace = true
 rmcp.workspace = true
 schemars.workspace = true
 serde.workspace = true

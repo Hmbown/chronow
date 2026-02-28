@@ -4,6 +4,11 @@ import { evaluateCorpusFile } from "../dist/index.js";
 
 const root = path.resolve(process.cwd(), "..", "..");
 const allCases = path.join(root, "conformance", "runner", ".tmp", "all_cases.json");
+const localChronow = path.join(root, "target", "debug", "chronow");
+
+if (!process.env.CHRONOW_BIN && fs.existsSync(localChronow)) {
+  process.env.CHRONOW_BIN = localChronow;
+}
 
 if (!fs.existsSync(allCases)) {
   console.error(`missing ${allCases}; run conformance runner to materialize merged corpus`);

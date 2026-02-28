@@ -5,7 +5,7 @@ use chrono::{
 use chrono_tz::Tz;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
-use serde_json::{json, Value};
+use serde_json::{Value, json};
 use std::collections::HashSet;
 use std::sync::LazyLock;
 #[cfg(feature = "wasm")]
@@ -248,9 +248,7 @@ fn default_format() -> String {
 #[serde(tag = "op", rename_all = "snake_case")]
 pub enum Request {
     /// Parse an RFC 3339 or ISO 8601 string into a UTC instant.
-    ParseInstant {
-        input: String,
-    },
+    ParseInstant { input: String },
     /// Format a UTC instant in a given time zone.
     FormatInstant {
         instant: String,
@@ -299,10 +297,7 @@ pub enum Request {
         zone: String,
     },
     /// Compare two instants and return their ordering.
-    CompareInstants {
-        a: String,
-        b: String,
-    },
+    CompareInstants { a: String, b: String },
     /// Snap (floor or ceil) an instant to a calendar-unit boundary in a given zone.
     SnapTo {
         instant: String,
@@ -313,13 +308,9 @@ pub enum Request {
         week_starts_on: String,
     },
     /// Parse an ISO 8601 duration string into a [`DurationSpec`].
-    ParseDuration {
-        input: String,
-    },
+    ParseDuration { input: String },
     /// Format a [`DurationSpec`] into an ISO 8601 duration string.
-    FormatDuration {
-        duration: DurationSpec,
-    },
+    FormatDuration { duration: DurationSpec },
     /// Test a relationship (overlap, containment, or gap) between two intervals.
     IntervalCheck {
         interval_a: TimeInterval,
@@ -470,7 +461,11 @@ fn op_format_instant(instant: &str, zone: &str, format: &str) -> Result<Value, E
     }))
 }
 
-fn op_resolve_local(local: &str, zone: &str, disambiguation: Disambiguation) -> Result<Value, EngineError> {
+fn op_resolve_local(
+    local: &str,
+    zone: &str,
+    disambiguation: Disambiguation,
+) -> Result<Value, EngineError> {
     let naive = parse_local_datetime(local)?;
     let tz = parse_zone(zone)?;
     let (resolved, applied) = resolve_local_datetime(naive, tz, disambiguation)?;
@@ -672,10 +667,8 @@ fn op_normalize_intent(
     let raw = input.trim();
 
     static TOMORROW_RE: LazyLock<Regex> = LazyLock::new(|| {
-        Regex::new(
-            r"(?i)^tomorrow at (?P<time>\d{1,2}:\d{2})(?: in (?P<zone>[A-Za-z0-9_./+-]+))?$",
-        )
-        .unwrap()
+        Regex::new(r"(?i)^tomorrow at (?P<time>\d{1,2}:\d{2})(?: in (?P<zone>[A-Za-z0-9_./+-]+))?$")
+            .unwrap()
     });
 
     static NEXT_RE: LazyLock<Regex> = LazyLock::new(|| {
@@ -713,7 +706,10 @@ fn op_normalize_intent(
 
     if let Some(caps) = TOMORROW_RE.captures(raw) {
         let time = parse_hhmm(caps.name("time").expect("time capture exists").as_str())?;
-        let zone = caps.name("zone").map(|m| m.as_str()).unwrap_or(default_zone);
+        let zone = caps
+            .name("zone")
+            .map(|m| m.as_str())
+            .unwrap_or(default_zone);
         let _ = parse_zone(zone)?;
         let target = reference
             .date()
@@ -725,9 +721,16 @@ fn op_normalize_intent(
 
     if let Some(caps) = NEXT_RE.captures(raw) {
         let time = parse_hhmm(caps.name("time").expect("time capture exists").as_str())?;
-        let zone = caps.name("zone").map(|m| m.as_str()).unwrap_or(default_zone);
+        let zone = caps
+            .name("zone")
+            .map(|m| m.as_str())
+            .unwrap_or(default_zone);
         let _ = parse_zone(zone)?;
-        let wanted = parse_weekday(caps.name("weekday").expect("weekday capture exists").as_str())?;
+        let wanted = parse_weekday(
+            caps.name("weekday")
+                .expect("weekday capture exists")
+                .as_str(),
+        )?;
 
         let mut day = reference.date();
         for _ in 0..7 {
@@ -744,7 +747,10 @@ fn op_normalize_intent(
 
     if let Some(caps) = IN_DAYS_RE.captures(raw) {
         let time = parse_hhmm(caps.name("time").expect("time capture exists").as_str())?;
-        let zone = caps.name("zone").map(|m| m.as_str()).unwrap_or(default_zone);
+        let zone = caps
+            .name("zone")
+            .map(|m| m.as_str())
+            .unwrap_or(default_zone);
         let _ = parse_zone(zone)?;
         let days: u64 = caps
             .name("days")
@@ -762,7 +768,10 @@ fn op_normalize_intent(
 
     if let Some(caps) = ON_DATE_RE.captures(raw) {
         let time = parse_hhmm(caps.name("time").expect("time capture exists").as_str())?;
-        let zone = caps.name("zone").map(|m| m.as_str()).unwrap_or(default_zone);
+        let zone = caps
+            .name("zone")
+            .map(|m| m.as_str())
+            .unwrap_or(default_zone);
         let _ = parse_zone(zone)?;
         let date = NaiveDate::parse_from_str(
             caps.name("date").expect("date capture exists").as_str(),
@@ -774,7 +783,10 @@ fn op_normalize_intent(
 
     if let Some(caps) = EVERY_WEEKDAY_RE.captures(raw) {
         let time = parse_hhmm(caps.name("time").expect("time capture exists").as_str())?;
-        let zone = caps.name("zone").map(|m| m.as_str()).unwrap_or(default_zone);
+        let zone = caps
+            .name("zone")
+            .map(|m| m.as_str())
+            .unwrap_or(default_zone);
         let _ = parse_zone(zone)?;
         let count = caps
             .name("count")
@@ -815,9 +827,15 @@ fn op_normalize_intent(
 
     if let Some(caps) = EVERY_DAY_RE.captures(raw) {
         let time = parse_hhmm(caps.name("time").expect("time capture exists").as_str())?;
-        let zone = caps.name("zone").map(|m| m.as_str()).unwrap_or(default_zone);
+        let zone = caps
+            .name("zone")
+            .map(|m| m.as_str())
+            .unwrap_or(default_zone);
         let _ = parse_zone(zone)?;
-        let weekday = caps.name("weekday").expect("weekday capture exists").as_str();
+        let weekday = caps
+            .name("weekday")
+            .expect("weekday capture exists")
+            .as_str();
         let count = caps
             .name("count")
             .map(|m| m.as_str().parse::<usize>())
@@ -879,16 +897,14 @@ fn op_diff_instants(start: &str, end: &str, zone: &str) -> Result<Value, EngineE
     let mut months = to.month() as i32 - from.month() as i32;
 
     let mut total_months = years * 12 + months;
-    let after_months = add_months_clamped(from, total_months)
-        .unwrap_or(from);
+    let after_months = add_months_clamped(from, total_months).unwrap_or(from);
     if after_months > to {
         total_months -= 1;
     }
     years = total_months / 12;
     months = total_months % 12;
 
-    let after_months = add_months_clamped(from, total_months)
-        .unwrap_or(from);
+    let after_months = add_months_clamped(from, total_months).unwrap_or(from);
     let remaining = to - after_months;
     let days = remaining.num_days();
     let leftover_secs = remaining.num_seconds() - days * 86400;
@@ -938,23 +954,17 @@ fn op_snap_to(
     let local = utc.with_timezone(&tz).naive_local();
 
     let snapped = match (unit, edge) {
-        (SnapUnit::Hour, SnapEdge::Start) => {
-            local.date().and_hms_opt(local.hour(), 0, 0).unwrap()
-        }
-        (SnapUnit::Hour, SnapEdge::End) => {
-            local.date().and_hms_opt(local.hour(), 59, 59).unwrap()
-        }
-        (SnapUnit::Day, SnapEdge::Start) => {
-            local.date().and_hms_opt(0, 0, 0).unwrap()
-        }
-        (SnapUnit::Day, SnapEdge::End) => {
-            local.date().and_hms_opt(23, 59, 59).unwrap()
-        }
+        (SnapUnit::Hour, SnapEdge::Start) => local.date().and_hms_opt(local.hour(), 0, 0).unwrap(),
+        (SnapUnit::Hour, SnapEdge::End) => local.date().and_hms_opt(local.hour(), 59, 59).unwrap(),
+        (SnapUnit::Day, SnapEdge::Start) => local.date().and_hms_opt(0, 0, 0).unwrap(),
+        (SnapUnit::Day, SnapEdge::End) => local.date().and_hms_opt(23, 59, 59).unwrap(),
         (SnapUnit::Week, SnapEdge::Start) => {
             let wk_start = parse_weekday(week_starts_on)?;
             let mut d = local.date();
             while d.weekday() != wk_start {
-                d = d.pred_opt().ok_or_else(|| EngineError::InvalidDateTime("date underflow".to_string()))?;
+                d = d
+                    .pred_opt()
+                    .ok_or_else(|| EngineError::InvalidDateTime("date underflow".to_string()))?;
             }
             d.and_hms_opt(0, 0, 0).unwrap()
         }
@@ -962,47 +972,52 @@ fn op_snap_to(
             let wk_start = parse_weekday(week_starts_on)?;
             let mut d = local.date();
             while d.weekday() != wk_start {
-                d = d.pred_opt().ok_or_else(|| EngineError::InvalidDateTime("date underflow".to_string()))?;
+                d = d
+                    .pred_opt()
+                    .ok_or_else(|| EngineError::InvalidDateTime("date underflow".to_string()))?;
             }
             // End of week = start + 6 days, at 23:59:59
-            d = d.checked_add_days(chrono::Days::new(6))
+            d = d
+                .checked_add_days(chrono::Days::new(6))
                 .ok_or_else(|| EngineError::InvalidDateTime("date overflow".to_string()))?;
             d.and_hms_opt(23, 59, 59).unwrap()
         }
         (SnapUnit::Month, SnapEdge::Start) => {
             NaiveDate::from_ymd_opt(local.year(), local.month(), 1)
                 .ok_or_else(|| EngineError::InvalidDateTime("invalid month start".to_string()))?
-                .and_hms_opt(0, 0, 0).unwrap()
+                .and_hms_opt(0, 0, 0)
+                .unwrap()
         }
         (SnapUnit::Month, SnapEdge::End) => {
             let last = days_in_month(local.year(), local.month());
             NaiveDate::from_ymd_opt(local.year(), local.month(), last)
                 .ok_or_else(|| EngineError::InvalidDateTime("invalid month end".to_string()))?
-                .and_hms_opt(23, 59, 59).unwrap()
+                .and_hms_opt(23, 59, 59)
+                .unwrap()
         }
         (SnapUnit::Quarter, SnapEdge::Start) => {
             let q_month = ((local.month() - 1) / 3) * 3 + 1;
             NaiveDate::from_ymd_opt(local.year(), q_month, 1)
                 .ok_or_else(|| EngineError::InvalidDateTime("invalid quarter start".to_string()))?
-                .and_hms_opt(0, 0, 0).unwrap()
+                .and_hms_opt(0, 0, 0)
+                .unwrap()
         }
         (SnapUnit::Quarter, SnapEdge::End) => {
             let q_end_month = ((local.month() - 1) / 3) * 3 + 3;
             let last = days_in_month(local.year(), q_end_month);
             NaiveDate::from_ymd_opt(local.year(), q_end_month, last)
                 .ok_or_else(|| EngineError::InvalidDateTime("invalid quarter end".to_string()))?
-                .and_hms_opt(23, 59, 59).unwrap()
+                .and_hms_opt(23, 59, 59)
+                .unwrap()
         }
-        (SnapUnit::Year, SnapEdge::Start) => {
-            NaiveDate::from_ymd_opt(local.year(), 1, 1)
-                .ok_or_else(|| EngineError::InvalidDateTime("invalid year start".to_string()))?
-                .and_hms_opt(0, 0, 0).unwrap()
-        }
-        (SnapUnit::Year, SnapEdge::End) => {
-            NaiveDate::from_ymd_opt(local.year(), 12, 31)
-                .ok_or_else(|| EngineError::InvalidDateTime("invalid year end".to_string()))?
-                .and_hms_opt(23, 59, 59).unwrap()
-        }
+        (SnapUnit::Year, SnapEdge::Start) => NaiveDate::from_ymd_opt(local.year(), 1, 1)
+            .ok_or_else(|| EngineError::InvalidDateTime("invalid year start".to_string()))?
+            .and_hms_opt(0, 0, 0)
+            .unwrap(),
+        (SnapUnit::Year, SnapEdge::End) => NaiveDate::from_ymd_opt(local.year(), 12, 31)
+            .ok_or_else(|| EngineError::InvalidDateTime("invalid year end".to_string()))?
+            .and_hms_opt(23, 59, 59)
+            .unwrap(),
     };
 
     let (resolved, _) = resolve_local_datetime(snapped, tz, Disambiguation::Compatible)?;
@@ -1024,11 +1039,14 @@ fn op_parse_duration(input: &str) -> Result<Value, EngineError> {
         (false, input)
     };
 
-    let re = Regex::new(r"^P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)W)?(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?)?$")
-        .map_err(|e| EngineError::InvalidRequest(e.to_string()))?;
+    let re = Regex::new(
+        r"^P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)W)?(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?)?$",
+    )
+    .map_err(|e| EngineError::InvalidRequest(e.to_string()))?;
 
-    let caps = re.captures(rest)
-        .ok_or_else(|| EngineError::InvalidDuration(format!("invalid ISO 8601 duration: {input}")))?;
+    let caps = re.captures(rest).ok_or_else(|| {
+        EngineError::InvalidDuration(format!("invalid ISO 8601 duration: {input}"))
+    })?;
 
     // Ensure not just "P" or "PT" with nothing
     let has_any = caps.get(1).is_some()
@@ -1040,11 +1058,15 @@ fn op_parse_duration(input: &str) -> Result<Value, EngineError> {
         || caps.get(7).is_some();
 
     if !has_any {
-        return Err(EngineError::InvalidDuration(format!("empty duration: {input}")));
+        return Err(EngineError::InvalidDuration(format!(
+            "empty duration: {input}"
+        )));
     }
 
     let parse_group = |idx: usize| -> i64 {
-        caps.get(idx).map(|m| m.as_str().parse::<i64>().unwrap_or(0)).unwrap_or(0)
+        caps.get(idx)
+            .map(|m| m.as_str().parse::<i64>().unwrap_or(0))
+            .unwrap_or(0)
     };
 
     let sign: i64 = if negative { -1 } else { 1 };
@@ -1086,14 +1108,8 @@ fn op_format_duration(duration: &DurationSpec) -> Result<Value, EngineError> {
     let abs_minutes = duration.minutes.unsigned_abs();
     let abs_seconds = duration.seconds.unsigned_abs();
 
-    let date_part = format!(
-        "{}Y{}M{}D",
-        abs_years, abs_months, abs_total_days
-    );
-    let time_part = format!(
-        "{}H{}M{}S",
-        abs_hours, abs_minutes, abs_seconds
-    );
+    let date_part = format!("{}Y{}M{}D", abs_years, abs_months, abs_total_days);
+    let time_part = format!("{}H{}M{}S", abs_hours, abs_minutes, abs_seconds);
 
     let prefix = if is_negative { "-" } else { "" };
     let formatted = format!("{prefix}P{date_part}T{time_part}");
@@ -1114,8 +1130,16 @@ fn op_interval_check(
     let b_end = parse_instant_str(&interval_b.end)?;
 
     // Normalize: swap if start > end
-    let (a_s, a_e) = if a_start <= a_end { (a_start, a_end) } else { (a_end, a_start) };
-    let (b_s, b_e) = if b_start <= b_end { (b_start, b_end) } else { (b_end, b_start) };
+    let (a_s, a_e) = if a_start <= a_end {
+        (a_start, a_end)
+    } else {
+        (a_end, a_start)
+    };
+    let (b_s, b_e) = if b_start <= b_end {
+        (b_start, b_end)
+    } else {
+        (b_end, b_start)
+    };
 
     match mode {
         IntervalCheckMode::Overlap => {
@@ -1216,7 +1240,7 @@ fn op_zone_info(zone: &str, at: Option<&str>) -> Result<Value, EngineError> {
         }
         prev = t;
         prev_offset = t_offset;
-        t = t + step;
+        t += step;
     }
 
     Ok(json!({
@@ -1230,10 +1254,7 @@ fn op_zone_info(zone: &str, at: Option<&str>) -> Result<Value, EngineError> {
 }
 
 fn op_list_zones(region_filter: Option<&str>) -> Result<Value, EngineError> {
-    let mut zones: Vec<&str> = chrono_tz::TZ_VARIANTS
-        .iter()
-        .map(|tz| tz.name())
-        .collect();
+    let mut zones: Vec<&str> = chrono_tz::TZ_VARIANTS.iter().map(|tz| tz.name()).collect();
 
     if let Some(filter) = region_filter {
         zones.retain(|name| name.starts_with(filter));
@@ -1293,10 +1314,10 @@ fn maybe_push_occurrence(
     holidays: &HashSet<NaiveDate>,
     disambiguation: Disambiguation,
 ) -> Result<(), EngineError> {
-    if let Some(filter) = weekday_filter {
-        if !filter.contains(&candidate.date().weekday()) {
-            return Ok(());
-        }
+    if let Some(filter) = weekday_filter
+        && !filter.contains(&candidate.date().weekday())
+    {
+        return Ok(());
     }
 
     if calendar.exclude_weekends {
@@ -1920,7 +1941,11 @@ mod tests {
         assert!(resp.ok);
         let v = resp.value.unwrap();
         let zones = v["zones"].as_array().unwrap();
-        assert!(zones.iter().all(|z| z.as_str().unwrap().starts_with("America/New")));
+        assert!(
+            zones
+                .iter()
+                .all(|z| z.as_str().unwrap().starts_with("America/New"))
+        );
     }
 
     #[test]

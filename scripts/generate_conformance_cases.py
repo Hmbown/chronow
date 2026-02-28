@@ -38,10 +38,14 @@ DATE_FNS_INTERVAL_SOURCE = {
     "note": "interval inclusivity and directional day stepping",
 }
 
-UNAVAILABLE_UPSTREAMS = [
+AVAILABLE_UPSTREAMS = [
+    "date-fns",
     "dayjs",
     "luxon",
     "pendulum",
+]
+
+UNAVAILABLE_UPSTREAMS = [
     "arrow",
     "dateparser",
     "chrono",
@@ -71,6 +75,8 @@ MAJOR_DST_ZONES = [
     "Australia/Hobart",
     "Pacific/Auckland",
 ]
+
+GENERATED_AT = "1970-01-01T00:00:00+00:00"
 
 
 def iso_local(dt: datetime) -> str:
@@ -224,7 +230,7 @@ def generate_iso_suite(bin_path: Path) -> Dict[str, Any]:
 
     return {
         "suite": "iso_rfc3339",
-        "generated_at": datetime.now(tz=UTC).isoformat(),
+        "generated_at": GENERATED_AT,
         "upstream_basis": [DATE_FNS_PARSE_SOURCE, DATE_FNS_FORMAT_SOURCE],
         "cases": cases,
     }
@@ -340,7 +346,7 @@ def generate_timezone_suite(bin_path: Path, year: int) -> Dict[str, Any]:
 
     return {
         "suite": "timezone_dst",
-        "generated_at": datetime.now(tz=UTC).isoformat(),
+        "generated_at": GENERATED_AT,
         "major_zones": MAJOR_DST_ZONES,
         "upstream_basis": [DATE_FNS_PARSE_SOURCE],
         "cases": cases,
@@ -458,7 +464,7 @@ def generate_recurrence_suite(bin_path: Path) -> Dict[str, Any]:
 
     return {
         "suite": "recurrence_business",
-        "generated_at": datetime.now(tz=UTC).isoformat(),
+        "generated_at": GENERATED_AT,
         "upstream_basis": [DATE_FNS_INTERVAL_SOURCE, DATE_FNS_BUSINESS_SOURCE],
         "cases": cases,
     }
@@ -506,7 +512,7 @@ def generate_intent_suite(bin_path: Path) -> Dict[str, Any]:
 
     return {
         "suite": "natural_language_intent",
-        "generated_at": datetime.now(tz=UTC).isoformat(),
+        "generated_at": GENERATED_AT,
         "upstream_basis": [DATE_FNS_PARSE_SOURCE],
         "cases": cases,
     }
@@ -625,7 +631,7 @@ def generate_diff_compare_suite(bin_path: Path) -> Dict[str, Any]:
 
     return {
         "suite": "diff_compare",
-        "generated_at": datetime.now(tz=UTC).isoformat(),
+        "generated_at": GENERATED_AT,
         "upstream_basis": [DATE_FNS_DIFF_SOURCE],
         "cases": cases,
     }
@@ -689,7 +695,7 @@ def generate_snap_suite(bin_path: Path) -> Dict[str, Any]:
 
     return {
         "suite": "snap_to",
-        "generated_at": datetime.now(tz=UTC).isoformat(),
+        "generated_at": GENERATED_AT,
         "upstream_basis": [DATE_FNS_SNAP_SOURCE],
         "cases": cases,
     }
@@ -768,7 +774,7 @@ def generate_duration_suite(bin_path: Path) -> Dict[str, Any]:
 
     return {
         "suite": "duration_parsing",
-        "generated_at": datetime.now(tz=UTC).isoformat(),
+        "generated_at": GENERATED_AT,
         "upstream_basis": [DATE_FNS_DURATION_SOURCE],
         "cases": cases,
     }
@@ -832,7 +838,7 @@ def generate_interval_suite(bin_path: Path) -> Dict[str, Any]:
 
     return {
         "suite": "interval_check",
-        "generated_at": datetime.now(tz=UTC).isoformat(),
+        "generated_at": GENERATED_AT,
         "upstream_basis": [DATE_FNS_OVERLAP_SOURCE],
         "cases": cases,
     }
@@ -889,7 +895,7 @@ def generate_zone_info_suite(bin_path: Path) -> Dict[str, Any]:
 
     return {
         "suite": "zone_info",
-        "generated_at": datetime.now(tz=UTC).isoformat(),
+        "generated_at": GENERATED_AT,
         "upstream_basis": [ZONE_INFO_SOURCE],
         "cases": cases,
     }
@@ -946,10 +952,10 @@ def main() -> None:
 
     merged = merge_cases(CASES_DIR.glob("*.json"))
     metadata = {
-        "generated_at": datetime.now(tz=UTC).isoformat(),
+        "generated_at": GENERATED_AT,
         "total_cases": len(merged),
         "major_zones": MAJOR_DST_ZONES,
-        "available_upstream": ["date-fns"],
+        "available_upstream": AVAILABLE_UPSTREAMS,
         "unavailable_in_corpus": UNAVAILABLE_UPSTREAMS,
     }
     (CASES_DIR / "_metadata.json").write_text(json.dumps(metadata, indent=2, sort_keys=True) + "\n")

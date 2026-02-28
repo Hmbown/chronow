@@ -1,0 +1,264 @@
+{
+  "library": "pendulum",
+  "version": "3.2.0",
+  "scenarios": {
+    "parse": [
+      {
+        "input": "2024-01-01T00:00:00Z",
+        "valid": true,
+        "utc_iso": "2024-01-01T00:00:00Z",
+        "epoch_ms": 1704067200000
+      },
+      {
+        "input": "2024-02-29T23:59:59Z",
+        "valid": true,
+        "utc_iso": "2024-02-29T23:59:59Z",
+        "epoch_ms": 1709251199000
+      },
+      {
+        "input": "2019-03-03T19:00:52+14:00",
+        "valid": true,
+        "utc_iso": "2019-03-03T05:00:52Z",
+        "epoch_ms": 1551589252000
+      },
+      {
+        "input": "2019-03-03T19:00:52-11:00",
+        "valid": true,
+        "utc_iso": "2019-03-04T06:00:52Z",
+        "epoch_ms": 1551679252000
+      },
+      {
+        "input": "2024-09-17",
+        "valid": true,
+        "utc_iso": "2024-09-17T00:00:00Z",
+        "epoch_ms": 1726531200000
+      },
+      {
+        "input": "2024-09-17T10:15:30",
+        "valid": true,
+        "utc_iso": "2024-09-17T10:15:30Z",
+        "epoch_ms": 1726568130000
+      },
+      {
+        "input": "2024-13-01T00:00:00Z",
+        "valid": false,
+        "utc_iso": null,
+        "epoch_ms": null,
+        "error": "Unable to parse string [2024-13-01T00:00:00Z]"
+      },
+      {
+        "input": "not-a-date",
+        "valid": false,
+        "utc_iso": null,
+        "epoch_ms": null,
+        "error": "Unable to parse string [not-a-date]"
+      }
+    ],
+    "format": [
+      {
+        "instant": "2024-04-10T00:00:00Z",
+        "zone": "America/New_York",
+        "formatted": "2024-04-09T20:00:00-04:00",
+        "offset": "-04:00"
+      },
+      {
+        "instant": "2024-09-17T10:00:00Z",
+        "zone": "Europe/London",
+        "formatted": "2024-09-17T11:00:00+01:00",
+        "offset": "+01:00"
+      },
+      {
+        "instant": "2024-06-15T12:00:00Z",
+        "zone": "Asia/Singapore",
+        "formatted": "2024-06-15T20:00:00+08:00",
+        "offset": "+08:00"
+      },
+      {
+        "instant": "2025-03-30T00:30:00Z",
+        "zone": "Europe/London",
+        "formatted": "2025-03-30T00:30:00+00:00",
+        "offset": "+00:00"
+      }
+    ],
+    "dst_resolve": [
+      {
+        "label": "spring_gap",
+        "local": "2024-03-10T02:30:00",
+        "zone": "America/New_York",
+        "valid": true,
+        "utc_iso": "2024-03-10T07:30:00Z",
+        "offset": "-04:00",
+        "note": "pendulum resolves gaps by shifting forward (post-transition), folds pick first"
+      },
+      {
+        "label": "fall_fold",
+        "local": "2024-11-03T01:30:00",
+        "zone": "America/New_York",
+        "valid": true,
+        "utc_iso": "2024-11-03T06:30:00Z",
+        "offset": "-05:00",
+        "note": "pendulum resolves gaps by shifting forward (post-transition), folds pick first"
+      },
+      {
+        "label": "uk_spring_gap",
+        "local": "2024-03-31T01:30:00",
+        "zone": "Europe/London",
+        "valid": true,
+        "utc_iso": "2024-03-31T01:30:00Z",
+        "offset": "+01:00",
+        "note": "pendulum resolves gaps by shifting forward (post-transition), folds pick first"
+      },
+      {
+        "label": "normal",
+        "local": "2024-06-15T12:00:00",
+        "zone": "America/New_York",
+        "valid": true,
+        "utc_iso": "2024-06-15T16:00:00Z",
+        "offset": "-04:00",
+        "note": "pendulum resolves gaps by shifting forward (post-transition), folds pick first"
+      }
+    ],
+    "add_duration": [
+      {
+        "label": "jan31+1m",
+        "instant": "2024-01-31T12:00:00Z",
+        "zone": "UTC",
+        "add": {
+          "months": 1
+        },
+        "result_utc": "2024-02-29T12:00:00Z",
+        "result_local": "2024-02-29T12:00:00"
+      },
+      {
+        "label": "leap+1y",
+        "instant": "2024-02-29T12:00:00Z",
+        "zone": "UTC",
+        "add": {
+          "years": 1
+        },
+        "result_utc": "2025-02-28T12:00:00Z",
+        "result_local": "2025-02-28T12:00:00"
+      },
+      {
+        "label": "dst_spring+1d",
+        "instant": "2024-03-10T06:00:00Z",
+        "zone": "America/New_York",
+        "add": {
+          "days": 1
+        },
+        "result_utc": "2024-03-11T05:00:00Z",
+        "result_local": "2024-03-11T01:00:00"
+      },
+      {
+        "label": "dst_fall+1d",
+        "instant": "2024-11-03T05:00:00Z",
+        "zone": "America/New_York",
+        "add": {
+          "days": 1
+        },
+        "result_utc": "2024-11-04T06:00:00Z",
+        "result_local": "2024-11-04T01:00:00"
+      },
+      {
+        "label": "dst_spring+24h",
+        "instant": "2024-03-10T06:00:00Z",
+        "zone": "America/New_York",
+        "add": {
+          "hours": 24
+        },
+        "result_utc": "2024-03-11T06:00:00Z",
+        "result_local": "2024-03-11T02:00:00"
+      }
+    ],
+    "diff": [
+      {
+        "label": "full_year",
+        "start": "2024-01-01T00:00:00Z",
+        "end": "2024-12-31T23:59:59Z",
+        "diff_days": 365,
+        "diff_months": 11,
+        "diff_years": 0,
+        "diff_seconds": 31622399
+      },
+      {
+        "label": "month_clamp_leap",
+        "start": "2024-01-31T00:00:00Z",
+        "end": "2024-02-29T00:00:00Z",
+        "diff_days": 29,
+        "diff_months": 1,
+        "diff_years": 0,
+        "diff_seconds": 2505600
+      },
+      {
+        "label": "month_clamp_nonleap",
+        "start": "2023-01-31T00:00:00Z",
+        "end": "2023-02-28T00:00:00Z",
+        "diff_days": 28,
+        "diff_months": 1,
+        "diff_years": 0,
+        "diff_seconds": 2419200
+      },
+      {
+        "label": "leap_to_nonleap",
+        "start": "2020-02-29T00:00:00Z",
+        "end": "2021-02-28T00:00:00Z",
+        "diff_days": 365,
+        "diff_months": 11,
+        "diff_years": 0,
+        "diff_seconds": 31536000
+      }
+    ],
+    "duration_parse": [
+      {
+        "input": "P1Y",
+        "valid": false,
+        "note": "pendulum does not support ISO 8601 duration parsing from strings"
+      },
+      {
+        "input": "P1M",
+        "valid": false,
+        "note": "pendulum does not support ISO 8601 duration parsing from strings"
+      },
+      {
+        "input": "P1W",
+        "valid": false,
+        "note": "pendulum does not support ISO 8601 duration parsing from strings"
+      },
+      {
+        "input": "P1D",
+        "valid": false,
+        "note": "pendulum does not support ISO 8601 duration parsing from strings"
+      },
+      {
+        "input": "PT1H",
+        "valid": false,
+        "note": "pendulum does not support ISO 8601 duration parsing from strings"
+      },
+      {
+        "input": "PT1M",
+        "valid": false,
+        "note": "pendulum does not support ISO 8601 duration parsing from strings"
+      },
+      {
+        "input": "PT1S",
+        "valid": false,
+        "note": "pendulum does not support ISO 8601 duration parsing from strings"
+      },
+      {
+        "input": "P1Y2M3DT4H5M6S",
+        "valid": false,
+        "note": "pendulum does not support ISO 8601 duration parsing from strings"
+      },
+      {
+        "input": "P0Y0M0DT0H0M0S",
+        "valid": false,
+        "note": "pendulum does not support ISO 8601 duration parsing from strings"
+      },
+      {
+        "input": "-P1D",
+        "valid": false,
+        "note": "pendulum does not support ISO 8601 duration parsing from strings"
+      }
+    ]
+  }
+}

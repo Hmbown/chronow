@@ -1,9 +1,9 @@
 use std::fs;
 use std::path::PathBuf;
 
-use chronow_core::{evaluate_request, evaluate_request_value, Disambiguation, Request};
+use chronow_core::{Disambiguation, Request, evaluate_request, evaluate_request_value};
 use clap::{CommandFactory, Parser, Subcommand};
-use serde_json::{json, Value};
+use serde_json::{Value, json};
 
 /// Print a JSON error to stderr and exit with code 1.
 fn exit_error(code: &str, message: &str) -> ! {
@@ -16,8 +16,7 @@ fn exit_error(code: &str, message: &str) -> ! {
 
 /// Serialize a value to `serde_json::Value`, exiting with a JSON error on failure.
 fn to_json_value<T: serde::Serialize>(val: T) -> Value {
-    serde_json::to_value(val)
-        .unwrap_or_else(|e| exit_error("serialization_error", &e.to_string()))
+    serde_json::to_value(val).unwrap_or_else(|e| exit_error("serialization_error", &e.to_string()))
 }
 
 #[derive(Parser, Debug)]
@@ -390,10 +389,7 @@ fn main() {
                 );
             }
             let dur = parse_resp.value.unwrap_or_else(|| {
-                exit_error(
-                    "internal_error",
-                    "parse_duration returned ok but no value",
-                )
+                exit_error("internal_error", "parse_duration returned ok but no value")
             });
 
             let zone_str = zone.unwrap_or_else(|| {
@@ -444,7 +440,10 @@ fn main() {
         } => {
             let req_json = if let Some(raw) = request {
                 serde_json::from_str::<Value>(&raw).unwrap_or_else(|e| {
-                    exit_error("invalid_json", &format!("--request is not valid JSON: {}", e))
+                    exit_error(
+                        "invalid_json",
+                        &format!("--request is not valid JSON: {}", e),
+                    )
                 })
             } else if let Some(path) = request_file {
                 let content = fs::read_to_string(&path).unwrap_or_else(|e| {
@@ -460,30 +459,36 @@ fn main() {
                     )
                 })
             } else {
-                exit_error(
-                    "missing_argument",
-                    "provide --request or --request-file",
-                );
+                exit_error("missing_argument", "provide --request or --request-file");
             };
 
             to_json_value(evaluate_request_value(req_json))
         }
         Commands::Completions { shell } => {
-            use clap_complete::{generate, Shell};
-            let shell = shell.parse::<Shell>().unwrap_or_else(|_| exit_error("invalid_argument", "unsupported shell"));
+            use clap_complete::{Shell, generate};
+            let shell = shell
+                .parse::<Shell>()
+                .unwrap_or_else(|_| exit_error("invalid_argument", "unsupported shell"));
             let mut cmd = Cli::command();
             generate(shell, &mut cmd, "chronow", &mut std::io::stdout());
-            return;  // Don't go through the normal JSON output path
+            return; // Don't go through the normal JSON output path
         }
         Commands::EvalCorpus { cases_file } => {
             let content = fs::read_to_string(&cases_file).unwrap_or_else(|e| {
                 exit_error(
                     "io_error",
-                    &format!("failed to read cases file '{}': {}", cases_file.display(), e),
+                    &format!(
+                        "failed to read cases file '{}': {}",
+                        cases_file.display(),
+                        e
+                    ),
                 )
             });
             let parsed: Value = serde_json::from_str(&content).unwrap_or_else(|e| {
-                exit_error("invalid_json", &format!("cases file is not valid JSON: {}", e))
+                exit_error(
+                    "invalid_json",
+                    &format!("cases file is not valid JSON: {}", e),
+                )
             });
 
             let cases = if parsed.is_array() {
@@ -515,15 +520,12 @@ fn main() {
                             )
                         })
                         .to_string();
-                    let request = case
-                        .get("request")
-                        .cloned()
-                        .unwrap_or_else(|| {
-                            exit_error(
-                                "invalid_format",
-                                &format!("case '{}' (index {}) is missing a \"request\" field", id, i),
-                            )
-                        });
+                    let request = case.get("request").cloned().unwrap_or_else(|| {
+                        exit_error(
+                            "invalid_format",
+                            &format!("case '{}' (index {}) is missing a \"request\" field", id, i),
+                        )
+                    });
                     let response = to_json_value(evaluate_request_value(request));
                     json!({
                         "id": id,

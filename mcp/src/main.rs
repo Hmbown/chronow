@@ -3,18 +3,54 @@ use rmcp::{
     handler::server::tool::ToolRouter,
     handler::server::wrapper::Parameters,
     model::{
-        AnnotateAble, Annotated, ListResourcesResult, PaginatedRequestParams, RawResource,
-        ReadResourceRequestParams, ReadResourceResult, ResourceContents, ResourcesCapability,
-        ServerCapabilities, ServerInfo, Implementation, ToolsCapability,
+        AnnotateAble, Annotated, Implementation, ListResourcesResult, PaginatedRequestParams,
+        RawResource, ReadResourceRequestParams, ReadResourceResult, ResourceContents,
+        ResourcesCapability, ServerCapabilities, ServerInfo, ToolsCapability,
     },
-    schemars, tool, tool_handler, tool_router,
+    schemars,
     service::RequestContext,
     service::RoleServer,
+    tool, tool_handler, tool_router,
     transport::io::stdio,
 };
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
+
+// ============================================================================ //
+// Timezone detection
+// ============================================================================ //
+
+/// Detect the user's timezone with fallback chain:
+/// 1. `CHRONOW_DEFAULT_ZONE` env var (explicit user config)
+/// 2. System timezone via `iana_time_zone` crate
+/// 3. `TZ` env var
+/// 4. "UTC" as final fallback
+fn detect_default_zone() -> String {
+    // 1. Explicit env var (highest priority — user configured this)
+    if let Ok(zone) = std::env::var("CHRONOW_DEFAULT_ZONE") {
+        if !zone.trim().is_empty() {
+            return zone.trim().to_string();
+        }
+    }
+
+    // 2. System timezone (OS-level detection)
+    if let Ok(zone) = iana_time_zone::get_timezone() {
+        if !zone.trim().is_empty() {
+            return zone;
+        }
+    }
+
+    // 3. TZ env var
+    if let Ok(zone) = std::env::var("TZ") {
+        if !zone.trim().is_empty() {
+            return zone.trim().to_string();
+        }
+    }
+
+    // 4. Final fallback
+    "UTC".to_string()
+}
 
 // ============================================================================ //
 // MCP Resources: prompt templates for common temporal workflows
@@ -265,6 +301,18 @@ Tips
 #[derive(Clone)]
 struct ChronowServer {
     tool_router: ToolRouter<Self>,
+    default_zone: String,
+}
+
+impl ChronowServer {
+    /// Resolve an optional zone parameter to a concrete IANA zone name.
+    /// Falls back to the server's detected default zone.
+    fn resolve_zone(&self, zone: Option<String>) -> String {
+        match zone {
+            Some(z) if !z.trim().is_empty() => z,
+            _ => self.default_zone.clone(),
+        }
+    }
 }
 
 #[derive(Debug, Deserialize, JsonSchema)]
@@ -277,8 +325,9 @@ struct ParseInstantParams {
 struct FormatInstantParams {
     /// UTC instant (RFC 3339) to format
     instant: String,
-    /// IANA timezone name (e.g. "America/New_York")
-    zone: String,
+    /// IANA timezone name (e.g. "America/New_York"). Defaults to the user's detected timezone if omitted.
+    #[serde(default)]
+    zone: Option<String>,
     /// Output format: extended, basic, date, or time
     #[serde(default = "default_extended")]
     format: String,
@@ -292,8 +341,9 @@ fn default_extended() -> String {
 struct ResolveLocalParams {
     /// Local datetime string (YYYY-MM-DDTHH:MM:SS)
     local: String,
-    /// IANA timezone name
-    zone: String,
+    /// IANA timezone name. Defaults to the user's detected timezone if omitted.
+    #[serde(default)]
+    zone: Option<String>,
     /// Disambiguation policy: compatible, earlier, later, reject
     #[serde(default = "default_compatible")]
     disambiguation: String,
@@ -325,8 +375,9 @@ struct DurationSpecParams {
 struct AddDurationParams {
     /// UTC instant (RFC 3339) to add duration to
     start: String,
-    /// IANA timezone name for calendar arithmetic
-    zone: String,
+    /// IANA timezone name for calendar arithmetic. Defaults to the user's detected timezone if omitted.
+    #[serde(default)]
+    zone: Option<String>,
     /// Duration to add
     #[serde(default)]
     duration: DurationSpecParams,
@@ -368,8 +419,9 @@ struct BusinessCalendarParams {
 struct RecurrencePreviewParams {
     /// Local start datetime
     start_local: String,
-    /// IANA timezone name
-    zone: String,
+    /// IANA timezone name. Defaults to the user's detected timezone if omitted.
+    #[serde(default)]
+    zone: Option<String>,
     /// Recurrence rule
     rule: RecurrenceRuleParams,
     /// Business calendar configuration
@@ -386,8 +438,9 @@ struct NormalizeIntentParams {
     input: String,
     /// Reference local datetime for relative calculations
     reference_local: String,
-    /// Default IANA timezone if not specified in input
-    default_zone: String,
+    /// Default IANA timezone if not specified in input. Defaults to the user's detected timezone if omitted.
+    #[serde(default)]
+    default_zone: Option<String>,
 }
 
 #[derive(Debug, Deserialize, JsonSchema)]
@@ -396,8 +449,9 @@ struct DiffInstantsParams {
     start: String,
     /// End instant (RFC 3339)
     end: String,
-    /// IANA timezone for calendar diff computation
-    zone: String,
+    /// IANA timezone for calendar diff computation. Defaults to the user's detected timezone if omitted.
+    #[serde(default)]
+    zone: Option<String>,
 }
 
 #[derive(Debug, Deserialize, JsonSchema)]
@@ -412,9 +466,10 @@ struct CompareInstantsParams {
 struct SnapToParams {
     /// UTC instant (RFC 3339) to snap
     instant: String,
-    /// IANA timezone name
-    zone: String,
-    /// Unit to snap to: day, week, month, quarter, year
+    /// IANA timezone name. Defaults to the user's detected timezone if omitted.
+    #[serde(default)]
+    zone: Option<String>,
+    /// Unit to snap to: day, week, month, quarter, year, hour
     unit: String,
     /// Edge: start or end
     edge: String,
@@ -459,8 +514,9 @@ struct IntervalCheckParams {
 
 #[derive(Debug, Deserialize, JsonSchema)]
 struct ZoneInfoParams {
-    /// IANA timezone name
-    zone: String,
+    /// IANA timezone name. Defaults to the user's detected timezone if omitted.
+    #[serde(default)]
+    zone: Option<String>,
     /// Optional instant to query at (RFC 3339, defaults to now)
     #[serde(default)]
     at: Option<String>,
@@ -475,7 +531,7 @@ struct ListZonesParams {
 
 #[derive(Debug, Deserialize, JsonSchema)]
 struct NowParams {
-    /// Optional IANA timezone for local projection
+    /// Optional IANA timezone for local projection. Defaults to the user's detected timezone if omitted.
     #[serde(default)]
     zone: Option<String>,
 }
@@ -490,9 +546,8 @@ struct NowParams {
 fn eval(request: serde_json::Value) -> Result<String, String> {
     let response = chronow_core::evaluate_request_value(request);
     if response.ok {
-        let text = serde_json::to_string_pretty(&response).unwrap_or_else(|e| {
-            format!("{{\"ok\":true,\"_serialization_note\":\"{}\"}}", e)
-        });
+        let text = serde_json::to_string_pretty(&response)
+            .unwrap_or_else(|e| format!("{{\"ok\":true,\"_serialization_note\":\"{}\"}}", e));
         Ok(text)
     } else {
         let msg = match &response.error {
@@ -519,36 +574,49 @@ fn require_non_empty(field_name: &str, value: &str) -> Result<(), String> {
 impl ChronowServer {
     /// Parse an ISO 8601/RFC 3339 datetime string into a UTC instant with epoch timestamps.
     #[tool]
-    fn parse_instant(&self, Parameters(p): Parameters<ParseInstantParams>) -> Result<String, String> {
+    fn parse_instant(
+        &self,
+        Parameters(p): Parameters<ParseInstantParams>,
+    ) -> Result<String, String> {
         require_non_empty("input", &p.input)?;
         eval(json!({"op": "parse_instant", "input": p.input}))
     }
 
     /// Format a UTC instant in a specific timezone with the given format (extended/basic/date/time).
     #[tool]
-    fn format_instant(&self, Parameters(p): Parameters<FormatInstantParams>) -> Result<String, String> {
+    fn format_instant(
+        &self,
+        Parameters(p): Parameters<FormatInstantParams>,
+    ) -> Result<String, String> {
         require_non_empty("instant", &p.instant)?;
-        require_non_empty("zone", &p.zone)?;
-        eval(json!({"op": "format_instant", "instant": p.instant, "zone": p.zone, "format": p.format}))
+        let zone = self.resolve_zone(p.zone);
+        eval(
+            json!({"op": "format_instant", "instant": p.instant, "zone": zone, "format": p.format}),
+        )
     }
 
     /// Resolve a local datetime in a timezone to a UTC instant, handling DST ambiguity.
     #[tool]
-    fn resolve_local(&self, Parameters(p): Parameters<ResolveLocalParams>) -> Result<String, String> {
+    fn resolve_local(
+        &self,
+        Parameters(p): Parameters<ResolveLocalParams>,
+    ) -> Result<String, String> {
         require_non_empty("local", &p.local)?;
-        require_non_empty("zone", &p.zone)?;
-        eval(json!({"op": "resolve_local", "local": p.local, "zone": p.zone, "disambiguation": p.disambiguation}))
+        let zone = self.resolve_zone(p.zone);
+        eval(
+            json!({"op": "resolve_local", "local": p.local, "zone": zone, "disambiguation": p.disambiguation}),
+        )
     }
 
     /// Add a duration to an instant using absolute or calendar arithmetic.
     #[tool]
     fn add_duration(&self, Parameters(p): Parameters<AddDurationParams>) -> Result<String, String> {
         require_non_empty("start", &p.start)?;
-        require_non_empty("zone", &p.zone)?;
+        let zone = self.resolve_zone(p.zone);
         eval(json!({
             "op": "add_duration",
             "start": p.start,
-            "zone": p.zone,
+            "zone": zone,
             "duration": p.duration,
             "arithmetic": p.arithmetic,
             "disambiguation": p.disambiguation,
@@ -557,13 +625,16 @@ impl ChronowServer {
 
     /// Generate a series of recurring datetime occurrences with optional business calendar rules.
     #[tool]
-    fn recurrence_preview(&self, Parameters(p): Parameters<RecurrencePreviewParams>) -> Result<String, String> {
+    fn recurrence_preview(
+        &self,
+        Parameters(p): Parameters<RecurrencePreviewParams>,
+    ) -> Result<String, String> {
         require_non_empty("start_local", &p.start_local)?;
-        require_non_empty("zone", &p.zone)?;
+        let zone = self.resolve_zone(p.zone);
         eval(json!({
             "op": "recurrence_preview",
             "start_local": p.start_local,
-            "zone": p.zone,
+            "zone": zone,
             "rule": p.rule,
             "business_calendar": p.business_calendar,
             "disambiguation": p.disambiguation,
@@ -572,46 +643,55 @@ impl ChronowServer {
 
     /// Normalize a natural language temporal intent into a deterministic request.
     #[tool]
-    fn normalize_intent(&self, Parameters(p): Parameters<NormalizeIntentParams>) -> Result<String, String> {
+    fn normalize_intent(
+        &self,
+        Parameters(p): Parameters<NormalizeIntentParams>,
+    ) -> Result<String, String> {
         require_non_empty("input", &p.input)?;
         require_non_empty("reference_local", &p.reference_local)?;
-        require_non_empty("default_zone", &p.default_zone)?;
+        let default_zone = self.resolve_zone(p.default_zone);
         eval(json!({
             "op": "normalize_intent",
             "input": p.input,
             "reference_local": p.reference_local,
-            "default_zone": p.default_zone,
+            "default_zone": default_zone,
         }))
     }
 
     /// Compute the calendar difference between two instants (years, months, days, hours, minutes, seconds).
     #[tool]
-    fn diff_instants(&self, Parameters(p): Parameters<DiffInstantsParams>) -> Result<String, String> {
+    fn diff_instants(
+        &self,
+        Parameters(p): Parameters<DiffInstantsParams>,
+    ) -> Result<String, String> {
         require_non_empty("start", &p.start)?;
         require_non_empty("end", &p.end)?;
-        require_non_empty("zone", &p.zone)?;
-        eval(json!({"op": "diff_instants", "start": p.start, "end": p.end, "zone": p.zone}))
+        let zone = self.resolve_zone(p.zone);
+        eval(json!({"op": "diff_instants", "start": p.start, "end": p.end, "zone": zone}))
     }
 
     /// Compare two instants, returning -1, 0, or 1.
     #[tool]
-    fn compare_instants(&self, Parameters(p): Parameters<CompareInstantsParams>) -> Result<String, String> {
+    fn compare_instants(
+        &self,
+        Parameters(p): Parameters<CompareInstantsParams>,
+    ) -> Result<String, String> {
         require_non_empty("a", &p.a)?;
         require_non_empty("b", &p.b)?;
         eval(json!({"op": "compare_instants", "a": p.a, "b": p.b}))
     }
 
-    /// Snap an instant to the start or end of a calendar unit (day/week/month/quarter/year).
+    /// Snap an instant to the start or end of a calendar unit (day/week/month/quarter/year/hour).
     #[tool]
     fn snap_to(&self, Parameters(p): Parameters<SnapToParams>) -> Result<String, String> {
         require_non_empty("instant", &p.instant)?;
-        require_non_empty("zone", &p.zone)?;
+        let zone = self.resolve_zone(p.zone);
         require_non_empty("unit", &p.unit)?;
         require_non_empty("edge", &p.edge)?;
         eval(json!({
             "op": "snap_to",
             "instant": p.instant,
-            "zone": p.zone,
+            "zone": zone,
             "unit": p.unit,
             "edge": p.edge,
             "week_starts_on": p.week_starts_on,
@@ -620,20 +700,29 @@ impl ChronowServer {
 
     /// Parse an ISO 8601 duration string (e.g. P1Y2M3DT4H5M6S) into components.
     #[tool]
-    fn parse_duration(&self, Parameters(p): Parameters<ParseDurationParams>) -> Result<String, String> {
+    fn parse_duration(
+        &self,
+        Parameters(p): Parameters<ParseDurationParams>,
+    ) -> Result<String, String> {
         require_non_empty("input", &p.input)?;
         eval(json!({"op": "parse_duration", "input": p.input}))
     }
 
     /// Format duration components into an ISO 8601 duration string.
     #[tool]
-    fn format_duration(&self, Parameters(p): Parameters<FormatDurationParams>) -> Result<String, String> {
+    fn format_duration(
+        &self,
+        Parameters(p): Parameters<FormatDurationParams>,
+    ) -> Result<String, String> {
         eval(json!({"op": "format_duration", "duration": p.duration}))
     }
 
     /// Check two time intervals for overlap, containment, or gap.
     #[tool]
-    fn interval_check(&self, Parameters(p): Parameters<IntervalCheckParams>) -> Result<String, String> {
+    fn interval_check(
+        &self,
+        Parameters(p): Parameters<IntervalCheckParams>,
+    ) -> Result<String, String> {
         require_non_empty("interval_a.start", &p.interval_a.start)?;
         require_non_empty("interval_a.end", &p.interval_a.end)?;
         require_non_empty("interval_b.start", &p.interval_b.start)?;
@@ -650,8 +739,8 @@ impl ChronowServer {
     /// Get timezone information: offset, DST status, abbreviation, and next transition.
     #[tool]
     fn zone_info(&self, Parameters(p): Parameters<ZoneInfoParams>) -> Result<String, String> {
-        require_non_empty("zone", &p.zone)?;
-        let mut req = json!({"op": "zone_info", "zone": p.zone});
+        let zone = self.resolve_zone(p.zone);
+        let mut req = json!({"op": "zone_info", "zone": zone});
         if let Some(ref at) = p.at {
             if at.trim().is_empty() {
                 return Err("field `at` must be non-empty when provided".to_string());
@@ -671,16 +760,11 @@ impl ChronowServer {
         eval(req)
     }
 
-    /// Get the current time as a UTC instant, optionally projected into a timezone.
+    /// Get the current time as a UTC instant, optionally projected into a timezone. Defaults to the user's detected timezone.
     #[tool]
     fn now(&self, Parameters(p): Parameters<NowParams>) -> Result<String, String> {
-        let mut req = json!({"op": "now"});
-        if let Some(ref z) = p.zone {
-            if z.trim().is_empty() {
-                return Err("field `zone` must be non-empty when provided".to_string());
-            }
-            req["zone"] = json!(z);
-        }
+        let zone = self.resolve_zone(p.zone);
+        let req = json!({"op": "now", "zone": zone});
         eval(req)
     }
 }
@@ -760,7 +844,15 @@ fn resource_content_for_uri(uri: &str) -> Option<&'static str> {
 impl ServerHandler for ChronowServer {
     fn get_info(&self) -> ServerInfo {
         ServerInfo {
-            instructions: Some("Chronow is a deterministic temporal engine. All operations are pure functions over UTC instants and IANA timezones. Results are byte-equivalent across Rust, TypeScript, and Python implementations.".into()),
+            instructions: Some(format!(
+                "Chronow is a deterministic temporal engine. All operations are pure functions over \
+                 UTC instants and IANA timezones. Results are byte-equivalent across Rust, TypeScript, \
+                 and Python implementations.\n\n\
+                 User's default timezone: {}. When tools accept a `zone` parameter and none is \
+                 provided, this timezone is used automatically. You do not need to ask the user for \
+                 their timezone.",
+                self.default_zone
+            )),
             server_info: Implementation {
                 name: "chronow".into(),
                 version: "0.2.0".into(),
@@ -815,8 +907,12 @@ impl ServerHandler for ChronowServer {
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
+    let default_zone = detect_default_zone();
+    eprintln!("[chronow-mcp] default timezone: {default_zone}");
+
     let server = ChronowServer {
         tool_router: ChronowServer::tool_router(),
+        default_zone,
     };
 
     let transport = stdio();
@@ -837,7 +933,8 @@ mod tests {
     use rmcp::handler::server::tool::IntoCallToolResult;
 
     fn to_result(r: Result<String, String>) -> rmcp::model::CallToolResult {
-        r.into_call_tool_result().expect("framework conversion should not fail")
+        r.into_call_tool_result()
+            .expect("framework conversion should not fail")
     }
 
     fn is_error(r: &rmcp::model::CallToolResult) -> bool {
@@ -852,6 +949,13 @@ mod tests {
             .unwrap_or_default()
     }
 
+    fn test_server() -> ChronowServer {
+        ChronowServer {
+            tool_router: ChronowServer::tool_router(),
+            default_zone: "America/Chicago".to_string(),
+        }
+    }
+
     // ------------------------------------------------------------------ //
     // 1. Invalid timezone  -- engine returns ok:false with code
     //    "invalid_zone".  Our `eval` wrapper must surface this as
@@ -863,7 +967,10 @@ mod tests {
             "op": "zone_info",
             "zone": "Fake/Not_A_Zone"
         })));
-        assert!(is_error(&result), "expected is_error: true for invalid timezone");
+        assert!(
+            is_error(&result),
+            "expected is_error: true for invalid timezone"
+        );
         let text = first_text(&result);
         assert!(
             text.contains("invalid_zone"),
@@ -880,7 +987,10 @@ mod tests {
             "op": "parse_instant",
             "input": "not-a-date"
         })));
-        assert!(is_error(&result), "expected is_error: true for unparseable instant");
+        assert!(
+            is_error(&result),
+            "expected is_error: true for unparseable instant"
+        );
         let text = first_text(&result);
         assert!(
             text.contains("invalid_datetime") || text.contains("invalid_request"),
@@ -920,7 +1030,10 @@ mod tests {
         })));
         assert!(!is_error(&result), "valid input should not be an error");
         let text = first_text(&result);
-        assert!(text.contains("\"ok\": true"), "response should contain ok:true; got: {text}");
+        assert!(
+            text.contains("\"ok\": true"),
+            "response should contain ok:true; got: {text}"
+        );
     }
 
     // ------------------------------------------------------------------ //
@@ -950,12 +1063,39 @@ mod tests {
         assert!(text.contains("invalid_zone"), "got: {text}");
     }
 
+    // ------------------------------------------------------------------ //
+    // 7. Timezone detection fallback chain.
+    // ------------------------------------------------------------------ //
+    #[test]
+    fn detect_zone_returns_nonempty() {
+        let zone = detect_default_zone();
+        assert!(!zone.is_empty(), "detected zone should not be empty");
+    }
+
+    // ------------------------------------------------------------------ //
+    // 8. resolve_zone uses default when None is provided.
+    // ------------------------------------------------------------------ //
+    #[test]
+    fn resolve_zone_uses_default() {
+        let server = test_server();
+        assert_eq!(server.resolve_zone(None), "America/Chicago");
+        assert_eq!(server.resolve_zone(Some("".to_string())), "America/Chicago");
+        assert_eq!(
+            server.resolve_zone(Some("  ".to_string())),
+            "America/Chicago"
+        );
+        assert_eq!(
+            server.resolve_zone(Some("Asia/Tokyo".to_string())),
+            "Asia/Tokyo"
+        );
+    }
+
     // ================================================================== //
     // Resource tests
     // ================================================================== //
 
     // ------------------------------------------------------------------ //
-    // 7. list_resources returns all four resources.
+    // 9. list_resources returns all four resources.
     // ------------------------------------------------------------------ //
     #[test]
     fn list_resources_returns_all() {
@@ -980,14 +1120,17 @@ mod tests {
     }
 
     // ------------------------------------------------------------------ //
-    // 8. read_resource returns content for each known URI.
+    // 10. read_resource returns content for each known URI.
     // ------------------------------------------------------------------ //
     #[test]
     fn read_resource_disambiguation() {
         let content = resource_content_for_uri("chronow://policies/disambiguation");
         assert!(content.is_some(), "disambiguation resource should exist");
         let text = content.unwrap();
-        assert!(text.contains("compatible"), "should describe compatible policy");
+        assert!(
+            text.contains("compatible"),
+            "should describe compatible policy"
+        );
         assert!(text.contains("earlier"), "should describe earlier policy");
         assert!(text.contains("later"), "should describe later policy");
         assert!(text.contains("reject"), "should describe reject policy");
@@ -996,10 +1139,19 @@ mod tests {
     #[test]
     fn read_resource_timezone_conversion() {
         let content = resource_content_for_uri("chronow://workflows/timezone-conversion");
-        assert!(content.is_some(), "timezone-conversion resource should exist");
+        assert!(
+            content.is_some(),
+            "timezone-conversion resource should exist"
+        );
         let text = content.unwrap();
-        assert!(text.contains("resolve_local"), "should reference resolve_local tool");
-        assert!(text.contains("format_instant"), "should reference format_instant tool");
+        assert!(
+            text.contains("resolve_local"),
+            "should reference resolve_local tool"
+        );
+        assert!(
+            text.contains("format_instant"),
+            "should reference format_instant tool"
+        );
     }
 
     #[test]
@@ -1007,9 +1159,18 @@ mod tests {
         let content = resource_content_for_uri("chronow://workflows/schedule-meeting");
         assert!(content.is_some(), "schedule-meeting resource should exist");
         let text = content.unwrap();
-        assert!(text.contains("resolve_local"), "should reference resolve_local tool");
-        assert!(text.contains("format_instant"), "should reference format_instant tool");
-        assert!(text.contains("diff_instants"), "should reference diff_instants tool");
+        assert!(
+            text.contains("resolve_local"),
+            "should reference resolve_local tool"
+        );
+        assert!(
+            text.contains("format_instant"),
+            "should reference format_instant tool"
+        );
+        assert!(
+            text.contains("diff_instants"),
+            "should reference diff_instants tool"
+        );
     }
 
     #[test]
@@ -1017,13 +1178,19 @@ mod tests {
         let content = resource_content_for_uri("chronow://workflows/next-business-day");
         assert!(content.is_some(), "next-business-day resource should exist");
         let text = content.unwrap();
-        assert!(text.contains("recurrence_preview"), "should reference recurrence_preview tool");
-        assert!(text.contains("exclude_weekends"), "should mention weekend exclusion");
+        assert!(
+            text.contains("recurrence_preview"),
+            "should reference recurrence_preview tool"
+        );
+        assert!(
+            text.contains("exclude_weekends"),
+            "should mention weekend exclusion"
+        );
         assert!(text.contains("holidays"), "should mention holidays");
     }
 
     // ------------------------------------------------------------------ //
-    // 9. read_resource returns None for unknown URIs.
+    // 11. read_resource returns None for unknown URIs.
     // ------------------------------------------------------------------ //
     #[test]
     fn read_resource_unknown_uri() {
@@ -1032,7 +1199,7 @@ mod tests {
     }
 
     // ------------------------------------------------------------------ //
-    // 10. All resources have non-empty names, titles, and descriptions.
+    // 12. All resources have non-empty names, titles, and descriptions.
     // ------------------------------------------------------------------ //
     #[test]
     fn resources_have_metadata() {

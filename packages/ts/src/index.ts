@@ -15,6 +15,10 @@ type WasmModule = {
   evaluate_json_wasm: (requestJson: string) => string;
 };
 
+type MaybeWasmModule = {
+  evaluate_json_wasm?: unknown;
+};
+
 let wasmModule: WasmModule | null = null;
 let wasmLoadAttempted = false;
 
@@ -25,9 +29,14 @@ export async function initWasm(): Promise<boolean> {
 
   try {
     // @ts-ignore - WASM module may not exist at compile time
-    const mod: any = await import(/* webpackIgnore: true */ "../wasm/chronow_core.js");
+    const mod = (await import(
+      /* webpackIgnore: true */ "../wasm/chronow_core.js"
+    )) as MaybeWasmModule;
     if (typeof mod.evaluate_json_wasm === "function") {
-      wasmModule = mod as WasmModule;
+      const evaluateJsonWasm = mod.evaluate_json_wasm as (requestJson: string) => string;
+      wasmModule = {
+        evaluate_json_wasm: evaluateJsonWasm,
+      };
       return true;
     }
     return false;
@@ -67,7 +76,10 @@ function evaluateViaCli(request: JsonObject, options?: ChronowOptions): EngineRe
 }
 
 function evaluateViaWasm(request: JsonObject): EngineResponse {
-  const raw = wasmModule!.evaluate_json_wasm(JSON.stringify(request));
+  if (!wasmModule) {
+    throw new Error("WASM module not initialized; call initWasm() first");
+  }
+  const raw = wasmModule.evaluate_json_wasm(JSON.stringify(request));
   return JSON.parse(raw) as EngineResponse;
 }
 
@@ -78,10 +90,7 @@ export function evaluate(request: JsonObject, options?: ChronowOptions): EngineR
   return evaluateViaCli(request, options);
 }
 
-export function evaluateCorpusFile(
-  casesFile: string,
-  options?: ChronowOptions,
-): EvalCorpusResult {
+export function evaluateCorpusFile(casesFile: string, options?: ChronowOptions): EvalCorpusResult {
   // WASM path: read and process in-process
   if (wasmModule && !options?.forceCli) {
     const content = readFileSync(casesFile, "utf8");
@@ -102,10 +111,7 @@ function evaluateCorpusInProcess(cases: CorpusCase[]): EvalCorpusResult {
   return { results, count: results.length };
 }
 
-export function evaluateCorpus(
-  cases: CorpusCase[],
-  options?: ChronowOptions,
-): EvalCorpusResult {
+export function evaluateCorpus(cases: CorpusCase[], options?: ChronowOptions): EvalCorpusResult {
   if (wasmModule && !options?.forceCli) {
     return evaluateCorpusInProcess(cases);
   }

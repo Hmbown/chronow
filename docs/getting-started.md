@@ -11,7 +11,7 @@ Pick whichever channel fits your stack.
 ### Binary (prebuilt release)
 
 Download the latest archive for your platform from the
-[Releases](https://github.com/punkpeye/chronow/releases) page, extract it, and
+[Releases](https://github.com/Hmbown/chronow/releases) page, extract it, and
 place the `chronow` binary on your `$PATH`:
 
 ```bash

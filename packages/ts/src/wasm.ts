@@ -7,8 +7,16 @@ export type WasmEvaluator = {
 export async function loadWasmEvaluator(): Promise<WasmEvaluator> {
   // WASM artifact is generated via:
   //   wasm-pack build crates/core --target nodejs --out-dir ../../packages/ts/wasm
-  const mod: any = await import(/* webpackIgnore: true */ "../wasm/chronow_core.js");
-  return mod as WasmEvaluator;
+  const mod = (await import(
+    /* webpackIgnore: true */ "../wasm/chronow_core.js"
+  )) as Partial<WasmEvaluator>;
+  if (typeof mod.evaluate_json_wasm !== "function") {
+    throw new Error("WASM module missing evaluate_json_wasm export");
+  }
+  const evaluateJsonWasm = mod.evaluate_json_wasm as (requestJson: string) => string;
+  return {
+    evaluate_json_wasm: evaluateJsonWasm,
+  };
 }
 
 export async function evaluateViaWasm(request: JsonObject): Promise<EngineResponse> {
