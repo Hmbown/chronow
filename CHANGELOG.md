@@ -16,6 +16,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-03-01
+
+### Changed
+
+- Rewrote README to lead with the actual problem: LLMs don't know what time it is and guess wrong. Added concrete DST recurrence example.
+- Reorganized README structure: Why > What it's for > How it works > Quick start. Consolidated duplicate tool tables, compressed MCP client setup instructions.
+- Sharpened tool descriptions to say what each one does in plain language.
+
+### Infrastructure
+
+- Added PyPI trusted publishing to release workflow.
+- Updated Dockerfile base image to `rust:1-alpine` (unpinned minor).
+
 ## [0.2.0] - 2025-06-15
 
 ### Added

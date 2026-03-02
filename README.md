@@ -4,37 +4,39 @@
 [![PyPI](https://img.shields.io/pypi/v/chronow)](https://pypi.org/project/chronow/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-**Deterministic temporal primitives for agents**: DST-safe timezone operations, recurrence generation, interval checks, and a strict cross-language conformance suite.
+An MCP server that gives AI agents correct timezone, scheduling, and interval operations. Handles DST, business calendars, and cross-timezone conversion without guessing.
 
-## Quick start
+## Why
 
-From the repo:
+LLMs don't know what time it is. The model gets a date string injected by the system prompt -- that's it. It doesn't know the current time, it doesn't know your timezone, and it can't reliably do calendar math in its head. When a Claude tells you "the market is open" or "that's a Thursday," it's doing vibes-based arithmetic on a date string. It gets it wrong regularly.
 
-```bash
-# Current time in a zone
-cargo run -p chronow-cli -- now --zone America/Chicago
+Without a tool, the model is guessing at:
+- What time it is right now (it literally doesn't know)
+- What day of the week a date falls on
+- Timezone conversions
+- Whether DST is in effect
+- Whether a date is a business day
 
-# Resolve a local time to a UTC instant (DST-safe, explicit disambiguation)
-cargo run -p chronow-cli -- resolve --local 2025-03-09T02:30:00 --zone America/New_York --disambiguation compatible
+Chronow replaces that guessing with tool calls that return correct results:
 
-# Run the cross-language conformance matrix (Rust/TS/Python)
-python3 conformance/runner/run.py --matrix rust ts python --strict
+```
+You: "Set up a weekly 9am standup for the next 4 weeks"
+
+Agent calls recurrence_preview →
+  Mar  2  09:00 CST  (2026-03-02T15:00:00Z)
+  Mar  9  09:00 CDT  (2026-03-09T14:00:00Z)  ← DST shift, local time stays 9am
+  Mar 16  09:00 CDT  (2026-03-16T14:00:00Z)
+  Mar 23  09:00 CDT  (2026-03-23T14:00:00Z)
 ```
 
-## The problem
+The UTC instant shifts by an hour at the DST boundary. The local time stays at 9:00. Without a tool, the model would likely keep the UTC constant and silently move the meeting to 10am local -- and not mention it.
 
-LLMs guess at time. DST, timezones, and business-day rules turn those guesses into real bugs.
+## What it's for
 
-Chronow gives agents deterministic time primitives (plus a test corpus) so scheduling, conversion, and "does this overlap?" become tool calls, not hallucinations.
-
-## Where it helps
-
-Chronow is useful when you care about correctness and reproducibility more than "best effort" parsing:
-
-- Agent runtimes: give the model tools like `now`, `resolve_local`, and `diff_instants` instead of letting it guess.
-- DST edges: pick an explicit policy for gaps/folds (`compatible`/`earlier`/`later`/`reject`) instead of getting silent one-hour bugs.
-- Multi-language stacks: CI enforces byte-identical JSON output across Rust/TypeScript/Python against an 865-case corpus.
-- Deterministic intent normalization: `normalize_intent` accepts a small, explicit grammar (24-hour `HH:MM`) and returns `unsupported_intent` for everything else.
+- **Agent runtimes**: give the model `now`, `resolve_local`, `recurrence_preview`, `interval_check` etc. instead of letting it do timezone math in its head.
+- **DST edges**: explicit disambiguation policies (`compatible`/`earlier`/`later`/`reject`) instead of silent one-hour bugs.
+- **Business calendars**: generate recurring dates that skip weekends and holidays you specify.
+- **Multi-language stacks**: 865-case conformance corpus enforces byte-identical output across Rust, TypeScript, and Python.
 
 ## What it isn't
 
@@ -42,248 +44,110 @@ Chronow is useful when you care about correctness and reproducibility more than 
 - A holiday database (you supply weekend/holiday rules via `business_calendar`).
 - A fuzzy natural-language date parser (that ambiguity is exactly what Chronow avoids).
 
-## What it does
+## How it works
 
-Chronow is a Rust temporal engine exposing 15 pure-function operations through:
+Chronow is a Rust temporal engine exposing 15 pure-function operations. The primary interface is an **MCP server** (`chronow-mcp`) that runs over stdio -- add it to Claude Code, Claude Desktop, Cursor, or any MCP host and the agent gets correct time tools automatically.
 
-- **MCP server (`chronow-mcp`)** -- stdio-based MCP server for Claude Code/Desktop, Cursor, or any MCP host.
-- **CLI (`chronow`)** -- parse/convert/resolve/diff/recur from the terminal (JSON in, JSON out).
-- **Adapters** -- TypeScript (WASM/CLI) and Python (CLI bridge), verified against the conformance suite.
+Also ships as a **CLI** (`chronow`) and as **TypeScript/Python adapters**, all verified against the same conformance suite.
 
-### Key capabilities
+### Tools
 
-| What you need | Tool | Example |
-|---|---|---|
-| Current time in any timezone | `now` | "What time is it in Tokyo?" |
-| Is today a trading day? | `recurrence_preview` | Business calendar (weekends + holiday list you supply) |
-| When does this option expire? | `add_duration`, `snap_to` | Add duration, snap to end of day/month |
-| Schedule a recurring meeting | `recurrence_preview` | Weekly MWF at 9am, auto-adjusts across DST |
-| Convert between timezones | `resolve_local` + `format_instant` | "3pm Chicago time in London" |
-| Days until a deadline | `diff_instants` | Calendar diff with timezone awareness |
-| Do these meetings overlap? | `interval_check` | Overlap/containment/gap detection |
-| What day of the week is March 14? | `format_instant` | Deterministic, no guessing |
-| Next business day after a holiday | `recurrence_preview` | Skip weekends + custom holiday list |
-| Normalize a deterministic phrase | `normalize_intent` | `next monday at 09:00 in America/New_York` |
-
-### Why not just use date-fns / dayjs / pendulum?
-
-You can, and they're great for application code. Chronow is different in three ways:
-
-1. **Explicit DST disambiguation.** Four policies (`compatible`, `earlier`, `later`, `reject`) give deterministic control over gap and fold resolution. No silent "wrong by one hour" bugs.
-2. **Cross-language parity.** Rust is the reference engine; TypeScript (WASM/CLI) and Python (CLI bridge) are checked for byte-identical output against an 865-case conformance corpus. If your agent pipeline spans languages, results won't drift.
-3. **Agent-native.** The MCP server auto-detects the user's timezone. `normalize_intent` is deliberately strict: it normalizes a small grammar and rejects everything else instead of guessing.
-
-## Install
-
-### Prebuilt binaries (recommended)
-
-Download from [Releases](https://github.com/Hmbown/chronow/releases) -- each archive includes both the `chronow` CLI and the `chronow-mcp` server for Linux, macOS, and Windows.
-
-### From source (CLI + MCP)
-
-```bash
-cargo build --release -p chronow-cli -p chronow-mcp
-
-# Or install into ~/.cargo/bin
-cargo install --path cli
-cargo install --path mcp
-```
-
-### Python (PyPI)
-
-```bash
-pip install chronow
-```
-
-The Python package shells out to the `chronow` CLI. Install the CLI (from a GitHub release or from source) and ensure `chronow` is on your `$PATH` (or set `CHRONOW_BIN`).
-
-### Rust / TypeScript bindings
-
-Rust (`crates/core`) and TypeScript (`packages/ts`) bindings live in this repo and are exercised by the conformance suite. They are not published to crates.io/npm yet.
-
-## MCP server
-
-Chronow ships an MCP (Model Context Protocol) server binary -- `chronow-mcp` -- that
-exposes every temporal operation as a tool. It uses the **stdio transport**
-(JSON-RPC over stdin/stdout), so the host process launches it directly; no
-network ports or URLs are needed.
-
-The server also exposes a small set of `resources/*` text templates (policies + common workflows) that MCP clients can read and reuse.
-
-### Timezone auto-detection
-
-The MCP server automatically detects the user's timezone at startup using this fallback chain:
-
-1. **`CHRONOW_DEFAULT_ZONE` env var** -- explicit override, highest priority
-2. **System timezone** -- detected from the OS (via `iana_time_zone`)
-3. **`TZ` env var** -- standard Unix timezone variable
-4. **UTC** -- final fallback
-
-The detected timezone is used as the default for all tools that accept a `zone` parameter. This means agents don't need to ask users for their timezone -- it just works.
-
-To override the detected timezone, set the env var in your MCP config:
-
-```json
-{
-  "mcpServers": {
-    "chronow": {
-      "command": "/path/to/chronow-mcp",
-      "env": {
-        "CHRONOW_DEFAULT_ZONE": "America/Chicago"
-      }
-    }
-  }
-}
-```
-
-### Available tools
-
-| Tool | Description |
-|------|-------------|
-| `now` | Current time (defaults to user's timezone) |
-| `parse_instant` | Parse ISO 8601 / RFC 3339 string to UTC instant |
-| `format_instant` | Format a UTC instant in a given timezone |
-| `resolve_local` | Resolve a local datetime to UTC (DST-aware) |
-| `add_duration` | Add a duration using absolute or calendar arithmetic |
-| `recurrence_preview` | Generate recurring datetime occurrences |
-| `normalize_intent` | Normalize a deterministic intent grammar into a structured request |
-| `diff_instants` | Calendar difference between two instants |
+| Tool | What it does |
+|---|---|
+| `now` | Current time in any timezone (auto-detects user's zone) |
+| `resolve_local` | Convert a wall-clock time to UTC -- handles DST gaps/folds explicitly |
+| `format_instant` | Show a UTC instant in any timezone |
+| `recurrence_preview` | Generate recurring dates (daily/weekly/monthly) with optional business calendar (skip weekends + holidays) |
+| `add_duration` | Add days/months/years with calendar or absolute arithmetic |
+| `diff_instants` | Calendar difference between two instants (years, months, days, ...) |
+| `interval_check` | Do two time ranges overlap / does one contain the other / what's the gap? |
+| `snap_to` | Snap to start/end of hour, day, week, month, quarter, or year |
+| `normalize_intent` | Parse a small deterministic grammar (`tomorrow at 09:00`, `next monday at 14:00`, `every weekday at 10:00`) -- rejects anything ambiguous |
+| `zone_info` | Timezone offset, DST status, next transition |
+| `parse_instant` | Parse ISO 8601 / RFC 3339 to UTC |
 | `compare_instants` | Compare two instants (-1, 0, 1) |
-| `snap_to` | Snap an instant to the edge of a calendar unit |
-| `parse_duration` | Parse an ISO 8601 duration string |
-| `format_duration` | Format duration components to ISO 8601 |
-| `interval_check` | Check two intervals for overlap / containment / gap |
-| `zone_info` | Get timezone offset, DST status, abbreviation |
+| `parse_duration` / `format_duration` | ISO 8601 duration round-trip |
 | `list_zones` | List IANA timezone names |
 
-`normalize_intent` is intentionally strict (for determinism). It accepts patterns like `tomorrow at 15:30`, `next monday at 09:00`, `on 2026-03-01 at 09:00`, and returns `unsupported_intent` for everything else.
+### Why not date-fns / dayjs / pendulum?
 
-### Install the MCP server
+Those are fine for application code. Chronow is built for a different problem:
 
-**From source (requires Rust toolchain)**
+1. **Explicit DST disambiguation.** Four policies (`compatible`/`earlier`/`later`/`reject`) so you control what happens at gaps and folds instead of getting silently wrong results.
+2. **Cross-language parity.** 865-case conformance corpus enforces byte-identical output across Rust, TypeScript, and Python.
+3. **Agent-native.** Auto-detects timezone. `normalize_intent` deliberately rejects ambiguous input instead of guessing.
+
+## Quick start
+
+### 1. Install
+
+**Prebuilt binaries** (recommended) -- download from [Releases](https://github.com/Hmbown/chronow/releases). Each archive includes both `chronow` (CLI) and `chronow-mcp` (MCP server) for Linux, macOS, and Windows.
+
+**From source:**
 
 ```bash
-cargo build --release -p chronow-mcp
-cp target/release/chronow-mcp /usr/local/bin/
+cargo install --path mcp   # MCP server
+cargo install --path cli   # CLI (optional)
 ```
 
-Or install directly:
-
-```bash
-cargo install --path mcp
-```
-
-**From prebuilt binaries**
-
-Download the latest release for your platform from the
-[Releases](https://github.com/Hmbown/chronow/releases) page, extract the
-archive, and place `chronow-mcp` somewhere on your `$PATH`.
-
-**Docker**
+**Docker:**
 
 ```bash
 docker run -i ghcr.io/hmbown/chronow-mcp
 ```
 
-If `docker pull` is denied, use the GitHub release binaries instead (container publishing may lag behind tags).
+**Python:** `pip install chronow` (requires `chronow` CLI on `$PATH` or `CHRONOW_BIN` set).
 
-### Configure your AI client
+### 2. Add to your AI client
 
-> Replace `/path/to/chronow-mcp` below with the actual absolute path to the
-> binary (e.g. the result of `which chronow-mcp` after installing).
+Replace `/path/to/chronow-mcp` with the actual path (e.g. `which chronow-mcp`).
 
-#### Claude Code
+**Claude Code:**
 
 ```bash
 claude mcp add chronow /path/to/chronow-mcp
 ```
 
-Or add to `.mcp.json` / `~/.claude/settings.json`:
+**Claude Desktop** -- Settings > Developer > Edit Config:
 
 ```json
 {
   "mcpServers": {
-    "chronow": {
-      "command": "/path/to/chronow-mcp"
-    }
+    "chronow": { "command": "/path/to/chronow-mcp" }
   }
 }
 ```
 
-To set a specific timezone:
+**Cursor** -- Settings > MCP, or `.cursor/mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "chronow": { "command": "/path/to/chronow-mcp" }
+  }
+}
+```
+
+### 3. Verify
+
+Ask your AI client "What time is it?" -- it should return your local time without you specifying a timezone.
+
+### Timezone detection
+
+The MCP server auto-detects the user's timezone: `CHRONOW_DEFAULT_ZONE` env var > system timezone > `TZ` env var > UTC. To override:
 
 ```json
 {
   "mcpServers": {
     "chronow": {
       "command": "/path/to/chronow-mcp",
-      "env": {
-        "CHRONOW_DEFAULT_ZONE": "America/Chicago"
-      }
+      "env": { "CHRONOW_DEFAULT_ZONE": "America/Chicago" }
     }
   }
 }
 ```
 
-#### Claude Desktop
-
-Open **Settings > Developer > Edit Config** and add to
-`claude_desktop_config.json`:
-
-```json
-{
-  "mcpServers": {
-    "chronow": {
-      "command": "/path/to/chronow-mcp"
-    }
-  }
-}
-```
-
-Restart Claude Desktop after saving.
-
-#### Cursor
-
-Open **Settings > MCP** and add a new global server, or edit
-`.cursor/mcp.json` in the project root:
-
-```json
-{
-  "mcpServers": {
-    "chronow": {
-      "command": "/path/to/chronow-mcp"
-    }
-  }
-}
-```
-
-### Verify it works
-
-Ask your AI client to call the `now` tool -- it should return the current time in your local timezone without you specifying it:
-
-```
-What time is it right now?
-```
-
-Expected result (timezone auto-detected; shape is the engine response):
-
-```json
-{
-  "ok": true,
-  "value": {
-    "epoch_seconds": 1718472600,
-    "instant": "2024-06-15T17:30:00Z",
-    "local": "2024-06-15T12:30:00",
-    "offset_seconds": -18000,
-    "zone": "America/Chicago",
-    "zoned": "2024-06-15T12:30:00-05:00"
-  }
-}
-```
-
-Note: if you test `chronow-mcp` by hand over stdin/stdout, you must send a `notifications/initialized` notification after the `initialize` request (MCP clients do this automatically).
-
-## Deterministic conflict policy
+## DST disambiguation policies
 
 For ambiguous/non-existent local times during DST transitions:
 

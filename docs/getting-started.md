@@ -16,7 +16,7 @@ place the `chronow` binary on your `$PATH`:
 
 ```bash
 # macOS / Linux example
-tar xzf chronow-v0.2.0-x86_64-unknown-linux-gnu.tar.gz
+tar xzf chronow-v0.2.1-x86_64-unknown-linux-gnu.tar.gz
 sudo cp chronow chronow-mcp /usr/local/bin/
 chronow --help
 ```

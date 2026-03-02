@@ -159,7 +159,7 @@ dependencies = [
 
 [[package]]
 name = "chronow-cli"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "chronow-core",
  "clap",
@@ -170,7 +170,7 @@ dependencies = [
 
 [[package]]
 name = "chronow-core"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "chrono",
  "chrono-tz",
@@ -183,7 +183,7 @@ dependencies = [
 
 [[package]]
 name = "chronow-mcp"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "anyhow",
  "chronow-core",

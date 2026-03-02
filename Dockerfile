@@ -5,7 +5,7 @@
 # Run:    docker run -i chronow-mcp
 
 # ── Stage 1: Build ───────────────────────────────────────────────────────
-FROM rust:1.84-alpine AS builder
+FROM rust:1-alpine AS builder
 
 RUN apk add --no-cache musl-dev
 
