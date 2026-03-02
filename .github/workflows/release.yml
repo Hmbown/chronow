@@ -193,57 +193,6 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-  # ── Publish to crates.io ──────────────────────────────────────────────
-  publish-crate:
-    name: Publish to crates.io
-    runs-on: ubuntu-latest
-    if: ${{ !contains(github.ref_name, '-') }}
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Rust
-        uses: dtolnay/rust-toolchain@stable
-
-      - name: Publish chronow-core
-        run: cargo publish -p chronow-core
-        env:
-          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
-
-  # ── Publish to npm ──────────────────────────────────────────────────
-  publish-npm:
-    name: Publish to npm
-    needs: [build-wasm]
-    runs-on: ubuntu-latest
-    if: ${{ !contains(github.ref_name, '-') }}
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-          registry-url: "https://registry.npmjs.org"
-
-      - name: Setup Rust
-        uses: dtolnay/rust-toolchain@stable
-        with:
-          targets: wasm32-unknown-unknown
-
-      - name: Install wasm-pack
-        run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
-
-      - name: Build WASM
-        run: wasm-pack build crates/core --target nodejs --out-dir ../../packages/ts/wasm -- --features wasm
-
-      - name: Install deps and build
-        working-directory: packages/ts
-        run: npm install && npm run build
-
-      - name: Publish
-        working-directory: packages/ts
-        run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
   publish:
     name: Publish GitHub Release
     needs: [build, build-wasm]
