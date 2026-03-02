@@ -251,7 +251,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ !contains(github.ref_name, '-') }}
     environment:
-      name: pypi
+      name: publish
       url: https://pypi.org/p/chronow
     steps:
       - uses: actions/checkout@v4
